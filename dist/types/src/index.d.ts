@@ -1,8 +1,8 @@
 import { Dexie } from 'dexie';
-import { EngineUtilities } from '@datapos/datapos-shared/engine';
-import { PreviewConfig } from '@datapos/datapos-shared/component/dataView';
-import { ToolConfig } from '@datapos/datapos-shared/component/tool';
-import { ConnectorConfig, ConnectorInterface, CreateObjectOptions, DropObjectOptions, FindObjectOptions, FindObjectResult, GetRecordOptions, GetRecordResult, ListNodesOptions, ListNodesResult, PreviewObjectOptions, RemoveRecordsOptions, RetrievalTypeId, RetrieveRecordsOptions, RetrieveRecordsSummary, UpsertRecordsOptions } from '@datapos/datapos-shared/component/connector';
+import { EngineUtilities } from '@dpuse/dpuse-shared/engine';
+import { PreviewConfig } from '@dpuse/dpuse-shared/component/dataView';
+import { ToolConfig } from '@dpuse/dpuse-shared/component/tool';
+import { ConnectorConfig, ConnectorInterface, CreateObjectOptions, DropObjectOptions, FindObjectOptions, FindObjectResult, GetRecordOptions, GetRecordResult, ListNodesOptions, ListNodesResult, PreviewObjectOptions, RemoveRecordsOptions, RetrievalTypeId, RetrieveRecordsOptions, RetrieveRecordsSummary, UpsertRecordsOptions } from '@dpuse/dpuse-shared/component/connector';
 interface ExtendedConnectorInterface extends ConnectorInterface {
     containers: Record<string, Dexie>;
 }
