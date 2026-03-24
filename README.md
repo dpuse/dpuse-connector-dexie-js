@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 <span><!-- OWASP_BADGES_START -->
+[![OWASP](https://img.shields.io/badge/OWASP-passed-4CAF50)](https://dpuse.github.io/dpuse-connector-dexie-js/dependency-check-reports/dependency-check-report.html)
 <!-- OWASP_BADGES_END --></span>
 
 A TypeScript library that implements the Dexie.js connector.
@@ -31,6 +32,11 @@ The following list details the repository management commands implementation by 
 The following badge reflects FOSSA's assessment of this repository's open-source license compliance.
 
 <!-- DEPENDENCY_LICENSES_START -->
+|Name|Type|Installed|Latest|Latest Released|Deps|Document|
+|:-|:-|:-:|:-:|:-|-:|:-|
+|@dpuse/dpuse-shared|MIT|0.3.595|0.3.595|this month: 2026-03-23|0|[LICENSE](https://raw.githubusercontent.com/dpuse/dpuse-shared/main/LICENSE)|
+|dexie|Apache-2.0|4.3.0 ⚠️|4.4.0|this month: 2026-03-18|0|[LICENSE](https://raw.githubusercontent.com/dexie/Dexie.js/master/LICENSE)|
+
 <!-- DEPENDENCY_LICENSES_END -->
 
 ## License

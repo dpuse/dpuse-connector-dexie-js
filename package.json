@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.270",
+    "version": "0.2.271",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
     "private": false,
@@ -61,7 +61,7 @@
         "audit": "op run --env-file=.env -- node -e \"import('@dpuse/dpuse-development').then(m => m.auditDependencies())\"",
         "build": "node -e \"import('@dpuse/dpuse-development').then(m => m.buildProject())\"",
         "check": "node -e \"import('@dpuse/dpuse-development').then(m => m.checkDependencies())\"",
-        "document": "op run --env-file=.env -- node -e \"import('@dpuse/dpuse-development').then(m => m.documentDependencies(['MIT']))\"",
+        "document": "op run --env-file=.env -- node -e \"import('@dpuse/dpuse-development').then(m => m.documentDependencies(['Apache-2.0','MIT']))\"",
         "format": "node -e \"import('@dpuse/dpuse-development').then(m => m.formatCode())\"",
         "lint": "node -e \"import('@dpuse/dpuse-development').then(m => m.lintCode())\"",
         "release": "op run --env-file=.env -- node -e \"import('@dpuse/dpuse-development').then(m => m.releaseProject())\"",
