@@ -6,10 +6,10 @@
 import { Dexie } from 'dexie';
 
 // DPUse framework
-import { ConnectorError } from '@datapos/datapos-shared/errors';
-import type { EngineUtilities } from '@datapos/datapos-shared/engine';
-import type { PreviewConfig } from '@datapos/datapos-shared/component/dataView';
-import type { ToolConfig } from '@datapos/datapos-shared/component/tool';
+import { ConnectorError } from '@dpuse/dpuse-shared/errors';
+import type { EngineUtilities } from '@dpuse/dpuse-shared/engine';
+import type { PreviewConfig } from '@dpuse/dpuse-shared/component/dataView';
+import type { ToolConfig } from '@dpuse/dpuse-shared/component/tool';
 import type {
     ConnectionNodeConfig,
     ConnectorConfig,
@@ -28,7 +28,7 @@ import type {
     RetrieveRecordsOptions,
     RetrieveRecordsSummary,
     UpsertRecordsOptions
-} from '@datapos/datapos-shared/component/connector';
+} from '@dpuse/dpuse-shared/component/connector';
 
 // Data
 import config from '~/config.json';

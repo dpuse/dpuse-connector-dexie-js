@@ -1,11 +1,8 @@
-# Data Positioning Dexie.js Connector
-
-<span><!-- OWASP_BADGES_START -->
-[![OWASP](https://img.shields.io/badge/OWASP-passed-4CAF50)](https://data-positioning.github.io/datapos-connector-file-store-emulator/dependency-check-reports/dependency-check-report.html)
-
-<!-- OWASP_BADGES_END --></span>
+# DPUse Dexie.js Connector
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+<span><!-- OWASP_BADGES_START -->
+<!-- OWASP_BADGES_END --></span>
 
 A TypeScript library that implements the Dexie.js connector.
 
@@ -32,6 +29,9 @@ The following list details the repository management commands implementation by 
 ## Compliance
 
 The following badge reflects FOSSA's assessment of this repository's open-source license compliance.
+
+<!-- DEPENDENCY_LICENSES_START -->
+<!-- DEPENDENCY_LICENSES_END -->
 
 ## License
 
