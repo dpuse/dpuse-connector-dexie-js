@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.272",
+    "version": "0.2.273",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
     "private": false,
@@ -8,10 +8,10 @@
     "homepage": "https://www.dpuse.app",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/data-positioning/dpuse-connector-dexie-js.git"
+        "url": "git+https://github.com/dpuse/dpuse-connector-dexie-js.git"
     },
     "bugs": {
-        "url": "https://github.com/data-positioning/dpuse-connector-dexie-js/issues"
+        "url": "https://github.com/dpuse/dpuse-connector-dexie-js/issues"
     },
     "module": "./dist/dpuse-connector-dexie-js.es.js",
     "types": "./dist/types/src/index.d.ts",
@@ -35,7 +35,7 @@
         "@types/node": "^25.5.0",
         "@typescript-eslint/eslint-plugin": "^8.57.2",
         "@typescript-eslint/parser": "^8.57.2",
-        "eslint": "^9.39.1",
+        "eslint": "^9.39.4",
         "eslint-import-resolver-typescript": "^4.4.4",
         "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-security": "^4.0.0",
@@ -46,7 +46,6 @@
         "license-report": "^6.8.2",
         "license-report-check": "^0.1.2",
         "license-report-recursive": "^6.8.3",
-        "nanoid": "^5.1.7",
         "npm-check-updates": "^19.6.5",
         "owasp-dependency-check": "^1.0.1",
         "prettier": "^3.8.1",

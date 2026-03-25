@@ -5,11 +5,11 @@
         "dataSource": [
 {
                 "name": "NVD API Last Checked",
-                "timestamp": "2026-03-24T14:01:44+01"
+                "timestamp": "2026-03-25T16:57:47+01"
             }
 ,{
                 "name": "NVD API Last Modified",
-                "timestamp": "2026-03-24T12:33:33Z"
+                "timestamp": "2026-03-25T15:47:08Z"
             }
         ]
 
@@ -17,7 +17,7 @@
     },
     "projectInfo": {
         "name": "@dpuse\/dpuse-connector-dexie-js",
-        "reportDate": "2026-03-24T16:43:33.798070Z",
+        "reportDate": "2026-03-25T15:57:51.313309Z",
         "credits": {
             "NVD": "This product uses the NVD API but is not endorsed or certified by the NVD. This report contains data retrieved from the National Vulnerability Database: https://nvd.nist.gov",
             "CISA": "This report may contain data retrieved from the CISA Known Exploited Vulnerability Catalog: https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
@@ -30,9 +30,9 @@
 {
             "isVirtual": true,
             "fileName": "@dpuse\/dpuse-shared:0.3.595",
-            "filePath": "\/Users\/jonathanterrell\/DPUse\/GitHub\/connectors\/dpuse-connector-dexie-js\/package-lock.json?dpuse-connector-dexie-js:0.2.268\/@dpuse\/dpuse-shared:0.3.595"
+            "filePath": "\/Users\/jonathanterrell\/DPUse\/GitHub\/connectors\/dpuse-connector-dexie-js\/package-lock.json?dpuse-connector-dexie-js:0.2.270\/@dpuse\/dpuse-shared:0.3.595"
 ,"description": "Common constants, types and utilities used across all DPUse projects.","license": "MIT"            ,"projectReferences": [
-                "@dpuse\/dpuse-connector-dexie-js:0.2.268"
+                "@dpuse\/dpuse-connector-dexie-js:0.2.270"
             ]
             ,"evidenceCollected": {
                 "vendorEvidence": [
@@ -106,9 +106,9 @@
         },{
             "isVirtual": true,
             "fileName": "dexie:4.3.0",
-            "filePath": "\/Users\/jonathanterrell\/DPUse\/GitHub\/connectors\/dpuse-connector-dexie-js\/package-lock.json?dpuse-connector-dexie-js:0.2.268\/dexie:4.3.0"
+            "filePath": "\/Users\/jonathanterrell\/DPUse\/GitHub\/connectors\/dpuse-connector-dexie-js\/package-lock.json?dpuse-connector-dexie-js:0.2.270\/dexie:4.3.0"
 ,"description": "A Minimalistic Wrapper for IndexedDB","license": "Apache-2.0"            ,"projectReferences": [
-                "@dpuse\/dpuse-connector-dexie-js:0.2.268"
+                "@dpuse\/dpuse-connector-dexie-js:0.2.270"
             ]
             ,"evidenceCollected": {
                 "vendorEvidence": [
