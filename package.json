@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.274",
+    "version": "0.2.275",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
     "private": false,
@@ -27,10 +27,10 @@
     "prettier": "@dpuse/dpuse-development/prettierrc",
     "dependencies": {
         "@dpuse/dpuse-shared": "^0.3.595",
-        "dexie": "^4.3.0"
+        "dexie": "^4.4.1"
     },
     "devDependencies": {
-        "@dpuse/dpuse-development": "^0.3.486",
+        "@dpuse/dpuse-development": "^0.3.487",
         "@dpuse/eslint-config-dpuse": "^1.0.55",
         "@types/node": "^25.5.0",
         "@typescript-eslint/eslint-plugin": "^8.57.2",
@@ -46,15 +46,15 @@
         "license-report": "^6.8.2",
         "license-report-check": "^0.1.2",
         "license-report-recursive": "^6.8.3",
-        "npm-check-updates": "^19.6.5",
+        "npm-check-updates": "^19.6.6",
         "owasp-dependency-check": "^1.0.1",
         "prettier": "^3.8.1",
         "rollup-plugin-visualizer": "^7.0.1",
         "sonda": "^0.11.1",
         "typescript": "^5.9.3",
-        "vite": "^8.0.2",
+        "vite": "^8.0.3",
         "vite-plugin-dts": "^4.5.4",
-        "vitest": "^4.1.1"
+        "vitest": "^4.1.2"
     },
     "scripts": {
         "audit": "op run --env-file=.env -- node -e \"import('@dpuse/dpuse-development').then(m => m.auditDependencies())\"",

@@ -35,7 +35,7 @@ The following badge reflects FOSSA's assessment of this repository's open-source
 |Name|Type|Installed|Latest|Latest Released|Deps|Document|
 |:-|:-|:-:|:-:|:-|-:|:-|
 |@dpuse/dpuse-shared|MIT|0.3.595|0.3.595|this month: 2026-03-23|0|[LICENSE](https://raw.githubusercontent.com/dpuse/dpuse-shared/main/LICENSE)|
-|dexie|Apache-2.0|4.3.0 ⚠️|4.4.0|this month: 2026-03-18|0|[LICENSE](https://raw.githubusercontent.com/dexie/Dexie.js/master/LICENSE)|
+|dexie|Apache-2.0|4.4.1|4.4.1|this month: 2026-03-26|0|[LICENSE](https://raw.githubusercontent.com/dexie/Dexie.js/master/LICENSE)|
 
 <!-- DEPENDENCY_LICENSES_END -->
 
