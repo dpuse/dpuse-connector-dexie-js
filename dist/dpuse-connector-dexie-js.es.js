@@ -3751,8 +3751,8 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 	vendorAccountURL: "https://dexie.org/cloud/",
 	vendorDocumentationURL: "https://dexie.org/docs/",
 	vendorHomeURL: "https://dexie.org/",
-	version: "0.2.270"
-}, w = "0.2.270", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
+	version: "0.2.274"
+}, w = "0.2.274", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
 	abortController;
 	config;
 	engineUtilities;
