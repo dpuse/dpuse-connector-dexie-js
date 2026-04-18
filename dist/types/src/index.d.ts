@@ -2,7 +2,7 @@ import { Dexie } from 'dexie';
 import { EngineUtilities } from '@dpuse/dpuse-shared/engine';
 import { PreviewConfig } from '@dpuse/dpuse-shared/component/dataView';
 import { ToolConfig } from '@dpuse/dpuse-shared/component/tool';
-import { ConnectorConfig, ConnectorInterface, CreateObjectOptions, DropObjectOptions, FindObjectOptions, FindObjectResult, GetRecordOptions, GetRecordResult, ListNodesOptions, ListNodesResult, PreviewObjectOptions, RemoveRecordsOptions, RetrievalTypeId, RetrieveRecordsOptions, RetrieveRecordsSummary, UpsertRecordsOptions } from '@dpuse/dpuse-shared/component/connector';
+import { ConnectorConfig, ConnectorInterface, CreateObjectOptions, DropObjectOptions, FindObjectOptions, FindObjectResult, GetRecordOptions, GetRecordResult, ListNodesOptions, ListNodesResult, PreviewObjectOptions, RemoveRecordsOptions, RetrievalTypeId, RetrieveRecordsOptions, RetrieveRecordsSummary, UpsertRecordsOptions } from '@dpuse/dpuse-shared/component/module/connector';
 interface ExtendedConnectorInterface extends ConnectorInterface {
     containers: Record<string, Dexie>;
 }

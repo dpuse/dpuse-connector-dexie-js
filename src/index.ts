@@ -28,7 +28,7 @@ import type {
     RetrieveRecordsOptions,
     RetrieveRecordsSummary,
     UpsertRecordsOptions
-} from '@dpuse/dpuse-shared/component/connector';
+} from '@dpuse/dpuse-shared/component/module/connector';
 
 // Data
 import config from '~/config.json';

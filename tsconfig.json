@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "baseUrl": "./",
         "declaration": true,
         "esModuleInterop": true,
         "exactOptionalPropertyTypes": true,
@@ -19,8 +18,8 @@
         "noUnusedParameters": false,
         "outDir": "dist",
         "paths": {
-            "~/*": ["*"],
-            "@/*": ["src/*"]
+            "~/*": ["./*"],
+            "@/*": ["./src/*"]
         },
         "resolveJsonModule": true,
         "skipLibCheck": true,

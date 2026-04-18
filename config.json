@@ -4,10 +4,12 @@
         "en": "Dexie.js"
     },
     "description": {
-        "en": "The Dexie.js..."
+        "en": "Dexie.js is a compact, well tested wrapper for IndexedDB — the standard database in every browser.",
+        "es": "Dexie.js es un envoltorio compacto y bien probado para IndexedDB, la base de datos estándar en todos los navegadores."
     },
     "category": null,
     "categoryId": "database",
+    "firstCreatedAt": 0,
     "implementations": {
         "default": {
             "authMethodId": "none",
@@ -33,8 +35,8 @@
     "statusId": "alpha",
     "typeId": "connector",
     "usageId": "bidirectional",
-    "vendorAccountURL": "https://dexie.org/cloud/",
-    "vendorDocumentationURL": "https://dexie.org/docs/",
-    "vendorHomeURL": "https://dexie.org/",
-    "version": "0.2.278"
+    "vendorAccountURL": "https://manager.dexie.cloud/auth/signin",
+    "vendorDocumentationURL": "https://dexie.org/docs",
+    "vendorHomeURL": "https://dexie.org",
+    "version": "0.2.281"
 }

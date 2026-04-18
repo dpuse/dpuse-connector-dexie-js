@@ -3642,7 +3642,7 @@ var e = Object.create, t = Object.defineProperty, n = Object.getOwnPropertyDescr
 				};
 			},
 			ignoreTransaction: function(e) {
-				return N.trans ? st(N.transless, e) : e();
+				return N.trans ? st(N.transless || M, e) : e();
 			},
 			vip: Sn,
 			async: function(e) {
@@ -3704,8 +3704,8 @@ var e = Object.create, t = Object.defineProperty, n = Object.getOwnPropertyDescr
 			errnames: me,
 			dependencies: ir,
 			cache: Mn,
-			semVer: "4.4.1",
-			version: "4.4.1".split(".").map(function(e) {
+			semVer: "4.4.2",
+			version: "4.4.2".split(".").map(function(e) {
 				return parseInt(e);
 			}).reduce(function(e, t, n) {
 				return e + t / 10 ** (2 * n);
@@ -3771,9 +3771,13 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 }, ee = {
 	id: "dpuse-connector-dexie-js",
 	label: { en: "Dexie.js" },
-	description: { en: "The Dexie.js..." },
+	description: {
+		en: "Dexie.js is a compact, well tested wrapper for IndexedDB — the standard database in every browser.",
+		es: "Dexie.js es un envoltorio compacto y bien probado para IndexedDB, la base de datos estándar en todos los navegadores."
+	},
 	category: null,
 	categoryId: "database",
+	firstCreatedAt: 0,
 	implementations: { default: {
 		authMethodId: "none",
 		maxConnectionCount: null
@@ -3797,11 +3801,11 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 	statusId: "alpha",
 	typeId: "connector",
 	usageId: "bidirectional",
-	vendorAccountURL: "https://dexie.org/cloud/",
-	vendorDocumentationURL: "https://dexie.org/docs/",
-	vendorHomeURL: "https://dexie.org/",
-	version: "0.2.278"
-}, w = "0.2.278", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
+	vendorAccountURL: "https://manager.dexie.cloud/auth/signin",
+	vendorDocumentationURL: "https://dexie.org/docs",
+	vendorHomeURL: "https://dexie.org",
+	version: "0.2.281"
+}, w = "0.2.281", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
 	abortController;
 	config;
 	engineUtilities;
