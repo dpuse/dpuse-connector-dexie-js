@@ -9,7 +9,7 @@
     },
     "category": null,
     "categoryId": "database",
-    "firstCreatedAt": 0,
+    "firstCreatedAt": null,
     "implementations": {
         "default": {
             "authMethodId": "none",
@@ -38,5 +38,5 @@
     "vendorAccountURL": "https://manager.dexie.cloud/auth/signin",
     "vendorDocumentationURL": "https://dexie.org/docs",
     "vendorHomeURL": "https://dexie.org",
-    "version": "0.2.281"
+    "version": "0.2.283"
 }

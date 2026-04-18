@@ -3777,7 +3777,7 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 	},
 	category: null,
 	categoryId: "database",
-	firstCreatedAt: 0,
+	firstCreatedAt: null,
 	implementations: { default: {
 		authMethodId: "none",
 		maxConnectionCount: null
@@ -3804,8 +3804,8 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 	vendorAccountURL: "https://manager.dexie.cloud/auth/signin",
 	vendorDocumentationURL: "https://dexie.org/docs",
 	vendorHomeURL: "https://dexie.org",
-	version: "0.2.281"
-}, w = "0.2.281", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
+	version: "0.2.283"
+}, w = "0.2.283", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
 	abortController;
 	config;
 	engineUtilities;

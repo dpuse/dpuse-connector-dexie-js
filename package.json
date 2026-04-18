@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.281",
+    "version": "0.2.283",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
     "private": false,
@@ -26,11 +26,11 @@
     ],
     "prettier": "@dpuse/dpuse-development/prettierrc",
     "dependencies": {
-        "@dpuse/dpuse-shared": "^0.3.621",
+        "@dpuse/dpuse-shared": "^0.3.622",
         "dexie": "^4.4.2"
     },
     "devDependencies": {
-        "@dpuse/dpuse-development": "^0.3.489",
+        "@dpuse/dpuse-development": "^0.3.491",
         "@dpuse/eslint-config-dpuse": "^1.0.55",
         "@types/node": "^25.6.0",
         "@typescript-eslint/eslint-plugin": "^8.58.2",
