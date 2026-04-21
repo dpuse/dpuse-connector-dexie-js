@@ -1,5 +1,5 @@
 //#region \0rolldown/runtime.js
-var e = Object.create, t = Object.defineProperty, n = Object.getOwnPropertyDescriptor, r = Object.getOwnPropertyNames, i = Object.getPrototypeOf, a = Object.prototype.hasOwnProperty, o = (e, t) => () => (t || e((t = { exports: {} }).exports, t), t.exports), s = (e, i, o, s) => {
+var e = Object.create, t = Object.defineProperty, n = Object.getOwnPropertyDescriptor, r = Object.getOwnPropertyNames, i = Object.getPrototypeOf, a = Object.prototype.hasOwnProperty, o = (e, t) => () => (t || (e((t = { exports: {} }).exports, t), e = null), t.exports), s = (e, i, o, s) => {
 	if (i && typeof i == "object" || typeof i == "function") for (var c = r(i), l = 0, u = c.length, d; l < u; l++) d = c[l], !a.call(e, d) && d !== o && t(e, d, {
 		get: ((e) => i[e]).bind(null, d),
 		enumerable: !(s = n(i, d)) || s.enumerable
@@ -3804,8 +3804,8 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 	vendorAccountURL: "https://manager.dexie.cloud/auth/signin",
 	vendorDocumentationURL: "https://dexie.org/docs",
 	vendorHomeURL: "https://dexie.org",
-	version: "0.2.283"
-}, w = "0.2.283", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
+	version: "0.2.284"
+}, w = "0.2.284", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
 	abortController;
 	config;
 	engineUtilities;

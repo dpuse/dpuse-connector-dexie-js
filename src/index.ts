@@ -6,12 +6,12 @@
 import { Dexie } from 'dexie';
 
 // DPUse framework
+import type { ConnectionNodeConfig } from '@dpuse/dpuse-shared/component/connection';
 import { ConnectorError } from '@dpuse/dpuse-shared/errors';
 import type { EngineUtilities } from '@dpuse/dpuse-shared/engine';
 import type { PreviewConfig } from '@dpuse/dpuse-shared/component/dataView';
-import type { ToolConfig } from '@dpuse/dpuse-shared/component/tool';
+import type { ToolConfig } from '@dpuse/dpuse-shared/component/module/tool';
 import type {
-    ConnectionNodeConfig,
     ConnectorConfig,
     ConnectorInterface,
     CreateObjectOptions,
