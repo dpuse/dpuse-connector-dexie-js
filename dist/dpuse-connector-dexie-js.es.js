@@ -3783,7 +3783,7 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 		maxConnectionCount: null
 	} },
 	icon: "<svg viewBox=\"0 0 57.000000 57.000000\" preserveAspectRatio=\"xMidYMid meet\"><g transform=\"matrix(0.1, 0, 0, -0.1, 2, 57)\" fill=\"#444444\" stroke=\"none\"><path d=\"M97 506 c-66 -18 -87 -40 -87 -92 0 -34 5 -47 25 -63 26 -19 104 -41 150 -41 23 0 25 4 25 43 l0 43 -70 11 c-127 20 -127 56 -1 76 45 7 71 16 71 24 0 16 -49 16 -113 -1z\"/><path d=\"M10 299 c0 -24 4 -49 8 -56 12 -19 75 -42 136 -49 l56 -7 0 47 c0 41 -2 46 -23 46 -39 0 -140 30 -159 47 -17 15 -18 14 -18 -28z\"/><path d=\"M10 179 c0 -24 4 -49 8 -56 12 -19 75 -42 136 -49 l56 -7 0 47 c0 41 -2 46 -23 46 -39 0 -140 30 -159 47 -17 15 -18 14 -18 -28z\"/></g><text style=\"fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 46px; font-weight: 700; white-space: pre;\" x=\"18.259\" y=\"50.296\" transform=\"matrix(1, 0, 0.003541, 1, 4.878334, 0)\">D</text></svg>",
-	iconDark: "",
+	iconDark: "<svg viewBox=\"0 0 57.000000 57.000000\" preserveAspectRatio=\"xMidYMid meet\"><g transform=\"matrix(0.1, 0, 0, -0.1, 2, 57)\" fill=\"#ffffff\" stroke=\"none\"><path d=\"M97 506 c-66 -18 -87 -40 -87 -92 0 -34 5 -47 25 -63 26 -19 104 -41 150 -41 23 0 25 4 25 43 l0 43 -70 11 c-127 20 -127 56 -1 76 45 7 71 16 71 24 0 16 -49 16 -113 -1z\"/><path d=\"M10 299 c0 -24 4 -49 8 -56 12 -19 75 -42 136 -49 l56 -7 0 47 c0 41 -2 46 -23 46 -39 0 -140 30 -159 47 -17 15 -18 14 -18 -28z\"/><path d=\"M10 179 c0 -24 4 -49 8 -56 12 -19 75 -42 136 -49 l56 -7 0 47 c0 41 -2 46 -23 46 -39 0 -140 30 -159 47 -17 15 -18 14 -18 -28z\"/></g><text style=\"fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 46px; font-weight: 700; white-space: pre;\" x=\"18.259\" y=\"50.296\" transform=\"matrix(1, 0, 0.003541, 1, 4.878334, 0)\">D</text></svg>",
 	lastUpdatedAt: null,
 	operations: [
 		"abortOperation",
@@ -3804,8 +3804,8 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 	vendorAccountURL: "https://manager.dexie.cloud/auth/signin",
 	vendorDocumentationURL: "https://dexie.org/docs",
 	vendorHomeURL: "https://dexie.org",
-	version: "0.2.287"
-}, w = "0.2.287", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
+	version: "0.2.288"
+}, w = "0.2.288", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
 	abortController;
 	config;
 	engineUtilities;
