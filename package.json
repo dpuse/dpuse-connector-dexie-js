@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.291",
+    "version": "0.2.292",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
     "private": false,
