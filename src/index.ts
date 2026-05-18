@@ -145,7 +145,7 @@ export class Connector implements ExtendedConnectorInterface {
         const folderPathSegments = settings.folderPath.split('/');
         switch (folderPathSegments.length) {
             case 1: {
-                if (folderPathSegments[0] != null) throw new Error(`${ERROR_INVALID_FOLDER_PATH} '${settings.folderPath}'.`); // Invalid folder path if characters ahead of first separator.
+                if (folderPathSegments[0] != '') throw new Error(`${ERROR_INVALID_FOLDER_PATH} '${settings.folderPath}'.`); // Invalid folder path if characters ahead of first separator.
                 // Return list of database nodes for Dexie instance.
                 const databaseNames = await Dexie.getDatabaseNames();
                 const connectionNodeConfigs = databaseNames.map(
@@ -235,7 +235,6 @@ export class Connector implements ExtendedConnectorInterface {
         } finally {
             this.abortController = undefined;
         }
-        // chunk(records);
     }
 
     // Helpers ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
