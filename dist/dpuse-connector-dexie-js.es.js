@@ -3805,8 +3805,8 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 	vendorAccountURL: "https://manager.dexie.cloud/auth/signin",
 	vendorDocumentationURL: "https://dexie.org/docs",
 	vendorHomeURL: "https://dexie.org",
-	version: "0.2.297"
-}, w = "0.2.297", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
+	version: "0.2.298"
+}, w = "0.2.298", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
 	abortController;
 	config;
 	engineUtilities;
@@ -3855,12 +3855,10 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 	}
 	async listNodes(e) {
 		let t = e.folderPath.split("/");
-		switch (console.log(888, t), t.length) {
+		switch (t.length) {
 			case 1: {
 				if (t[0] != "") throw Error(`${T} '${e.folderPath}'.`);
-				let n = await u.getDatabaseNames();
-				console.log(999, n);
-				let r = n.map((t) => ({
+				let n = (await u.getDatabaseNames()).map((t) => ({
 					folderPath: e.folderPath,
 					id: t,
 					label: t,
@@ -3870,8 +3868,8 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 				return {
 					cursor: void 0,
 					isMore: !1,
-					connectionNodeConfigs: r,
-					totalCount: r.length
+					connectionNodeConfigs: n,
+					totalCount: n.length
 				};
 			}
 			case 2: {
