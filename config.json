@@ -39,5 +39,5 @@
     "vendorAccountURL": "https://manager.dexie.cloud/auth/signin",
     "vendorDocumentationURL": "https://dexie.org/docs",
     "vendorHomeURL": "https://dexie.org",
-    "version": "0.2.296"
+    "version": "0.2.297"
 }
