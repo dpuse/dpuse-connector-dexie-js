@@ -3805,8 +3805,8 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 	vendorAccountURL: "https://manager.dexie.cloud/auth/signin",
 	vendorDocumentationURL: "https://dexie.org/docs",
 	vendorHomeURL: "https://dexie.org",
-	version: "0.2.295"
-}, w = "0.2.295", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
+	version: "0.2.296"
+}, w = "0.2.296", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
 	abortController;
 	config;
 	engineUtilities;
@@ -3873,7 +3873,7 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 				};
 			}
 			case 2: {
-				if (t[0] != null) throw Error(`${T} '${e.folderPath}'.`);
+				if (t[0] != "") throw Error(`${T} '${e.folderPath}'.`);
 				let n = t[1];
 				if (n == null) throw Error(`${T} '${e.folderPath}'.`);
 				let r = (await this.establishContainer(n)).tables.map((t) => ({
