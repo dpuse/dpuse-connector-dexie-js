@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.298",
+    "version": "0.2.299",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
     "private": false,
@@ -54,7 +54,8 @@
         "typescript": "^5.9.3",
         "vite": "^8.0.9",
         "vite-plugin-dts": "^4.5.4",
-        "vitest": "^4.1.5"
+        "vitest": "^4.1.5",
+        "wrangler": "^4.103.0"
     },
     "scripts": {
         "audit": "op run --env-file=.env -- node -e \"import('@dpuse/dpuse-development').then(m => m.auditDependencies())\"",

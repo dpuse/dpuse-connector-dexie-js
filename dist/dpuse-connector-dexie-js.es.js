@@ -3772,7 +3772,7 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 	id: "dpuse-connector-dexie-js",
 	label: { en: "Dexie.js" },
 	description: {
-		en: "Dexie.js is a compact, well tested wrapper for IndexedDB — the standard database in every browser.",
+		en: "Provides access to local Dexie.js (IndexedDB) databases in the user's browser. It is intended for local-first, offline-capable data storage and supports read/write operations. Each database may optionally be synced with Dexie Cloud, in which case access is governed by that database's own authentication and realm permissions; unsynced databases require no authentication and are scoped to the local device only.",
 		es: "Dexie.js es un envoltorio compacto y bien probado para IndexedDB, la base de datos estándar en todos los navegadores."
 	},
 	category: null,
@@ -3805,8 +3805,8 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 	vendorAccountURL: "https://manager.dexie.cloud/auth/signin",
 	vendorDocumentationURL: "https://dexie.org/docs",
 	vendorHomeURL: "https://dexie.org",
-	version: "0.2.298"
-}, w = "0.2.298", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
+	version: "0.2.299"
+}, w = "0.2.299", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
 	abortController;
 	config;
 	engineUtilities;
