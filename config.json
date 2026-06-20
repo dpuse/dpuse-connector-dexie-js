@@ -4,8 +4,7 @@
         "en": "Dexie.js"
     },
     "description": {
-        "en": "Provides access to local Dexie.js (IndexedDB) databases in the user's browser. It is intended for local-first, offline-capable data storage and supports read/write operations. Each database may optionally be synced with Dexie Cloud, in which case access is governed by that database's own authentication and realm permissions; unsynced databases require no authentication and are scoped to the local device only.",
-        "es": "Dexie.js es un envoltorio compacto y bien probado para IndexedDB, la base de datos estándar en todos los navegadores."
+        "en": "Provides access to local Dexie.js (IndexedDB) databases in the browser. It is intended for local-first, offline-capable data storage and supports read/write operations. Each database may optionally be synced with Dexie Cloud, in which case access is governed by that database's own authentication and realm permissions; unsynced databases require no authentication and are scoped to the local device only."
     },
     "category": null,
     "categoryId": "database",
@@ -39,5 +38,5 @@
     "vendorAccountURL": "https://manager.dexie.cloud/auth/signin",
     "vendorDocumentationURL": "https://dexie.org/docs",
     "vendorHomeURL": "https://dexie.org",
-    "version": "0.2.299"
+    "version": "0.2.300"
 }
