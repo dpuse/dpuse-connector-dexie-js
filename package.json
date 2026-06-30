@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.302",
+    "version": "0.2.303",
     "private": false,
     "description": "",
     "license": "MIT",
@@ -41,8 +41,8 @@
     "scripts": {
         "audit": "node -e \"import('@dpuse/dpuse-development').then(m => m.auditDependencies())\"",
         "build": "node -e \"import('@dpuse/dpuse-development').then(m => m.buildProject())\" && node -e \"import('@dpuse/dpuse-development').then(m => m.documentBundleSizes())\"",
-        "check": "node -e \"import('@dpuse/dpuse-development').then(m => m.checkDependencies())\"",
-        "document": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentDependencies(['Apache-2.0;MIT']))\"",
+        "check": "node -e \"import('@dpuse/dpuse-development').then(m => m.checkConfigFiles())\" && node -e \"import('@dpuse/dpuse-development').then(m => m.checkDependencies())\"",
+        "document": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentDependencies('Apache-2.0;MIT'))\"",
         "format": "node -e \"import('@dpuse/dpuse-development').then(m => m.formatCode())\"",
         "lint": "node -e \"import('@dpuse/dpuse-development').then(m => m.lintCode())\"",
         "release": "op run --env-file=.env -- node -e \"import('@dpuse/dpuse-development').then(m => m.releaseProject())\"",
