@@ -30,5 +30,5 @@
         "tsBuildInfoFile": "./node_modules/.cache/tsconfig.tsbuildinfo",
         "useDefineForClassFields": true
     },
-    "include": ["src/**/*.ts", "tests/**/*.ts", "vite.config.*", "vitest.config.*"]
+    "include": ["eslint.config.*", "src/**/*.ts", "tests/**/*.ts", "vite.config.*", "vitest.config.*"]
 }

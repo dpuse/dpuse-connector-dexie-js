@@ -8,12 +8,12 @@ import { Dexie } from 'dexie';
 // DPUse framework
 import type { ConnectionNodeConfig } from '@dpuse/dpuse-shared/component/connection';
 import { ConnectorError } from '@dpuse/dpuse-shared/errors';
-import type { EngineUtilities } from '@dpuse/dpuse-shared/engine';
 import type { PreviewConfig } from '@dpuse/dpuse-shared/component/dataView';
 import type { ToolConfig } from '@dpuse/dpuse-shared/component/module/tool';
 import type {
     ConnectorConfig,
     ConnectorInterface,
+    ConnectorUtilities,
     CreateObjectOptions,
     DropObjectOptions,
     FindObjectOptions,
@@ -23,8 +23,8 @@ import type {
     ListNodesOptions,
     ListNodesResult,
     PreviewObjectOptions,
+    RecordRetrievalTypeId,
     RemoveRecordsOptions,
-    RetrievalTypeId,
     RetrieveRecordsOptions,
     RetrieveRecordsSummary,
     UpsertRecordsOptions
@@ -49,15 +49,15 @@ const ERROR_INVALID_OBJECT_PATH = 'Encountered invalid object path';
 export class Connector implements ExtendedConnectorInterface {
     abortController: AbortController | undefined;
     readonly config: ConnectorConfig;
-    engineUtilities: EngineUtilities;
+    connectorUtilities: ConnectorUtilities;
     readonly toolConfigs;
     containers: Record<string, Dexie>;
 
-    constructor(engineUtilities: EngineUtilities, toolConfigs: ToolConfig[]) {
+    constructor(connectorUtilities: ConnectorUtilities, toolConfigs: ToolConfig[]) {
         this.abortController = undefined;
         this.config = config as ConnectorConfig;
         this.config.version = version;
-        this.engineUtilities = engineUtilities;
+        this.connectorUtilities = connectorUtilities;
         this.toolConfigs = toolConfigs;
         this.containers = {};
     }
@@ -125,7 +125,7 @@ export class Connector implements ExtendedConnectorInterface {
 
     // Find object
     async findObject(options: FindObjectOptions): Promise<FindObjectResult> {
-        if (options.storeId == null) throw new Error(`${ERROR_INVALID_CONTAINER_ID} '${options.storeId}'.`);
+        if (options.storeId == null) throw new Error(`${ERROR_INVALID_CONTAINER_ID} '${String(options.storeId)}'.`);
         const container = await this.establishContainer(options.storeId);
         const table = container.tables.find((table) => table.name === options.nodeId);
         return table ? { path: `/${options.storeId}/${options.nodeId}` } : { path: undefined };
@@ -221,7 +221,7 @@ export class Connector implements ExtendedConnectorInterface {
     // Retrieve records
     async retrieveRecords(
         options: RetrieveRecordsOptions,
-        chunk: (typeId: RetrievalTypeId, records: Record<string, unknown>[]) => void,
+        chunk: (typeId: RecordRetrievalTypeId, records: Record<string, unknown>[]) => void,
         complete: (result: RetrieveRecordsSummary) => void
     ): Promise<void> {
         try {

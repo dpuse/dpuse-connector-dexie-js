@@ -92,8 +92,19 @@ var e = Object.create, t = Object.defineProperty, n = Object.getOwnPropertyDescr
 				v(typeof n != "string" && "length" in n);
 				for (var r = 0, i = t.length; r < i; ++r) x(e, t[r], n[r]);
 			} else {
-				var o, s, c = t.indexOf(".");
-				c === -1 ? n === void 0 ? a(e) && !isNaN(parseInt(t)) ? e.splice(t, 1) : delete e[t] : e[t] = n : (o = t.substr(0, c), (c = t.substr(c + 1)) === "" ? n === void 0 ? a(e) && !isNaN(parseInt(o)) ? e.splice(o, 1) : delete e[o] : e[o] = n : x(s = (s = e[o]) && l(e, o) ? s : e[o] = {}, c, n));
+				var o = t.indexOf(".");
+				if (o !== -1) {
+					var s = t.substr(0, o), o = t.substr(o + 1);
+					if (o === "") n === void 0 ? a(e) && !isNaN(parseInt(s)) ? e.splice(s, 1) : delete e[s] : e[s] = n;
+					else {
+						var c = e[s];
+						if (!c || !l(e, s)) {
+							if (n === void 0) return;
+							c = e[s] = {};
+						}
+						x(c, o, n);
+					}
+				} else n === void 0 ? a(e) && !isNaN(parseInt(t)) ? e.splice(t, 1) : delete e[t] : e[t] = n;
 			}
 		}
 		function S(e) {
@@ -1278,7 +1289,7 @@ var e = Object.create, t = Object.defineProperty, n = Object.getOwnPropertyDescr
 				return H(a(e, i), a(t, i)) * o;
 			}
 			return this.toArray(function(e) {
-				return e.sort(s);
+				return e.slice().sort(s);
 			}).then(t);
 		}, W.prototype.toArray = function(e) {
 			var t = this;
@@ -3185,7 +3196,7 @@ var e = Object.create, t = Object.defineProperty, n = Object.getOwnPropertyDescr
 									if (u && (u.res = n), t) {
 										for (var r = 0, i = n.length; r < i; ++r) Object.freeze(n[r]);
 										Object.freeze(n);
-									} else e.result = E(n);
+									}
 									return e;
 								}).catch(function(e) {
 									return c && u && oe(c, u), Promise.reject(e);
@@ -3205,7 +3216,7 @@ var e = Object.create, t = Object.defineProperty, n = Object.getOwnPropertyDescr
 									optimisticOps: [],
 									unsignaledParts: {}
 								}).queries.query[e.query.index.name || ""] = c)), tr(u, c, a, o), u.promise.then(function(n) {
-									return { result: Qn(n.result, e, s?.optimisticOps, i, u, t) };
+									return n = Qn(n.result, e, s?.optimisticOps, i, u, t), { result: t ? n : E(n) };
 								})) : i.query(e);
 							}
 						});
@@ -3584,7 +3595,7 @@ var e = Object.create, t = Object.defineProperty, n = Object.getOwnPropertyDescr
 						requery: d,
 						querier: e,
 						trans: null
-					}), u ||= (Y(Wt, p), !0), Promise.resolve(h).then(function(e) {
+					}), u ||= (Y.storagemutated.subscribe(p), !0), Promise.resolve(h).then(function(e) {
 						n = !0, t = e, o || m.signal.aborted || (f() || (c = l, f()) ? d() : (s = {}, lt(function() {
 							return !o && r.next && r.next(e);
 						})));
@@ -3704,8 +3715,8 @@ var e = Object.create, t = Object.defineProperty, n = Object.getOwnPropertyDescr
 			errnames: me,
 			dependencies: ir,
 			cache: Mn,
-			semVer: "4.4.2",
-			version: "4.4.2".split(".").map(function(e) {
+			semVer: "4.4.4",
+			version: "4.4.4".split(".").map(function(e) {
 				return parseInt(e);
 			}).reduce(function(e, t, n) {
 				return e + t / 10 ** (2 * n);
@@ -3771,7 +3782,19 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 }, ee = {
 	id: "dpuse-connector-dexie-js",
 	label: { en: "Dexie.js" },
-	description: { en: "Provides access to local Dexie.js (IndexedDB) databases in the browser. It is intended for local-first, offline-capable data storage and supports read/write operations. Each database may optionally be synced with Dexie Cloud, in which case access is governed by that database's own authentication and realm permissions; unsynced databases require no authentication and are scoped to the local device only." },
+	description: { en: ["Provides access to local Dexie.js (IndexedDB) databases in the browser. It is intended for local-first, offline-capable data storage and supports read/write operations. Each database may optionally be synced with Dexie Cloud, in which case access is governed by that database's own authentication and realm permissions; unsynced databases require no authentication and are scoped to the local device only."] },
+	actionNames: [
+		"abortOperation",
+		"createObject",
+		"dropObject",
+		"findObject",
+		"getRecord",
+		"listNodes",
+		"previewObject",
+		"upsertRecords",
+		"removeRecords",
+		"retrieveRecords"
+	],
 	category: null,
 	categoryId: "database",
 	firstCreatedAt: null,
@@ -3783,6 +3806,13 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 	iconDark: "<svg viewBox=\"0 0 52 52\" fill=\"none\"><path d=\"M2 29.668C2 29.0378 2.73382 28.6798 3.2512 29.0302C7.27034 31.7516 12.121 32.3835 16.9587 32.3835C18.2911 32.3835 19.3816 33.4786 19.3816 34.8275V40.4163C19.3816 41.7826 18.3083 42.8888 16.9587 42.8888C14.8782 42.8888 6.8721 42.8088 3.05343 38.9426C2.39504 38.1427 2 37.3695 2 36.063V29.668Z\" fill=\"white\"></path><path d=\"M16.827 9C17.0823 9 17.624 9.00193 18.1545 9.00569C18.838 9.01054 19.3816 9.57177 19.3816 10.2638V11.0829C19.3816 11.8071 18.7882 12.3956 18.0728 12.3907C17.6399 12.3877 17.2274 12.3862 17.0377 12.3862C9.76903 12.3862 5.3973 14.5193 5.3973 15.2658C5.3973 16.0124 9.74269 18.1454 17.0377 18.1454C18.3194 18.1454 19.3816 19.2001 19.3816 20.4977V26.365C19.3816 27.7175 18.3209 28.8107 16.985 28.8107C10.6118 28.8107 5.05494 27.0242 3.00076 24.9445C2.63206 24.5712 2 23.8993 2 23.3447V15.2392C2 13.986 2.79007 12.5757 4.52823 11.5597C8.13622 9.45069 13.8247 9 16.827 9Z\" fill=\"white\"></path><path d=\"M34.0334 43H22.8857V9.69409H34.2583C37.5244 9.69409 40.3301 10.3609 42.6753 11.6944C45.0312 13.0171 46.841 14.9198 48.1046 17.4026C49.3682 19.8854 50 22.856 50 26.3145C50 29.7839 49.3628 32.7654 48.0885 35.259C46.8249 37.7526 44.9991 39.6662 42.611 40.9997C40.2337 42.3332 37.3745 43 34.0334 43ZM28.8451 37.7797H33.7443C36.0359 37.7797 37.9474 37.3569 39.4788 36.5112C41.0101 35.6547 42.1613 34.3808 42.9323 32.6895C43.7033 30.9873 44.0888 28.8623 44.0888 26.3145C44.0888 23.7667 43.7033 21.6526 42.9323 19.9721C42.1613 18.2808 41.0208 17.0177 39.5109 16.1829C38.0117 15.3372 36.1484 14.9144 33.921 14.9144H28.8451V37.7797Z\" fill=\"white\"></path></svg>",
 	iconNeutral: "<svg viewBox=\"0 0 52 52\" fill=\"none\"><path d=\"M2 29.668C2 29.0378 2.73382 28.6798 3.2512 29.0302C7.27034 31.7516 12.121 32.3835 16.9587 32.3835C18.2911 32.3835 19.3816 33.4786 19.3816 34.8275V40.4163C19.3816 41.7826 18.3083 42.8888 16.9587 42.8888C14.8782 42.8888 6.8721 42.8088 3.05343 38.9426C2.39504 38.1427 2 37.3695 2 36.063V29.668Z\" fill=\"currentColor\"></path><path d=\"M16.827 9C17.0823 9 17.624 9.00193 18.1545 9.00569C18.838 9.01054 19.3816 9.57177 19.3816 10.2638V11.0829C19.3816 11.8071 18.7882 12.3956 18.0728 12.3907C17.6399 12.3877 17.2274 12.3862 17.0377 12.3862C9.76903 12.3862 5.3973 14.5193 5.3973 15.2658C5.3973 16.0124 9.74269 18.1454 17.0377 18.1454C18.3194 18.1454 19.3816 19.2001 19.3816 20.4977V26.365C19.3816 27.7175 18.3209 28.8107 16.985 28.8107C10.6118 28.8107 5.05494 27.0242 3.00076 24.9445C2.63206 24.5712 2 23.8993 2 23.3447V15.2392C2 13.986 2.79007 12.5757 4.52823 11.5597C8.13622 9.45069 13.8247 9 16.827 9Z\" fill=\"currentColor\"></path><path d=\"M34.0334 43H22.8857V9.69409H34.2583C37.5244 9.69409 40.3301 10.3609 42.6753 11.6944C45.0312 13.0171 46.841 14.9198 48.1046 17.4026C49.3682 19.8854 50 22.856 50 26.3145C50 29.7839 49.3628 32.7654 48.0885 35.259C46.8249 37.7526 44.9991 39.6662 42.611 40.9997C40.2337 42.3332 37.3745 43 34.0334 43ZM28.8451 37.7797H33.7443C36.0359 37.7797 37.9474 37.3569 39.4788 36.5112C41.0101 35.6547 42.1613 34.3808 42.9323 32.6895C43.7033 30.9873 44.0888 28.8623 44.0888 26.3145C44.0888 23.7667 43.7033 21.6526 42.9323 19.9721C42.1613 18.2808 41.0208 17.0177 39.5109 16.1829C38.0117 15.3372 36.1484 14.9144 33.921 14.9144H28.8451V37.7797Z\" fill=\"currentColor\"></path></svg>",
 	lastUpdatedAt: null,
+	status: null,
+	statusId: "alpha",
+	typeId: "connector",
+	vendorAccountURL: "https://manager.dexie.cloud/auth/signin",
+	vendorDocumentationURL: "https://dexie.org/docs",
+	vendorHomeURL: "https://dexie.org",
+	version: "0.2.301",
 	operations: [
 		"abortOperation",
 		"createObject",
@@ -3795,22 +3825,15 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 		"removeRecords",
 		"retrieveRecords"
 	],
-	status: null,
-	statusId: "alpha",
-	typeId: "connector",
-	usageId: "bidirectional",
-	vendorAccountURL: "https://manager.dexie.cloud/auth/signin",
-	vendorDocumentationURL: "https://dexie.org/docs",
-	vendorHomeURL: "https://dexie.org",
-	version: "0.2.300"
-}, w = "0.2.300", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
+	usageId: "bidirectional"
+}, w = "0.2.301", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
 	abortController;
 	config;
-	engineUtilities;
+	connectorUtilities;
 	toolConfigs;
 	containers;
 	constructor(e, t) {
-		this.abortController = void 0, this.config = ee, this.config.version = w, this.engineUtilities = e, this.toolConfigs = t, this.containers = {};
+		this.abortController = void 0, this.config = ee, this.config.version = w, this.connectorUtilities = e, this.toolConfigs = t, this.containers = {};
 	}
 	abortOperation() {
 		this.abortController &&= (this.abortController.abort(), void 0);
@@ -3842,7 +3865,7 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 		i.version(r.verno).stores(a), i.version(r.verno + 1).stores({ [n]: null }), this.containers[t] = await i.open();
 	}
 	async findObject(e) {
-		if (e.storeId == null) throw Error(`${te} '${e.storeId}'.`);
+		if (e.storeId == null) throw Error(`${te} '${String(e.storeId)}'.`);
 		return (await this.establishContainer(e.storeId)).tables.find((t) => t.name === e.nodeId) ? { path: `/${e.storeId}/${e.nodeId}` } : { path: void 0 };
 	}
 	async getRecord(e) {

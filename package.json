@@ -1,17 +1,19 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.300",
+    "version": "0.2.301",
+    "private": false,
+    "description": "",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
-    "private": false,
     "type": "module",
+    "sideEffects": false,
     "homepage": "https://www.dpuse.app",
+    "bugs": {
+        "url": "https://github.com/dpuse/dpuse-connector-dexie-js/issues"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/dpuse/dpuse-connector-dexie-js.git"
-    },
-    "bugs": {
-        "url": "https://github.com/dpuse/dpuse-connector-dexie-js/issues"
     },
     "module": "./dist/dpuse-connector-dexie-js.es.js",
     "types": "./dist/types/src/index.d.ts",
@@ -24,49 +26,57 @@
     "files": [
         "dist"
     ],
-    "prettier": "@dpuse/dpuse-development/prettierrc",
-    "dependencies": {
-        "@dpuse/dpuse-shared": "^0.3.642",
-        "dexie": "^4.4.2"
+    "engines": {
+        "node": ">=22",
+        "npm": ">=11"
     },
-    "devDependencies": {
-        "@dpuse/dpuse-development": "^0.3.496",
-        "@dpuse/eslint-config-dpuse": "^1.0.55",
-        "@types/node": "^25.6.0",
-        "@typescript-eslint/eslint-plugin": "^8.59.0",
-        "@typescript-eslint/parser": "^8.59.0",
-        "eslint": "^9.39.4",
-        "eslint-import-resolver-typescript": "^4.4.4",
-        "eslint-plugin-import": "^2.32.0",
-        "eslint-plugin-security": "^4.0.0",
-        "eslint-plugin-sonarjs": "^4.0.3",
-        "eslint-plugin-unicorn": "^63.0.0",
-        "jiti": "^2.6.1",
-        "license-downloader": "^1.3.3",
-        "license-report": "^6.8.2",
-        "license-report-check": "^1.0.0",
-        "license-report-recursive": "^6.8.4",
-        "npm-check-updates": "^21.0.3",
-        "owasp-dependency-check": "^1.0.1",
-        "prettier": "^3.8.3",
-        "rollup-plugin-visualizer": "^7.0.1",
-        "sonda": "^0.11.1",
-        "typescript": "^5.9.3",
-        "vite": "^8.0.9",
-        "vite-plugin-dts": "^4.5.4",
-        "vitest": "^4.1.5",
-        "wrangler": "^4.103.0"
+    "prettier": "@dpuse/dpuse-development/prettierrc",
+    "allowScripts": {
+        "esbuild@0.28.1": true,
+        "fsevents@2.3.3": true,
+        "sharp@0.34.5": true,
+        "unrs-resolver@1.11.1": true,
+        "workerd@1.20260625.1": true
     },
     "scripts": {
-        "audit": "op run --env-file=.env -- node -e \"import('@dpuse/dpuse-development').then(m => m.auditDependencies())\"",
-        "build": "node -e \"import('@dpuse/dpuse-development').then(m => m.buildProject())\"",
+        "audit": "node -e \"import('@dpuse/dpuse-development').then(m => m.auditDependencies())\"",
+        "build": "node -e \"import('@dpuse/dpuse-development').then(m => m.buildProject())\" && node -e \"import('@dpuse/dpuse-development').then(m => m.documentBundleSizes())\"",
         "check": "node -e \"import('@dpuse/dpuse-development').then(m => m.checkDependencies())\"",
-        "document": "op run --env-file=.env -- node -e \"import('@dpuse/dpuse-development').then(m => m.documentDependencies(['Apache-2.0','MIT']))\"",
+        "document": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentDependencies(['Apache-2.0','MIT']))\"",
         "format": "node -e \"import('@dpuse/dpuse-development').then(m => m.formatCode())\"",
         "lint": "node -e \"import('@dpuse/dpuse-development').then(m => m.lintCode())\"",
         "release": "op run --env-file=.env -- node -e \"import('@dpuse/dpuse-development').then(m => m.releaseProject())\"",
         "sync": "node -e \"import('@dpuse/dpuse-development').then(m => m.syncProjectWithGitHub())\"",
-        "test": "node -e \"import('@dpuse/dpuse-development').then(m => m.testProject())\"",
-        "update": "node -e \"import('@dpuse/dpuse-development').then(m => m.updateDPUseDependencies(['development', 'eslint', 'shared']))\""
+        "test": "node -e \"import('@dpuse/dpuse-development').then(m => m.testProject())\""
+    },
+    "dependencies": {
+        "@dpuse/dpuse-shared": "^0.3.719",
+        "dexie": "^4.4.4"
+    },
+    "devDependencies": {
+        "@dpuse/dpuse-development": "^0.3.600",
+        "@eslint-community/eslint-plugin-eslint-comments": "^4.7.2",
+        "@types/eslint-plugin-security": "^3.0.1",
+        "@types/node": "^26.0.1",
+        "eslint": "^9.39.4",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-import-resolver-typescript": "^4.4.5",
+        "eslint-plugin-import-x": "^4.17.1",
+        "eslint-plugin-regexp": "^3.1.1",
+        "eslint-plugin-security": "^4.0.1",
+        "eslint-plugin-sonarjs": "^4.1.0",
+        "eslint-plugin-unicorn": "^63.0.0",
+        "jiti": "^2.7.0",
+        "license-checker-rseidelsohn": "^5.0.1",
+        "npm-check-updates": "^22.2.9",
+        "prettier": "^3.9.4",
+        "rollup-plugin-visualizer": "^7.0.1",
+        "sonda": "^0.13.1",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.62.1",
+        "vite": "^8.1.0",
+        "vite-plugin-dts": "^5.0.3",
+        "vitest": "^4.1.9",
+        "wrangler": "^4.105.0"
     }
 }
