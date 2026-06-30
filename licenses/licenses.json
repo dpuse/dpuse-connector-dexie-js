@@ -1,0 +1,19 @@
+{
+    "@dpuse/dpuse-shared@0.3.719": {
+        "licenses": "MIT",
+        "repository": "https://github.com/dpuse/dpuse-shared",
+        "publisher": "Jonathan Terrell",
+        "email": "terrell.jm@gmail.com",
+        "path": "node_modules/@dpuse/dpuse-shared",
+        "licenseFile": "downloads/@dpuse/dpuse-shared@0.3.719-LICENSE.txt"
+    },
+    "dexie@4.4.4": {
+        "licenses": "Apache-2.0",
+        "repository": "https://github.com/dexie/Dexie.js",
+        "publisher": "David Fahlander",
+        "email": "https://github.com/dfahlander",
+        "path": "node_modules/dexie",
+        "licenseFile": "downloads/dexie@4.4.4-LICENSE.txt",
+        "noticeFile": "node_modules/dexie/NOTICE"
+    }
+}

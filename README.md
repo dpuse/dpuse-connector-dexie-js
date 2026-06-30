@@ -1,9 +1,8 @@
 # DPUse Dexie.js Connector
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-<span><!-- OWASP_BADGES_START -->
-[![OWASP](https://img.shields.io/badge/OWASP-passed-4CAF50)](https://dpuse.github.io/dpuse-connector-dexie-js/dependency-check-reports/dependency-check-report.html)
-<!-- OWASP_BADGES_END --></span>
+
+## Introduction
 
 A TypeScript library that implements the Dexie.js connector.
 
@@ -33,27 +32,34 @@ The following badge reflects FOSSA's assessment of this repository's open-source
 
 <!-- DEPENDENCY_LICENSES_START -->
 
-| Name                | Type       | Installed | Latest  | Latest Released        | Deps | Document                                                                     |
-| :------------------ | :--------- | :-------: | :-----: | :--------------------- | ---: | :--------------------------------------------------------------------------- |
-| @dpuse/dpuse-shared | MIT        |  0.3.595  | 0.3.595 | this month: 2026-03-23 |    0 | [LICENSE](https://raw.githubusercontent.com/dpuse/dpuse-shared/main/LICENSE) |
-| dexie               | Apache-2.0 |   4.4.1   |  4.4.1  | this month: 2026-03-26 |    0 | [LICENSE](https://raw.githubusercontent.com/dexie/Dexie.js/master/LICENSE)   |
+| Dependency                                                   | Version | License(s) | Document                                                              |
+| :----------------------------------------------------------- | :-----: | :--------- | :-------------------------------------------------------------------- |
+| [@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared) | 0.3.719 | MIT        | [LICENSE](licenses/downloads/@dpuse/dpuse-shared@0.3.719-LICENSE.txt) |
+| [dexie](https://github.com/dexie/Dexie.js)                   |  4.4.4  | Apache-2.0 | [LICENSE](licenses/downloads/dexie@4.4.4-LICENSE.txt)                 |
 
 <!-- DEPENDENCY_LICENSES_END -->
 
+<!-- DEPENDENCY_TREE_START -->
+
+- **[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)** 0.3.719 — this month: 2026-06-29
+- **[dexie](https://github.com/dexie/Dexie.js)** 4.4.4 — this month: 2026-06-16
+
+<!-- DEPENDENCY_TREE_END -->
+
 <!-- BUNDLE_START -->
 
-|Chunk/Module/File|Composition|
-|:------ |:-----------|
-| dpuse-connector-dexie-js.es.js | 139.6 kB · gz 37.9 kB · br 32.7 kB |
-| &nbsp;&nbsp;&nbsp;&nbsp;dexie | `██████████████████░░` 89.4% |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist/dexie.min.js | `██████████████████░░` 89.0% |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;import-wrapper-prod.mjs | `░░░░░░░░░░░░░░░░░░░░` 0.4% |
-| &nbsp;&nbsp;&nbsp;&nbsp;src | `██░░░░░░░░░░░░░░░░░░` 9.3% |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index.ts | `█░░░░░░░░░░░░░░░░░░░` 4.9% |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;config.json | `█░░░░░░░░░░░░░░░░░░░` 4.4% |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;package.json | `░░░░░░░░░░░░░░░░░░░░` 0.0% |
-| &nbsp;&nbsp;&nbsp;&nbsp;(runtime) → rolldown/runtime.js | `░░░░░░░░░░░░░░░░░░░░` 0.8% |
-| &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared-errors.es.js | `░░░░░░░░░░░░░░░░░░░░` 0.5% |
+| Chunk/Module/File                                                            | Composition                        |
+| :--------------------------------------------------------------------------- | :--------------------------------- |
+| dpuse-connector-dexie-js.es.js                                               | 139.6 kB · gz 37.9 kB · br 32.7 kB |
+| &nbsp;&nbsp;&nbsp;&nbsp;dexie                                                | `██████████████████░░` 89.4%       |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist/dexie.min.js            | `██████████████████░░` 89.0%       |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;import-wrapper-prod.mjs      | `░░░░░░░░░░░░░░░░░░░░` 0.4%        |
+| &nbsp;&nbsp;&nbsp;&nbsp;src                                                  | `██░░░░░░░░░░░░░░░░░░` 9.3%        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index.ts                     | `█░░░░░░░░░░░░░░░░░░░` 4.9%        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;config.json                  | `█░░░░░░░░░░░░░░░░░░░` 4.4%        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;package.json                 | `░░░░░░░░░░░░░░░░░░░░` 0.0%        |
+| &nbsp;&nbsp;&nbsp;&nbsp;(runtime) → rolldown/runtime.js                      | `░░░░░░░░░░░░░░░░░░░░` 0.8%        |
+| &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared-errors.es.js | `░░░░░░░░░░░░░░░░░░░░` 0.5%        |
 
 <!-- BUNDLE_END -->
 
