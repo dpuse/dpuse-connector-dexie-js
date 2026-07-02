@@ -8,7 +8,7 @@ import { fileURLToPath, URL } from 'node:url';
 // ── Data
 import config from './config.json';
 
-// ──  Vite Configuration ──────────────────────────────────────────────────────────────────────────────────────────────
+// ── Vite Configuration ───────────────────────────────────────────────────────────────────────────────────────────────
 
 export default defineConfig({
     build: {

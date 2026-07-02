@@ -2,7 +2,7 @@
 import { defineConfig } from 'vitest/config';
 import path from 'node:path';
 
-// ──  Vitest Configuration ──────────────────────────────────────────────────────────────────────────────────────────────
+// ── Vitest Configuration ─────────────────────────────────────────────────────────────────────────────────────────────
 
 export default defineConfig({
     resolve: {

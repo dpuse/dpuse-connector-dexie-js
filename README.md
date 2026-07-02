@@ -31,19 +31,16 @@ The following list details the repository management commands implementation by 
 The following badge reflects FOSSA's assessment of this repository's open-source license compliance.
 
 <!-- DEPENDENCY_LICENSES_START -->
-
-| Dependency                                                   | Version | License(s) | Document                                                              |
-| :----------------------------------------------------------- | :-----: | :--------- | :-------------------------------------------------------------------- |
-| [@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared) | 0.3.719 | MIT        | [LICENSE](licenses/downloads/@dpuse/dpuse-shared@0.3.719-LICENSE.txt) |
-| [dexie](https://github.com/dexie/Dexie.js)                   |  4.4.4  | Apache-2.0 | [LICENSE](licenses/downloads/dexie@4.4.4-LICENSE.txt)                 |
+|Dependency|Version|License(s)|Document|
+|:-|:-:|:-|:-|
+|[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)|0.3.727|MIT|[LICENSE](licenses/downloads/@dpuse/dpuse-shared@0.3.727-LICENSE.txt)|
+|[dexie](https://github.com/dexie/Dexie.js)|4.4.4|Apache-2.0|[LICENSE](licenses/downloads/dexie@4.4.4-LICENSE.txt)|
 
 <!-- DEPENDENCY_LICENSES_END -->
 
 <!-- DEPENDENCY_TREE_START -->
-
-- **[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)** 0.3.719 — this month: 2026-06-29
+- **[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)** 0.3.727 — this month: 2026-07-01
 - **[dexie](https://github.com/dexie/Dexie.js)** 4.4.4 — this month: 2026-06-16
-
 <!-- DEPENDENCY_TREE_END -->
 
 <!-- BUNDLE_START -->
