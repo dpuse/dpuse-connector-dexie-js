@@ -1,0 +1,144 @@
+{
+  "metadata": {
+    "version": "0.13.1",
+    "generatedAt": "2026-07-03T09:34:05.335Z",
+    "integration": "vite",
+    "sources": false,
+    "gzip": false,
+    "brotli": true
+  },
+  "resources": [
+    {
+      "kind": "sourcemap",
+      "name": "[unassigned]",
+      "type": "other",
+      "format": "other",
+      "uncompressed": 0,
+      "parent": null
+    },
+    {
+      "kind": "chunk",
+      "name": "[unassigned]",
+      "type": "other",
+      "format": "other",
+      "uncompressed": 24828,
+      "gzip": 0,
+      "brotli": 1850,
+      "parent": "dist/dpuse-connector-dexie-js.es.js"
+    },
+    {
+      "kind": "filesystem",
+      "name": "config.json",
+      "type": "script",
+      "format": "esm",
+      "uncompressed": 6785
+    },
+    {
+      "kind": "asset",
+      "name": "dist/dpuse-connector-dexie-js.es.js",
+      "type": "script",
+      "uncompressed": 143155,
+      "gzip": 0,
+      "brotli": 33471
+    },
+    {
+      "kind": "filesystem",
+      "name": "node_modules/@dpuse/dpuse-shared/dist/dpuse-shared-errors.es.js",
+      "type": "script",
+      "format": "esm",
+      "uncompressed": 3598
+    },
+    {
+      "kind": "chunk",
+      "name": "node_modules/@dpuse/dpuse-shared/dist/dpuse-shared-errors.es.js",
+      "type": "script",
+      "format": "esm",
+      "uncompressed": 253,
+      "gzip": 0,
+      "brotli": 139,
+      "parent": "dist/dpuse-connector-dexie-js.es.js"
+    },
+    {
+      "kind": "filesystem",
+      "name": "node_modules/dexie/dist/dexie.min.js",
+      "type": "script",
+      "format": "cjs",
+      "uncompressed": 96136
+    },
+    {
+      "kind": "chunk",
+      "name": "node_modules/dexie/dist/dexie.min.js",
+      "type": "script",
+      "format": "cjs",
+      "uncompressed": 112716,
+      "gzip": 0,
+      "brotli": 29871,
+      "parent": "dist/dpuse-connector-dexie-js.es.js"
+    },
+    {
+      "kind": "filesystem",
+      "name": "node_modules/dexie/import-wrapper-prod.mjs",
+      "type": "script",
+      "format": "esm",
+      "uncompressed": 851
+    },
+    {
+      "kind": "chunk",
+      "name": "node_modules/dexie/import-wrapper-prod.mjs",
+      "type": "script",
+      "format": "esm",
+      "uncompressed": 387,
+      "gzip": 0,
+      "brotli": 244,
+      "parent": "dist/dpuse-connector-dexie-js.es.js"
+    },
+    {
+      "kind": "filesystem",
+      "name": "package.json",
+      "type": "script",
+      "format": "esm",
+      "uncompressed": 2733
+    },
+    {
+      "kind": "filesystem",
+      "name": "src/index.ts",
+      "type": "script",
+      "format": "esm",
+      "uncompressed": 7849
+    },
+    {
+      "kind": "chunk",
+      "name": "src/index.ts",
+      "type": "script",
+      "format": "esm",
+      "uncompressed": 4971,
+      "gzip": 0,
+      "brotli": 1367,
+      "parent": "dist/dpuse-connector-dexie-js.es.js"
+    }
+  ],
+  "connections": [
+    {
+      "kind": "entrypoint",
+      "source": "dist/dpuse-connector-dexie-js.es.js",
+      "target": "src/index.ts",
+      "original": null
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "@dpuse/dpuse-shared",
+      "paths": [
+        "node_modules/@dpuse/dpuse-shared"
+      ]
+    },
+    {
+      "name": "dexie",
+      "paths": [
+        "node_modules/dexie"
+      ]
+    }
+  ],
+  "issues": [],
+  "sourcemaps": []
+}

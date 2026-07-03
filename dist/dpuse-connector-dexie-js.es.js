@@ -3812,7 +3812,7 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 	vendorAccountURL: "https://manager.dexie.cloud/auth/signin",
 	vendorDocumentationURL: "https://dexie.org/docs",
 	vendorHomeURL: "https://dexie.org/",
-	version: "0.2.303",
+	version: "0.2.306",
 	operations: [
 		"abortOperation",
 		"createObject",
@@ -3826,7 +3826,7 @@ var { liveQuery: d, mergeRanges: f, rangesOverlap: p, RangeSet: m, cmp: h, Entit
 		"retrieveRecords"
 	],
 	usageId: "bidirectional"
-}, w = "0.2.303", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
+}, w = "0.2.306", te = "Encountered invalid container identifier", T = "Encountered invalid folder path", E = "Encountered invalid object path", ne = class {
 	abortController;
 	config;
 	connectorUtilities;
