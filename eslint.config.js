@@ -5,7 +5,8 @@ import { dpuseESLintConfig } from '@dpuse/eslint-config-dpuse';
 
 /** @type {import('eslint').Linter.Config[]} */
 const config = dpuseESLintConfig({
-    ignores: ['rust/**']
+    ignores: ['rust/**'],
+    rules: {}
 });
 
 export default config;

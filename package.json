@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.311",
+    "version": "0.2.312",
     "private": false,
     "description": "",
     "license": "MIT",
@@ -54,8 +54,8 @@
         "dexie": "^4.4.4"
     },
     "devDependencies": {
-        "@dpuse/dpuse-development": "^0.3.647",
-        "@dpuse/eslint-config-dpuse": "^1.0.98",
+        "@dpuse/dpuse-development": "^0.3.652",
+        "@dpuse/eslint-config-dpuse": "^1.0.101",
         "@types/node": "^26.1.0",
         "eslint": "^10.6.0",
         "prettier": "^3.9.4",

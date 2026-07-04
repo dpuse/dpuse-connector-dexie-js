@@ -1,4 +1,5 @@
 # Common git ignore configuration for UNPUBLISHED DPUse projects.
+.dev.vars
 .env
 .npmrc
 .wrangler
