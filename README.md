@@ -1,4 +1,4 @@
-# DPUse Dropbox Connector
+# DPUse Dexie.js Connector
 
 <!-- OPENING_START -->
 
@@ -28,22 +28,22 @@ Connectors conform to a unified interface contract by implementing a specific su
 
 This connector is a Bidirectional connector that supports both read and write actions. Connectors can also function as a Source (read-only) or Destination (write-only), depending on the actions they support. The table below lists all connector actions and highlights those supported by this connector.
 
-|Action|Supported|
-|:----|:-------:|
-| Abort Operation | ✓ |
-| Audit Object Content |  |
-| Create Object | ✓ |
-| Describe Connection |  |
-| Drop Object | ✓ |
-| Find Object | ✓ |
-| Get Readable Stream |  |
-| Get Record | ✓ |
-| List Nodes | ✓ |
-| Preview Object | ✓ |
-| Remove Records | ✓ |
-| Retrieve Chunks |  |
-| Retrieve Records | ✓ |
-| Upsert Records | ✓ |
+| Action               | Supported |
+| :------------------- | :-------: |
+| Abort Operation      |     ✓     |
+| Audit Object Content |           |
+| Create Object        |     ✓     |
+| Describe Connection  |           |
+| Drop Object          |     ✓     |
+| Find Object          |     ✓     |
+| Get Readable Stream  |           |
+| Get Record           |     ✓     |
+| List Nodes           |     ✓     |
+| Preview Object       |     ✓     |
+| Remove Records       |     ✓     |
+| Retrieve Chunks      |           |
+| Retrieve Records     |     ✓     |
+| Upsert Records       |     ✓     |
 
 <!-- CONNECTOR_ACTIONS_END -->
 
@@ -71,10 +71,10 @@ _Requires [Node.js](https://nodejs.org/) 22 or later, [npm](https://www.npmjs.co
 
 License data is collected automatically on each release using [license-checker](https://github.com/RSeidelsohn/license-checker-rseidelsohn). The following table lists all production dependencies. These dependencies (including transitive ones) have been checked and confirmed to use Apache-2.0 or MIT — all permissive, commercially-friendly licenses. Users of the uploaded library are covered by these checks; developers cloning this repository should independently verify development dependencies.
 
-|Dependency|Version|License(s)|Document|
-|:-|:-:|:-|:-|
-|[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)|0.3.737|MIT|[LICENSE](licenses/downloads/@dpuse/dpuse-shared@0.3.737-LICENSE.txt)|
-|[dexie](https://github.com/dexie/Dexie.js)|4.4.4|Apache-2.0|[LICENSE](licenses/downloads/dexie@4.4.4-LICENSE.txt)|
+| Dependency                                                   | Version | License(s) | Document                                                              |
+| :----------------------------------------------------------- | :-----: | :--------- | :-------------------------------------------------------------------- |
+| [@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared) | 0.3.737 | MIT        | [LICENSE](licenses/downloads/@dpuse/dpuse-shared@0.3.737-LICENSE.txt) |
+| [dexie](https://github.com/dexie/Dexie.js)                   |  4.4.4  | Apache-2.0 | [LICENSE](licenses/downloads/dexie@4.4.4-LICENSE.txt)                 |
 
 <!-- DEPENDENCY_LICENSES_END -->
 
@@ -97,15 +97,15 @@ The Bundle Analysis Report is generated automatically on each release using [Son
 
 _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not generate source maps for CSS._
 
-|Chunk/Module/File|Composition|
-|:------ |:-----------|
-| dist/dpuse-connector-dexie-js.es.js | 139.7 kB · brotli 32.7 kB |
-| &nbsp;&nbsp;&nbsp;&nbsp;dexie | `████████████████░░░░` 79.0% |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist/dexie.min.js | `████████████████░░░░` 78.8% |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;import-wrapper-prod.mjs | `░░░░░░░░░░░░░░░░░░░░` 0.3% |
-| &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned] | `███░░░░░░░░░░░░░░░░░` 17.3% |
-| &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts | `█░░░░░░░░░░░░░░░░░░░` 3.5% |
-| &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared-errors.es.js | `░░░░░░░░░░░░░░░░░░░░` 0.2% |
+| Chunk/Module/File                                                            | Composition                  |
+| :--------------------------------------------------------------------------- | :--------------------------- |
+| dist/dpuse-connector-dexie-js.es.js                                          | 139.7 kB · brotli 32.7 kB    |
+| &nbsp;&nbsp;&nbsp;&nbsp;dexie                                                | `████████████████░░░░` 79.0% |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist/dexie.min.js            | `████████████████░░░░` 78.8% |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;import-wrapper-prod.mjs      | `░░░░░░░░░░░░░░░░░░░░` 0.3%  |
+| &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned]                          | `███░░░░░░░░░░░░░░░░░` 17.3% |
+| &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts                                       | `█░░░░░░░░░░░░░░░░░░░` 3.5%  |
+| &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared-errors.es.js | `░░░░░░░░░░░░░░░░░░░░` 0.2%  |
 
 <!-- BUNDLE_END -->
 
