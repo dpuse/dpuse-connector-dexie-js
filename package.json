@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.323",
+    "version": "0.2.324",
     "private": false,
     "description": "Provides access to local Dexie.js (IndexedDB) databases in the browser.",
     "license": "MIT",
