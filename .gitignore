@@ -1,13 +1,27 @@
-# Common git ignore configuration for UNPUBLISHED DPUse projects.
+# Default '.gitignore' configuration for DPUse projects.
 .dev.vars
-.env
+.env*
+.eslintcache
 .npmrc
 .wrangler
+coverage
 dist
 dist-scripts
 node_modules
+*.tsbuildinfo
+**/.DS_Store
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Rust
 rust/*/pkg
 rust/*/target
 rust/target
-wrangler.jsonc
-**/.DS_Store
+
+# Testing
+__screenshots__/
+test-results/
+playwright-report/
