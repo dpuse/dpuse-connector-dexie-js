@@ -1,11 +1,11 @@
 {
-    "@dpuse/dpuse-shared@0.3.727": {
+    "@dpuse/dpuse-shared@0.3.737": {
         "licenses": "MIT",
         "repository": "https://github.com/dpuse/dpuse-shared",
         "publisher": "Jonathan Terrell",
         "email": "terrell.jm@gmail.com",
         "path": "node_modules/@dpuse/dpuse-shared",
-        "licenseFile": "downloads/@dpuse/dpuse-shared@0.3.727-LICENSE.txt"
+        "licenseFile": "downloads/@dpuse/dpuse-shared@0.3.737-LICENSE.txt"
     },
     "dexie@4.4.4": {
         "licenses": "Apache-2.0",

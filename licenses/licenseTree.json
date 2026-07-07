@@ -1,10 +1,10 @@
 {
-  "version": "0.2.304",
+  "version": "0.2.318",
   "name": "@dpuse/dpuse-connector-dexie-js",
   "dependencies": {
     "@dpuse/dpuse-shared": {
-      "version": "0.3.727",
-      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-shared/-/dpuse-shared-0.3.727.tgz",
+      "version": "0.3.737",
+      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-shared/-/dpuse-shared-0.3.737.tgz",
       "overridden": false
     },
     "dexie": {

@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.318",
+    "version": "0.2.319",
     "private": false,
     "description": "",
     "license": "MIT",
@@ -42,7 +42,12 @@
         "audit": "node -e \"import('@dpuse/dpuse-development').then(m => m.auditDependencies())\"",
         "build": "node -e \"import('@dpuse/dpuse-development').then(m => m.buildProject())\" && node -e \"import('@dpuse/dpuse-development').then(m => m.documentBundleSizes())\"",
         "check": "node -e \"import('@dpuse/dpuse-development').then(m => m.checkConfigFiles())\" && node -e \"import('@dpuse/dpuse-development').then(m => m.checkDependencies())\"",
-        "document": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentDependencies('Apache-2.0;MIT'))\"",
+        "document": "npm run documentOpening && npm run documentActions && npm run documentUsage && npm run documentDependencies && npm run documentGovernance",
+        "documentActions": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentActions())\"",
+        "documentOpening": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentOpening())\"",
+        "documentDependencies": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentDependencies('Apache-2.0;MIT'))\"",
+        "documentGovernance": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentGovernance())\"",
+        "documentUsage": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentUsage())\"",
         "format": "node -e \"import('@dpuse/dpuse-development').then(m => m.formatCode())\"",
         "lint": "node -e \"import('@dpuse/dpuse-development').then(m => m.lintCode())\"",
         "release": "op run --env-file=.env -- node -e \"import('@dpuse/dpuse-development').then(m => m.releaseProject())\"",
@@ -54,7 +59,7 @@
         "dexie": "^4.4.4"
     },
     "devDependencies": {
-        "@dpuse/dpuse-development": "^0.3.676",
+        "@dpuse/dpuse-development": "^0.3.678",
         "@dpuse/eslint-config-dpuse": "^1.0.105",
         "@types/node": "^26.1.0",
         "eslint": "^10.6.0",
