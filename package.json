@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.324",
+    "version": "0.2.325",
     "private": false,
     "description": "Provides access to local Dexie.js (IndexedDB) databases in the browser.",
     "license": "MIT",
@@ -61,8 +61,8 @@
         "dexie": "^4.4.4"
     },
     "devDependencies": {
-        "@dpuse/dpuse-development": "^0.3.681",
-        "@dpuse/eslint-config-dpuse": "^1.0.105",
+        "@dpuse/dpuse-development": "^0.3.682",
+        "@dpuse/eslint-config-dpuse": "^1.0.108",
         "@types/node": "^26.1.0",
         "eslint": "^10.6.0",
         "prettier": "^3.9.4",

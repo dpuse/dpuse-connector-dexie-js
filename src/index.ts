@@ -2,10 +2,10 @@
 // https://dexie.org/docs/Tutorial/Understanding-the-basics
 // https://dexie.org/docs/Dexie/Dexie.open()#dynamic-schema-manipulation
 
-// External dependencies
+// ── External Dependencies & Registrations
 import { Dexie } from 'dexie';
 
-// DPUse framework
+// ── DPUse framework
 import type { ConnectionNodeConfig } from '@dpuse/dpuse-shared/component/connection';
 import { ConnectorError } from '@dpuse/dpuse-shared/errors';
 import type { PreviewConfig } from '@dpuse/dpuse-shared/component/dataView';
@@ -30,22 +30,26 @@ import type {
     UpsertRecordsOptions
 } from '@dpuse/dpuse-shared/component/module/connector';
 
-// Data
+// ── Data
 import config from '~/config.json';
 import { version } from '~/package.json';
+
+// ── Types ────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 // Extend default connector interface with Dexie container map
 interface ExtendedConnectorInterface extends ConnectorInterface {
     containers: Record<string, Dexie>;
 }
 
-// Constants
+// ── Constants ────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 const CALLBACK_RETRIEVE_ABORTED = 'Connector failed to abort retrieve all records operation.';
 const ERROR_INVALID_CONTAINER_ID = 'Encountered invalid container identifier';
 const ERROR_INVALID_FOLDER_PATH = 'Encountered invalid folder path';
 const ERROR_INVALID_OBJECT_PATH = 'Encountered invalid object path';
 
-// Connectors
+// ── Connectors ───────────────────────────────────────────────────────────────────────────────────────────────────────
+
 export class Connector implements ExtendedConnectorInterface {
     abortController: AbortController | undefined;
     readonly config: ConnectorConfig;
@@ -101,7 +105,7 @@ export class Connector implements ExtendedConnectorInterface {
         const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
         const container = await this.establishContainer(containerId);
 
-        if (!container.tables.some((table) => table.name === nodeId)) throw new Error(`Table '${nodeId}' not found.`);
+        if (container.tables.every((table) => table.name !== nodeId)) throw new Error(`Table '${nodeId}' not found.`);
 
         container.close();
         const newContainer = new Dexie(container.name);
@@ -127,8 +131,8 @@ export class Connector implements ExtendedConnectorInterface {
     async findObject(options: FindObjectOptions): Promise<FindObjectResult> {
         if (options.storeId == null) throw new Error(`${ERROR_INVALID_CONTAINER_ID} '${String(options.storeId)}'.`);
         const container = await this.establishContainer(options.storeId);
-        const table = container.tables.find((table) => table.name === options.nodeId);
-        return table ? { path: `/${options.storeId}/${options.nodeId}` } : { path: undefined };
+        const isObjectFound = container.tables.some((table) => table.name === options.nodeId);
+        return isObjectFound ? { path: `/${options.storeId}/${options.nodeId}` } : { path: undefined };
     }
 
     // Get record
@@ -237,15 +241,17 @@ export class Connector implements ExtendedConnectorInterface {
         }
     }
 
-    // Helpers ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // ── Helpers ──────────────────────────────────────────────────────────────────────────────────────────────────────
 
     private async establishContainer(name: string): Promise<Dexie> {
-        if (!this.containers[name]) {
+        let container = this.containers[name];
+        if (!container) {
             const database = new Dexie(name);
             if (!(await Dexie.exists(database.name))) database.version(1).stores({});
-            this.containers[name] = await database.open();
+            container = await database.open();
+            this.containers[name] = container;
         }
-        return this.containers[name];
+        return container;
     }
 
     private establishObjectIdentifiers(path: string): { containerId: string; nodeId: string } {

@@ -97,15 +97,15 @@ The Bundle Analysis Report is generated automatically on each release using [Son
 
 _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not generate source maps for CSS._
 
-| Chunk/Module/File                                                            | Composition                  |
-| :--------------------------------------------------------------------------- | :--------------------------- |
-| dist/dpuse-connector-dexie-js.es.js                                          | 139.7 kB · brotli 32.7 kB    |
-| &nbsp;&nbsp;&nbsp;&nbsp;dexie                                                | `████████████████░░░░` 79.0% |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist/dexie.min.js            | `████████████████░░░░` 78.8% |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;import-wrapper-prod.mjs      | `░░░░░░░░░░░░░░░░░░░░` 0.3%  |
-| &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned]                          | `███░░░░░░░░░░░░░░░░░` 17.3% |
-| &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts                                       | `█░░░░░░░░░░░░░░░░░░░` 3.5%  |
-| &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared-errors.es.js | `░░░░░░░░░░░░░░░░░░░░` 0.2%  |
+|Chunk/Module/File|Composition|
+|:------ |:-----------|
+| dist/dpuse-connector-dexie-js.es.js | 137.9 kB · brotli 32.7 kB |
+| &nbsp;&nbsp;&nbsp;&nbsp;dexie | `████████████████░░░░` 80.1% |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist/dexie.min.js | `████████████████░░░░` 79.8% |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;import-wrapper-prod.mjs | `░░░░░░░░░░░░░░░░░░░░` 0.3% |
+| &nbsp;&nbsp;&nbsp;&nbsp;(unassigned) → [unassigned] | `███░░░░░░░░░░░░░░░░░` 16.2% |
+| &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts | `█░░░░░░░░░░░░░░░░░░░` 3.5% |
+| &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared-errors.es.js | `░░░░░░░░░░░░░░░░░░░░` 0.2% |
 
 <!-- BUNDLE_END -->
 

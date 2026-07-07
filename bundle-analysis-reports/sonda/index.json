@@ -1,7 +1,7 @@
 {
   "metadata": {
     "version": "0.14.0",
-    "generatedAt": "2026-07-07T14:01:30.491Z",
+    "generatedAt": "2026-07-07T17:59:40.145Z",
     "integration": "vite",
     "sources": false,
     "gzip": false,
@@ -21,9 +21,9 @@
       "name": "[unassigned]",
       "type": "other",
       "format": "other",
-      "uncompressed": 24753,
+      "uncompressed": 22901,
       "gzip": 0,
-      "brotli": 1835,
+      "brotli": 1799,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },
     {
@@ -31,15 +31,15 @@
       "name": "config.json",
       "type": "script",
       "format": "esm",
-      "uncompressed": 6710
+      "uncompressed": 4809
     },
     {
       "kind": "asset",
       "name": "dist/dpuse-connector-dexie-js.es.js",
       "type": "script",
-      "uncompressed": 143080,
+      "uncompressed": 141229,
       "gzip": 0,
-      "brotli": 33443
+      "brotli": 33437
     },
     {
       "kind": "filesystem",
@@ -72,7 +72,7 @@
       "format": "cjs",
       "uncompressed": 112716,
       "gzip": 0,
-      "brotli": 29858,
+      "brotli": 29876,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },
     {
@@ -97,23 +97,23 @@
       "name": "package.json",
       "type": "script",
       "format": "esm",
-      "uncompressed": 3292
+      "uncompressed": 3537
     },
     {
       "kind": "filesystem",
       "name": "src/index.ts",
       "type": "script",
       "format": "esm",
-      "uncompressed": 7849
+      "uncompressed": 7908
     },
     {
       "kind": "chunk",
       "name": "src/index.ts",
       "type": "script",
       "format": "esm",
-      "uncompressed": 4971,
+      "uncompressed": 4972,
       "gzip": 0,
-      "brotli": 1367,
+      "brotli": 1379,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     }
   ],
