@@ -1,8 +1,8 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.319",
+    "version": "0.2.320",
     "private": false,
-    "description": "",
+    "description": "Provides access to local Dexie.js (IndexedDB) databases in the browser.",
     "license": "MIT",
     "author": "Jonathan Terrell <terrell.jm@gmail.com>",
     "type": "module",
@@ -40,17 +40,19 @@
     },
     "scripts": {
         "audit": "node -e \"import('@dpuse/dpuse-development').then(m => m.auditDependencies())\"",
-        "build": "node -e \"import('@dpuse/dpuse-development').then(m => m.buildProject())\" && node -e \"import('@dpuse/dpuse-development').then(m => m.documentBundleSizes())\"",
+        "build": "node -e \"import('@dpuse/dpuse-development').then(m => m.buildProject())\" && npm run documentBundleSizes",
         "check": "node -e \"import('@dpuse/dpuse-development').then(m => m.checkConfigFiles())\" && node -e \"import('@dpuse/dpuse-development').then(m => m.checkDependencies())\"",
         "document": "npm run documentOpening && npm run documentActions && npm run documentUsage && npm run documentDependencies && npm run documentGovernance",
         "documentActions": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentActions())\"",
-        "documentOpening": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentOpening())\"",
+        "documentBundleSizes": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentBundleSizes())\"",
         "documentDependencies": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentDependencies('Apache-2.0;MIT'))\"",
         "documentGovernance": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentGovernance())\"",
+        "documentOpening": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentOpening())\"",
         "documentUsage": "node -e \"import('@dpuse/dpuse-development').then(m => m.documentUsage())\"",
         "format": "node -e \"import('@dpuse/dpuse-development').then(m => m.formatCode())\"",
         "lint": "node -e \"import('@dpuse/dpuse-development').then(m => m.lintCode())\"",
-        "release": "op run --env-file=.env -- node -e \"import('@dpuse/dpuse-development').then(m => m.releaseProject())\"",
+        "publish": "node -e \"import('@dpuse/dpuse-development').then(m => m.publishProject())\"",
+        "release": "npm run sync && gh release create \"v$(npm pkg get version | tr -d '\"')\" --target \"$(git rev-parse HEAD)\" --generate-notes --latest",
         "sync": "node -e \"import('@dpuse/dpuse-development').then(m => m.syncProjectWithGitHub())\"",
         "test": "node -e \"import('@dpuse/dpuse-development').then(m => m.testProject())\""
     },
@@ -59,7 +61,7 @@
         "dexie": "^4.4.4"
     },
     "devDependencies": {
-        "@dpuse/dpuse-development": "^0.3.678",
+        "@dpuse/dpuse-development": "^0.3.681",
         "@dpuse/eslint-config-dpuse": "^1.0.105",
         "@types/node": "^26.1.0",
         "eslint": "^10.6.0",
