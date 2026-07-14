@@ -64,7 +64,7 @@
         "@dpuse/dpuse-development": "^0.3.682",
         "@dpuse/eslint-config-dpuse": "^1.0.108",
         "@types/node": "^26.1.0",
-        "eslint": "^10.6.0",
+        "eslint": "^10.7.0",
         "prettier": "^3.9.4",
         "sonda": "^0.14.0",
         "typescript": "^6.0.3",
