@@ -213,6 +213,7 @@ export class Connector implements ExtendedConnectorInterface {
         const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
         const container = await this.establishContainer(containerId);
         const keys = options.keys;
+        console.log('aaa', keys);
         if (keys.length === 0) {
             await container.table(nodeId).clear(); // Remove all records.
         } else if (keys.length === 1 && keys[0] != null) {
