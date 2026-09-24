@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "0.2.333",
+    "version": "0.2.334",
     "private": false,
     "description": "Provides access to local Dexie.js (IndexedDB) databases in the browser.",
     "license": "MIT",
@@ -27,16 +27,27 @@
         "dist"
     ],
     "engines": {
-        "node": ">=23.11",
-        "npm": ">=11"
+        "node": ">=24",
+        "npm": ">=12"
+    },
+    "devEngines": {
+        "runtime": {
+            "name": "node",
+            "version": ">=24",
+            "onFail": "error"
+        },
+        "packageManager": {
+            "name": "npm",
+            "version": ">=12",
+            "onFail": "error"
+        }
     },
     "prettier": "@dpuse/dpuse-development/prettierrc",
     "allowScripts": {
         "esbuild@0.28.1": true,
         "fsevents@2.3.3": true,
-        "sharp@0.34.5": true,
         "unrs-resolver@1.11.1": true,
-        "workerd@1.20260815.1": true
+        "workerd@1.20260921.1": true
     },
     "scripts": {
         "audit": "node -e \"import('@dpuse/dpuse-development').then(m => m.auditDependencies())\"",
@@ -57,20 +68,20 @@
         "test": "node -e \"import('@dpuse/dpuse-development').then(m => m.testProject())\""
     },
     "dependencies": {
-        "@dpuse/dpuse-shared": "^0.3.777",
-        "dexie": "^4.4.5"
+        "@dpuse/dpuse-shared": "^0.3.816",
+        "dexie": "^4.4.6"
     },
     "devDependencies": {
-        "@dpuse/dpuse-development": "^0.3.706",
-        "@dpuse/eslint-config-dpuse": "^1.0.116",
-        "@types/node": "^26.2.0",
-        "eslint": "^10.8.1",
-        "prettier": "^3.9.6",
+        "@dpuse/dpuse-development": "^0.3.722",
+        "@dpuse/eslint-config-dpuse": "^1.0.121",
+        "@types/node": "^26.6.2",
+        "eslint": "^10.11.0",
+        "prettier": "^3.9.9",
         "sonda": "^0.14.0",
         "typescript": "^6.0.3",
-        "vite": "^8.2.2",
-        "vite-plugin-dts": "^5.0.3",
-        "vitest": "^4.1.11",
-        "wrangler": "^4.124.0"
+        "vite": "^8.3.0",
+        "vite-plugin-dts": "^5.1.1",
+        "vitest": "^5.0.1",
+        "wrangler": "^4.138.0"
     }
 }

@@ -2,7 +2,6 @@
 .dev.vars
 .env*
 .eslintcache
-.npmrc
 .wrangler
 coverage
 dist
@@ -25,3 +24,8 @@ rust/target
 __screenshots__/
 test-results/
 playwright-report/
+
+# VitePress
+site/kb/
+site/.vitepress/cache
+site/.vitepress/dist
