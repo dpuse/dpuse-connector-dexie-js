@@ -73,7 +73,7 @@
     },
     "devDependencies": {
         "@dpuse/dpuse-development": "^0.3.722",
-        "@dpuse/eslint-config-dpuse": "^1.0.121",
+        "@dpuse/eslint-config-dpuse": "^1.0.123",
         "@types/node": "^26.6.2",
         "eslint": "^10.11.0",
         "prettier": "^3.9.9",
