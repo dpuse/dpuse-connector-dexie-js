@@ -130,11 +130,11 @@ _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not gen
 
 | Chunk/Module/File                                                       | Composition                  |
 | :---------------------------------------------------------------------- | :--------------------------- |
-| dist/dpuse-connector-dexie-js.es.js                                     | 146.8 kB · gzip 40.2 kB      |
+| dist/dpuse-connector-dexie-js.es.js                                     | 146.8 kB · gzip 40.1 kB      |
 | &nbsp;&nbsp;&nbsp;&nbsp;dexie                                           | `███████████████░░░░░` 75.2% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist/dexie.min.js       | `███████████████░░░░░` 75.0% |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;import-wrapper-prod.mjs | `░░░░░░░░░░░░░░░░░░░░` 0.3%  |
-| &nbsp;&nbsp;&nbsp;&nbsp;(bundler output, whitespace & JSON)             | `███░░░░░░░░░░░░░░░░░` 16.0% |
+| &nbsp;&nbsp;&nbsp;&nbsp;(bundler output, whitespace & JSON)             | `███░░░░░░░░░░░░░░░░░` 16.1% |
 | &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared.es.js   | `█░░░░░░░░░░░░░░░░░░░` 5.4%  |
 | &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts                                  | `█░░░░░░░░░░░░░░░░░░░` 3.3%  |
 

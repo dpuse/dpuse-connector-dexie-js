@@ -1,5 +1,5 @@
 {
-  "version": "0.2.334",
+  "version": "0.2.336",
   "name": "@dpuse/dpuse-connector-dexie-js",
   "dependencies": {
     "@dpuse/dpuse-shared": {

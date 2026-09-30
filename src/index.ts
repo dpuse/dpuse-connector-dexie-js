@@ -6,6 +6,7 @@
 import { Dexie } from 'dexie';
 
 // ── DPUse framework
+import { ConnectorError } from '@dpuse/dpuse-shared';
 import type {
     ConnectionNodeConfig,
     ConnectorConfig,
@@ -28,7 +29,6 @@ import type {
     ToolConfig,
     UpsertRecordsOptions
 } from '@dpuse/dpuse-shared';
-import { ConnectorError } from '@dpuse/dpuse-shared';
 
 // ── Data
 import config from '~/config.json';
@@ -132,7 +132,7 @@ export class Connector implements ExtendedConnectorInterface {
         if (options.storeId == null) throw new Error(`${ERROR_INVALID_CONTAINER_ID} '${String(options.storeId)}'.`);
         const container = await this.establishContainer(options.storeId);
         const isObjectFound = container.tables.some((table) => table.name === options.nodeId);
-        return isObjectFound ? { path: `/${options.storeId}/${options.nodeId}` } : { path: undefined };
+        return { path: isObjectFound ? `/${options.storeId}/${options.nodeId}` : undefined };
     }
 
     // Get record
@@ -257,7 +257,7 @@ export class Connector implements ExtendedConnectorInterface {
     private establishObjectIdentifiers(path: string): { containerId: string; nodeId: string } {
         const pathSegments = path.split('/');
         const [, containerId, nodeId] = pathSegments;
-        if (pathSegments.length !== 3 || containerId === undefined || containerId === '' || nodeId === undefined || nodeId === '') {
+        if (!containerId || !nodeId || pathSegments.length !== 3) {
             throw new Error(`${ERROR_INVALID_OBJECT_PATH} '${path}'.`);
         }
         return { containerId, nodeId };
