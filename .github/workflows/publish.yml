@@ -6,10 +6,11 @@ on:
 
 permissions:
     contents: read
+    id-token: write
 
 jobs:
     publish:
-        name: Publish to Cloudflare
+        name: Publish
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -25,9 +26,18 @@ jobs:
                   node-version: 24
                   package-manager-cache: false
 
-            # Run outside the checkout, as 'devEngines' rejects the bundled npm there too.
+            # Replaces the bundled npm with npm 12, unpacked from a download checked against a pinned hash. Not installed with
+            # 'npm install -g', which OpenSSF Scorecard always counts as unpinned. Runs in the temp folder to keep the download
+            # out of the checkout. When changing the version, update the URL and take the new hash from:
+            #   npm view npm@<version> dist.integrity | base64 -d | xxd -p | tr -d '\n'
             - name: Setup npm
-              run: npm install -g npm@12
+              run: |
+                  curl --proto '=https' -fsSLo npm.tgz https://registry.npmjs.org/npm/-/npm-12.1.0.tgz
+                  echo "17286eeb6a4dc7bd180acff9f9d1262504c556648ac2fa39080d2abc19060d1a686f8d8c27a1b6450dad77178a3389d89c8643aa4600c4482ab687a39fd406b5  npm.tgz" | sha512sum -c -
+                  npm_directory="$(dirname "$(dirname "$(command -v node)")")/lib/node_modules/npm"
+                  rm -rf "$npm_directory" && mkdir "$npm_directory"
+                  tar -xzf npm.tgz -C "$npm_directory" --strip-components=1
+                  npm --version
               working-directory: ${{ runner.temp }}
 
             # The same Node again, now with npm 12, so the npm cache can be used.
@@ -36,15 +46,42 @@ jobs:
               with:
                   node-version: 24
                   cache: npm
+                  registry-url: https://registry.npmjs.org
+
+            # Only in projects with Rust code. Unpacked from a download checked against a pinned hash, as npm is above. Rust
+            # itself needs no step: the runner's 'rustup' installs the version 'rust-toolchain.toml' names on the first build.
+            # When changing the version, update the URL and take the new hash from the release's list of files on GitHub.
+            - name: Setup wasm-pack
+              if: hashFiles('rust/Cargo.toml') != ''
+              run: |
+                  curl --proto '=https' -fsSLo wasm-pack.tgz https://github.com/wasm-bindgen/wasm-pack/releases/download/v0.15.0/wasm-pack-v0.15.0-x86_64-unknown-linux-musl.tar.gz
+                  echo "c09f971ecaed9a2efc80fdcea7a00ef6b53c7fadc8c57d1f61b53a6aa66b668a  wasm-pack.tgz" | sha256sum -c -
+                  tar -xzf wasm-pack.tgz -C "$HOME/.cargo/bin" --strip-components=1 wasm-pack-v0.15.0-x86_64-unknown-linux-musl/wasm-pack
+                  wasm-pack --version
+              working-directory: ${{ runner.temp }}
 
             - name: Install dependencies
-              run: npm ci
+              run: npm ci --ignore-scripts
 
             - name: Build
               run: npm run build
 
+            # Repeats the CI checks: a release is created straight after its push, so this runs alongside CI rather than
+            # after it, and must not publish a commit that fails them.
+            - name: Lint
+              run: npm run lint
+
+            - name: Test
+              run: npm test
+
+            # One step for every project: the action publishes to npm, uploads to DPUse, or both, as the module type requires.
+            # Called directly rather than through a package.json script, as a script named 'publish' would be run again by
+            # 'npm publish' itself. The project's own commands, such as 'wrangler', are put on the path first, which
+            # 'npm run' would otherwise have done.
             - name: Publish
-              run: npm run publish
+              run: |
+                  export PATH="$PWD/node_modules/.bin:$PATH"
+                  node -e "import('@dpuse/dpuse-development').then(m => m.publishProject())"
               env:
                   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                   CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

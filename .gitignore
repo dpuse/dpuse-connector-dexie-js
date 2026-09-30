@@ -2,10 +2,10 @@
 .dev.vars
 .env*
 .eslintcache
+.fallow
 .wrangler
 coverage
 dist
-dist-scripts
 node_modules
 *.tsbuildinfo
 **/.DS_Store

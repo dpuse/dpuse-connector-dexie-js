@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Only the latest released version of this connector is actively maintained and receives security fixes.
+Only the latest released version of this package is actively maintained and receives security fixes.
 
 ## Reporting a Vulnerability
 

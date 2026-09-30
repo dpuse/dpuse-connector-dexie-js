@@ -1,0 +1,12 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "allowImportingTsExtensions": true,
+        "erasableSyntaxOnly": true,
+        "incremental": false,
+        "noEmit": true,
+        "types": ["node"],
+        "verbatimModuleSyntax": true
+    },
+    "include": ["**/*.ts"]
+}

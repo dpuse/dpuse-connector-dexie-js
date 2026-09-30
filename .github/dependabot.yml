@@ -1,11 +1,15 @@
+# Version-update pull requests are switched off (limit 0): dependencies are updated with 'npm run check' instead. The
+# file is kept because OpenSSF Scorecard looks for it when checking that a dependency update tool is used.
 version: 2
 updates:
     - package-ecosystem: npm
       directory: /
       schedule:
           interval: weekly
+      open-pull-requests-limit: 0
 
     - package-ecosystem: github-actions
       directory: /
       schedule:
           interval: weekly
+      open-pull-requests-limit: 0

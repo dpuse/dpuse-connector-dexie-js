@@ -22,5 +22,5 @@
         "target": "ESNext",
         "tsBuildInfoFile": "./node_modules/.cache/tsconfig.tsbuildinfo"
     },
-    "include": ["eslint.config.js", "src/**/*.ts", "tests/**/*.ts", "vite.config.*", "vitest.config.*"]
+    "include": ["eslint.config.js", "eslint.config.*.js", "src/**/*.ts", "tests/**/*.ts", "vite.config.*", "vitest.config.*"]
 }

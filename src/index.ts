@@ -6,11 +6,8 @@
 import { Dexie } from 'dexie';
 
 // ── DPUse framework
-import type { ConnectionNodeConfig } from '@dpuse/dpuse-shared/component/connection';
-import { ConnectorError } from '@dpuse/dpuse-shared/errors';
-import type { PreviewConfig } from '@dpuse/dpuse-shared/component/dataView';
-import type { ToolConfig } from '@dpuse/dpuse-shared/component/module/tool';
 import type {
+    ConnectionNodeConfig,
     ConnectorConfig,
     ConnectorInterface,
     ConnectorUtilities,
@@ -22,13 +19,16 @@ import type {
     GetRecordResult,
     ListNodesOptions,
     ListNodesResult,
+    PreviewConfig,
     PreviewObjectOptions,
     RecordRetrievalTypeId,
     RemoveRecordsOptions,
     RetrieveRecordsOptions,
     RetrieveRecordsSummary,
+    ToolConfig,
     UpsertRecordsOptions
-} from '@dpuse/dpuse-shared/component/module/connector';
+} from '@dpuse/dpuse-shared';
+import { ConnectorError } from '@dpuse/dpuse-shared';
 
 // ── Data
 import config from '~/config.json';
