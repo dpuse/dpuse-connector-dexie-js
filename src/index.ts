@@ -5,7 +5,7 @@
 // ── External Dependencies & Registrations
 import { Dexie } from 'dexie';
 
-// ── DPUse framework
+// ── DPUse Framework
 import { ConnectorError } from '@dpuse/dpuse-shared';
 import type {
     ConnectionNodeConfig,

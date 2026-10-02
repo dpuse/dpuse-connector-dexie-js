@@ -1,39 +1,11 @@
 {
-    "@borewit/text-codec@0.2.2": {
-        "licenses": "MIT",
-        "repository": "https://github.com/Borewit/text-codec",
-        "publisher": "Borewit",
-        "path": "node_modules/@borewit/text-codec",
-        "licenseFile": "downloads/@borewit/text-codec@0.2.2-LICENSE.txt"
-    },
-    "@dpuse/dpuse-shared@0.3.865": {
+    "@dpuse/dpuse-shared@0.3.868": {
         "licenses": "MIT",
         "repository": "https://github.com/dpuse/dpuse-shared",
         "publisher": "Jonathan Terrell",
         "email": "terrell.jm@gmail.com",
         "path": "node_modules/@dpuse/dpuse-shared",
-        "licenseFile": "downloads/@dpuse/dpuse-shared@0.3.865-LICENSE.txt"
-    },
-    "@tokenizer/inflate@0.4.1": {
-        "licenses": "MIT",
-        "repository": "https://github.com/Borewit/tokenizer-inflate",
-        "publisher": "Borewit",
-        "path": "node_modules/@tokenizer/inflate",
-        "licenseFile": "downloads/@tokenizer/inflate@0.4.1-LICENSE.txt"
-    },
-    "@tokenizer/token@0.3.0": {
-        "licenses": "MIT",
-        "repository": "https://github.com/Borewit/tokenizer-token",
-        "publisher": "Borewit",
-        "path": "node_modules/@tokenizer/token",
-        "licenseFile": "downloads/@tokenizer/token@0.3.0-LICENSE.txt"
-    },
-    "debug@4.4.3": {
-        "licenses": "MIT",
-        "repository": "https://github.com/debug-js/debug",
-        "publisher": "Josh Junon",
-        "path": "node_modules/debug",
-        "licenseFile": "downloads/debug@4.4.3-LICENSE.txt"
+        "licenseFile": "downloads/@dpuse/dpuse-shared@0.3.868-LICENSE.txt"
     },
     "dexie@4.4.6": {
         "licenses": "Apache-2.0",
@@ -43,50 +15,6 @@
         "path": "node_modules/dexie",
         "licenseFile": "downloads/dexie@4.4.6-LICENSE.txt",
         "noticeFile": "node_modules/dexie/NOTICE"
-    },
-    "file-type@22.1.1": {
-        "licenses": "MIT",
-        "repository": "https://github.com/sindresorhus/file-type",
-        "publisher": "Sindre Sorhus",
-        "email": "sindresorhus@gmail.com",
-        "path": "node_modules/file-type",
-        "licenseFile": "downloads/file-type@22.1.1-LICENSE.txt"
-    },
-    "ieee754@1.2.1": {
-        "licenses": "BSD-3-Clause",
-        "repository": "https://github.com/feross/ieee754",
-        "publisher": "Feross Aboukhadijeh",
-        "email": "feross@feross.org",
-        "path": "node_modules/ieee754",
-        "licenseFile": "downloads/ieee754@1.2.1-LICENSE.txt"
-    },
-    "ms@2.1.3": {
-        "licenses": "MIT",
-        "repository": "https://github.com/vercel/ms",
-        "path": "node_modules/ms",
-        "licenseFile": "downloads/ms@2.1.3-LICENSE.txt"
-    },
-    "strtok3@10.3.5": {
-        "licenses": "MIT",
-        "repository": "https://github.com/Borewit/strtok3",
-        "publisher": "Borewit",
-        "path": "node_modules/strtok3",
-        "licenseFile": "downloads/strtok3@10.3.5-LICENSE.txt"
-    },
-    "token-types@6.1.2": {
-        "licenses": "MIT",
-        "repository": "https://github.com/Borewit/token-types",
-        "publisher": "Borewit",
-        "path": "node_modules/token-types",
-        "licenseFile": "downloads/token-types@6.1.2-LICENSE.txt"
-    },
-    "uint8array-extras@1.6.0": {
-        "licenses": "MIT",
-        "repository": "https://github.com/sindresorhus/uint8array-extras",
-        "publisher": "Sindre Sorhus",
-        "email": "sindresorhus@gmail.com",
-        "path": "node_modules/uint8array-extras",
-        "licenseFile": "downloads/uint8array-extras@1.6.0-LICENSE.txt"
     },
     "valibot@1.5.0": {
         "licenses": "MIT",

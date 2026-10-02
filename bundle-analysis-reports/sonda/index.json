@@ -1,7 +1,7 @@
 {
   "metadata": {
     "version": "0.14.0",
-    "generatedAt": "2026-09-30T15:31:39.050Z",
+    "generatedAt": "2026-10-02T10:27:42.744Z",
     "integration": "vite",
     "sources": false,
     "gzip": true,
@@ -22,7 +22,7 @@
       "type": "other",
       "format": "other",
       "uncompressed": 24134,
-      "gzip": 2393,
+      "gzip": 2395,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },
@@ -71,7 +71,7 @@
       "type": "script",
       "format": "cjs",
       "uncompressed": 112717,
-      "gzip": 34194,
+      "gzip": 34193,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },

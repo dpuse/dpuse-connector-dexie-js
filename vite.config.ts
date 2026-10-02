@@ -4,6 +4,9 @@ import dts from 'vite-plugin-dts';
 import Sonda from 'sonda/vite';
 import { fileURLToPath, URL } from 'node:url';
 
+// ── DPUse Framework
+import { recordShippedPackages } from '@dpuse/dpuse-development/vite';
+
 // ── Data
 import config from './config.json' with { type: 'json' };
 
@@ -24,7 +27,8 @@ export default defineConfig({
     },
     // Tests and config files sit in the tsconfig so they get type-checked, but their declarations must not reach the
     // published package. 'entryRoot' keeps the types under 'dist/types/src', where package.json points.
-    plugins: [dts({ entryRoot: '.', exclude: ['tests/**', '*.config.*'], outDirs: 'dist/types' })],
+    // 'recordShippedPackages' writes the record of what the build ships, which 'npm run document' lists licences from.
+    plugins: [dts({ entryRoot: '.', exclude: ['tests/**', '*.config.*'], outDirs: 'dist/types' }), recordShippedPackages()],
     resolve: {
         alias: {
             '~': fileURLToPath(new URL('./', import.meta.url)),
