@@ -1,7 +1,7 @@
 {
   "metadata": {
     "version": "0.14.0",
-    "generatedAt": "2026-10-02T10:27:42.744Z",
+    "generatedAt": "2026-10-02T15:02:07.915Z",
     "integration": "vite",
     "sources": false,
     "gzip": true,
@@ -97,7 +97,7 @@
       "name": "package.json",
       "type": "script",
       "format": "esm",
-      "uncompressed": 2861
+      "uncompressed": 2837
     },
     {
       "kind": "filesystem",
