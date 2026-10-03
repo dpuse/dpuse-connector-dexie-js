@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from 'node:url';
 
 // ── Vitest Configuration ─────────────────────────────────────────────────────────────────────────────────────────────
 
-export default defineConfig({
+const config = defineConfig({
     resolve: {
         alias: {
             '~': fileURLToPath(new URL('./', import.meta.url)),
@@ -26,3 +26,5 @@ export default defineConfig({
         environment: 'node'
     }
 });
+
+export default config;

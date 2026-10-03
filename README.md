@@ -6,13 +6,13 @@
 [![DPUse version](https://img.shields.io/github/v/release/dpuse/dpuse-connector-dexie-js?color=f6821f&label=DPUse)](https://github.com/dpuse/dpuse-connector-dexie-js/releases/latest)
 [![CI](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml/badge.svg)](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml)
 
-[DPUse](https://www.dpuse.app) · [Report a Vulnerability](https://github.com/dpuse/dpuse-connector-dexie-js/security/advisories/new) · [Open an Issue](https://github.com/dpuse/dpuse-connector-dexie-js/issues)
-
 Provides access to local Dexie.js (IndexedDB) databases in the browser.
+
+[Report a Vulnerability](https://github.com/dpuse/dpuse-connector-dexie-js/security/advisories/new) · [Open an Issue](https://github.com/dpuse/dpuse-connector-dexie-js/issues)
 
 ## About DPUse
 
-DPUse (Data Positioning & Use) is an in-browser application that positions your data for use through three core activities: sourcing, contextualising, and publishing.
+[DPUse](https://www.dpuse.app) (Data Positioning & Use) is an in-browser application that positions your data for use through three core activities: sourcing, contextualising, and publishing.
 
 **Sourcing** uses a library of [Connectors](https://www.dpuse.app/connectors) to establish [Connections](https://www.dpuse.app) to applications, databases, file stores, and curated datasets; these connections are subsequently used to configure structured [Data Views](https://www.dpuse.app) from the underlying sources.
 
@@ -82,17 +82,17 @@ This repository is managed using the common set of actions provided by [@dpuse/d
 
 License data is updated each time `npm run document` is run, using [license-checker](https://github.com/RSeidelsohn/license-checker-rseidelsohn). The following table lists every package whose code, styles or assets are included in this project's build, as recorded by the build itself. Modules loaded at run time are not included; each documents its own. These dependencies have been checked and confirmed to use Apache-2.0 or MIT, all of which allow commercial use. All are used unmodified, so any licence conditions that apply only to modified versions are not triggered. Developers cloning this repository should independently verify development dependencies.
 
-| Dependency                                                   | Version | License(s) | Document                                                              |
-| :----------------------------------------------------------- | :-----: | :--------- | :-------------------------------------------------------------------- |
-| [@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared) | 0.3.869 | MIT        | [LICENSE](licenses/downloads/@dpuse/dpuse-shared@0.3.869-LICENSE.txt) |
-| [dexie](https://github.com/dexie/Dexie.js)                   |  4.4.6  | Apache-2.0 | [LICENSE](licenses/downloads/dexie@4.4.6-LICENSE.txt)                 |
-| [valibot](https://github.com/open-circle/valibot)            |  1.5.0  | MIT        | [LICENSE](licenses/downloads/valibot@1.5.0-LICENSE.txt)               |
+| Dependency                                                   | Version | License(s) | Document                                                            |
+| :----------------------------------------------------------- | :-----: | :--------- | :------------------------------------------------------------------ |
+| [@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared) |  1.0.2  | MIT        | [LICENSE](licenses/downloads/@dpuse/dpuse-shared@1.0.2-LICENSE.txt) |
+| [dexie](https://github.com/dexie/Dexie.js)                   |  4.4.6  | Apache-2.0 | [LICENSE](licenses/downloads/dexie@4.4.6-LICENSE.txt)               |
+| [valibot](https://github.com/open-circle/valibot)            |  1.5.0  | MIT        | [LICENSE](licenses/downloads/valibot@1.5.0-LICENSE.txt)             |
 
 ### Dependency Tree
 
 The dependency tree below shows how each package in the table above is reached — direct and transitive — along with its installed version, release date, and update status. A package that does not ship itself, such as one whose parts are bundled separately, is left out and what ships beneath it is shown in its place. Packages flagged ❗ have a newer version available; ⚠️ indicates a package that hasn't been updated in the last 6 months or longer. Neither flag necessarily indicates a problem: we let new releases stabilise before upgrading, and some packages are mature and stable (have limited or no dependencies), so they require no active development.
 
-- **[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)** 0.3.869 — this month: 2026-10-02
+- **[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)** 1.0.2 — this month: 2026-10-03
     - **[valibot](https://github.com/open-circle/valibot)** 1.5.0 — this month: 2026-09-09
 - **[dexie](https://github.com/dexie/Dexie.js)** 4.4.6 — this month: 2026-09-10
 
