@@ -108,7 +108,7 @@ _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not gen
 
 | Chunk/Module/File                                                         | Composition                                   |
 | :------------------------------------------------------------------------ | :-------------------------------------------- |
-| **dist/dpuse-connector-dexie-js.es.js**                                   | 146.8 kB · gzip 40.1 kB · 100.0% of the build |
+| **dist/dpuse-connector-dexie-js.es.js**                                   | 146.8 kB · gzip 40.2 kB · 100.0% of the build |
 | &nbsp;&nbsp;&nbsp;&nbsp;dexie                                             | `███████████████░░░░░` 75.2% · 110.5 kB       |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ dist/dexie.min.js       | `▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░` 75.0% · 110.1 kB       |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ import-wrapper-prod.mjs | `░░░░░░░░░░░░░░░░░░░░` 0.3% · 387 B           |
