@@ -83,5 +83,5 @@ jobs:
                   export PATH="$PWD/node_modules/.bin:$PATH"
                   node -e "import('@dpuse/dpuse-development').then(m => m.publishProject())"
               env:
-                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_PUBLISH_TOKEN }}
                   CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
