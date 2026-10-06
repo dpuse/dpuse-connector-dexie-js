@@ -33,7 +33,7 @@ jobs:
             #   npm view npm@<version> dist.integrity | base64 -d | xxd -p | tr -d '\n'
             - name: Setup npm
               run: |
-                  curl --proto '=https' -fsSLo npm.tgz https://registry.npmjs.org/npm/-/npm-12.1.0.tgz
+                  curl --proto '=https' --retry 3 --retry-all-errors -fsSLo npm.tgz https://registry.npmjs.org/npm/-/npm-12.1.0.tgz
                   echo "17286eeb6a4dc7bd180acff9f9d1262504c556648ac2fa39080d2abc19060d1a686f8d8c27a1b6450dad77178a3389d89c8643aa4600c4482ab687a39fd406b5  npm.tgz" | sha512sum -c -
                   npm_directory="$(dirname "$(dirname "$(command -v node)")")/lib/node_modules/npm"
                   rm -rf "$npm_directory" && mkdir "$npm_directory"
@@ -54,7 +54,7 @@ jobs:
             - name: Setup wasm-pack
               if: hashFiles('rust/Cargo.toml') != ''
               run: |
-                  curl --proto '=https' -fsSLo wasm-pack.tgz https://github.com/wasm-bindgen/wasm-pack/releases/download/v0.15.0/wasm-pack-v0.15.0-x86_64-unknown-linux-musl.tar.gz
+                  curl --proto '=https' --retry 3 --retry-all-errors -fsSLo wasm-pack.tgz https://github.com/wasm-bindgen/wasm-pack/releases/download/v0.15.0/wasm-pack-v0.15.0-x86_64-unknown-linux-musl.tar.gz
                   echo "c09f971ecaed9a2efc80fdcea7a00ef6b53c7fadc8c57d1f61b53a6aa66b668a  wasm-pack.tgz" | sha256sum -c -
                   tar -xzf wasm-pack.tgz -C "$HOME/.cargo/bin" --strip-components=1 wasm-pack-v0.15.0-x86_64-unknown-linux-musl/wasm-pack
                   wasm-pack --version

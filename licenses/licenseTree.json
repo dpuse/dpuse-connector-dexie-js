@@ -1,24 +1,14 @@
 {
-  "version": "1.0.001",
+  "version": "1.0.105",
   "name": "@dpuse/dpuse-connector-dexie-js",
   "dependencies": {
     "@dpuse/dpuse-development": {
-      "version": "1.0.3",
-      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-development/-/dpuse-development-1.0.3.tgz",
+      "version": "1.0.113",
+      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-development/-/dpuse-development-1.0.113.tgz",
       "overridden": false,
       "dependencies": {
         "@dpuse/dpuse-shared": {
-          "version": "0.3.869",
-          "resolved": "https://registry.npmjs.org/@dpuse/dpuse-shared/-/dpuse-shared-0.3.869.tgz",
-          "overridden": false,
-          "dependencies": {
-            "file-type": {
-              "version": "22.1.1"
-            },
-            "valibot": {
-              "version": "1.5.0"
-            }
-          }
+          "version": "1.0.113"
         },
         "license-checker-rseidelsohn": {
           "version": "5.0.1",
@@ -132,8 +122,8 @@
                   "overridden": false,
                   "dependencies": {
                     "postcss-selector-parser": {
-                      "version": "7.1.4",
-                      "resolved": "https://registry.npmjs.org/postcss-selector-parser/-/postcss-selector-parser-7.1.4.tgz",
+                      "version": "7.1.6",
+                      "resolved": "https://registry.npmjs.org/postcss-selector-parser/-/postcss-selector-parser-7.1.6.tgz",
                       "overridden": false,
                       "dependencies": {
                         "cssesc": {
@@ -562,8 +552,8 @@
                           "version": "20.0.4"
                         },
                         "http-cache-semantics": {
-                          "version": "4.2.0",
-                          "resolved": "https://registry.npmjs.org/http-cache-semantics/-/http-cache-semantics-4.2.0.tgz",
+                          "version": "4.3.0",
+                          "resolved": "https://registry.npmjs.org/http-cache-semantics/-/http-cache-semantics-4.3.0.tgz",
                           "overridden": false
                         },
                         "minipass-fetch": {
@@ -1204,8 +1194,8 @@
       }
     },
     "@dpuse/dpuse-shared": {
-      "version": "1.0.2",
-      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-shared/-/dpuse-shared-1.0.2.tgz",
+      "version": "1.0.113",
+      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-shared/-/dpuse-shared-1.0.113.tgz",
       "overridden": false,
       "dependencies": {
         "file-type": {
@@ -1754,7 +1744,7 @@
                   "overridden": false
                 },
                 "source-map-js": {
-                  "version": "1.2.1"
+                  "version": "1.2.2"
                 }
               }
             },
@@ -3025,8 +3015,8 @@
               "overridden": false
             },
             "source-map-js": {
-              "version": "1.2.1",
-              "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz",
+              "version": "1.2.2",
+              "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.2.tgz",
               "overridden": false
             }
           }
