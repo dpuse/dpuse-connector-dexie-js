@@ -69,8 +69,32 @@ jobs:
             - name: Lint
               run: npm run lint
 
+            # Only in projects with end-to-end tests. 'vite.config.ts' serves over HTTPS with a certificate from
+            # '../../localhost/', which exists only on a developer's machine, so the runner gets a throwaway self-signed one
+            # at the same path. 'playwright.config.ts' accepts it on CI.
+            - name: Create localhost certificate
+              if: hashFiles('playwright.config.ts') != ''
+              run: |
+                  mkdir -p ../../localhost
+                  openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj "/CN=localhost" -keyout ../../localhost/localhost+1-key.pem -out ../../localhost/localhost+1.pem
+
+            # Only in projects with end-to-end tests. Chromium alone, which is all 'playwright.config.ts' runs on CI.
+            - name: Install Playwright browsers
+              if: hashFiles('playwright.config.ts') != ''
+              run: npx playwright install --with-deps chromium
+
             - name: Test
               run: npm test
+
+            # Only in projects with end-to-end tests, and only when a step fails. Playwright saves a trace of each failed
+            # test in 'test-results/', which the runner discards. Kept for a week, to open with 'npx playwright show-trace'.
+            - name: Upload Playwright results
+              if: failure() && hashFiles('playwright.config.ts') != ''
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+              with:
+                  name: playwright-results
+                  path: test-results/
+                  retention-days: 7
 
             - name: Audit
               run: npm run audit
