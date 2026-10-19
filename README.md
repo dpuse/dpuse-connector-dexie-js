@@ -3,7 +3,7 @@
 <!-- OPENING_START -->
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-[![DPUse version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.dpuse.app%2Fconfigs%2Fdpuse-connector-dexie-js&query=%24.data.version&prefix=v&label=DPUse&color=f6821f)](https://github.com/dpuse/dpuse-connector-dexie-js/releases/latest)
+[![DPUse version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.dpuse.app%2Fconfigs%2Fdpuse-connector-dexie-js&query=%24.data.version&prefix=v&label=DPUse&color=blue)](https://github.com/dpuse/dpuse-connector-dexie-js/releases/latest)
 [![CI](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml/badge.svg)](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml)
 
 Provides access to local Dexie.js (IndexedDB) databases in the browser.
@@ -84,7 +84,7 @@ License data is updated each time `npm run document` is run, using [license-chec
 
 | Dependency                                                   | Version | License(s) | Document                                                              |
 | :----------------------------------------------------------- | :-----: | :--------- | :-------------------------------------------------------------------- |
-| [@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared) | 1.0.113 | MIT        | [LICENSE](licenses/downloads/@dpuse/dpuse-shared@1.0.113-LICENSE.txt) |
+| [@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared) | 1.0.126 | MIT        | [LICENSE](licenses/downloads/@dpuse/dpuse-shared@1.0.126-LICENSE.txt) |
 | [dexie](https://github.com/dexie/Dexie.js)                   |  4.4.6  | Apache-2.0 | [LICENSE](licenses/downloads/dexie@4.4.6-LICENSE.txt)                 |
 | [valibot](https://github.com/open-circle/valibot)            |  1.5.0  | MIT        | [LICENSE](licenses/downloads/valibot@1.5.0-LICENSE.txt)               |
 
@@ -92,9 +92,9 @@ License data is updated each time `npm run document` is run, using [license-chec
 
 The dependency tree below shows how each package in the table above is reached — direct and transitive — along with its installed version, release date, and update status. A package that does not ship itself, such as one whose parts are bundled separately, is left out and what ships beneath it is shown in its place. Packages flagged ❗ have a newer version available; ⚠️ indicates a package that hasn't been updated in the last 6 months or longer. Neither flag necessarily indicates a problem: we let new releases stabilise before upgrading, and some packages are mature and stable (have limited or no dependencies), so they require no active development.
 
-- **[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)** 1.0.113 — this month: 2026-10-05 → latest: 1.0.116 — this month: 2026-10-06 ❗
-    - **[valibot](https://github.com/open-circle/valibot)** 1.5.0 — this month: 2026-09-09
-- **[dexie](https://github.com/dexie/Dexie.js)** 4.4.6 — this month: 2026-09-10
+- **[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)** 1.0.126 — this month: 2026-10-19
+    - **[valibot](https://github.com/open-circle/valibot)** 1.5.0 — 1 mth ago: 2026-09-09
+- **[dexie](https://github.com/dexie/Dexie.js)** 4.4.6 — 1 mth ago: 2026-09-10
 
 <!-- DEPENDENCY_LICENSES_END -->
 
@@ -106,17 +106,19 @@ This report is updated with each release, from the bundle the release builds, us
 
 _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not generate source maps for CSS._
 
-| Chunk/Module/File                                                         | Composition                                   |
-| :------------------------------------------------------------------------ | :-------------------------------------------- |
-| **dist/dpuse-connector-dexie-js.es.js**                                   | 146.9 kB · gzip 40.2 kB · 100.0% of the build |
-| &nbsp;&nbsp;&nbsp;&nbsp;dexie                                             | `███████████████░░░░░` 75.2% · 110.5 kB       |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ dist/dexie.min.js       | `▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░` 74.9% · 110.1 kB       |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ import-wrapper-prod.mjs | `░░░░░░░░░░░░░░░░░░░░` 0.3% · 387 B           |
-| &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared.es.js     | `█░░░░░░░░░░░░░░░░░░░` 5.4% · 8.0 kB          |
-| &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts                                    | `█░░░░░░░░░░░░░░░░░░░` 3.3% · 4.8 kB          |
-| &nbsp;&nbsp;&nbsp;&nbsp;(bundler output, whitespace & JSON)               | `███░░░░░░░░░░░░░░░░░` 16.1% · 23.6 kB        |
+| Chunk/Module/File                                                         | Composition                                                                                     |
+| :------------------------------------------------------------------------ | :---------------------------------------------------------------------------------------------- |
+| **dist/dpuse-connector-dexie-js.es.js**                                   | 146.9&nbsp;kB&nbsp;·&nbsp;gzip&nbsp;40.2&nbsp;kB&nbsp;·&nbsp;100.0%&nbsp;of&nbsp;the&nbsp;build |
+| &nbsp;&nbsp;&nbsp;&nbsp;dexie → dist/dexie.min.js + 1 more                | `███████████████░░░░░`&nbsp;75.2%&nbsp;·&nbsp;110.5&nbsp;kB                                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ dist/dexie.min.js       | `▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░`&nbsp;74.9%&nbsp;·&nbsp;110.1&nbsp;kB                                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ import-wrapper-prod.mjs | `░░░░░░░░░░░░░░░░░░░░`&nbsp;0.3%&nbsp;·&nbsp;387&nbsp;B                                         |
+| &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared.es.js     | `█░░░░░░░░░░░░░░░░░░░`&nbsp;5.4%&nbsp;·&nbsp;8.0&nbsp;kB                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts                                    | `█░░░░░░░░░░░░░░░░░░░`&nbsp;3.3%&nbsp;·&nbsp;4.8&nbsp;kB                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;(bundler output, whitespace & JSON)               | `███░░░░░░░░░░░░░░░░░`&nbsp;16.1%&nbsp;·&nbsp;23.7&nbsp;kB                                      |
 
 Bars show each row's share of its output file. ↳ rows are part of the row above.
+
+- n more = the row also holds n more files from the same package or folder, each no larger than the one named. A package can appear under several output files, each holding different files, never the same file twice.
 
 (bundler output, whitespace & JSON) = bytes Sonda can't trace to a source file: whitespace (indentation and line breaks), code the bundler generates (region comments, the combined import/export lines, its small runtime helper and wrappers), and imported JSON such as `config.json`, which the bundler doesn't map. The JSON and the generated code are real bytes that ship; the whitespace mostly disappears once compressed.
 
@@ -130,10 +132,11 @@ This section is updated each time `npm run document` is run. Settings come from 
 
 ### Testing
 
-| Check                | Status | What it does                                                                                                                                                                                      |
-| :------------------- | :----- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Unit tests           | ✅ On  | [Vitest](https://vitest.dev) runs the unit tests. Part of the [CI workflow](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml) on every push and pull request to `main`. |
-| Property-based tests | ❌ Off | [fast-check](https://fast-check.dev) runs many random inputs per test to find edge cases, alongside the unit tests.                                                                               |
+| Check                | Status | What it does                                                                                                                                                                                                                                                                                                       |
+| :------------------- | :----- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit tests           | ✅ On  | [Vitest](https://vitest.dev) runs the unit tests. Part of the [CI workflow](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml) on every push and pull request to `main`.                                                                                                                  |
+| Property-based tests | ❌ Off | [fast-check](https://fast-check.dev) runs many random inputs per test to find edge cases, alongside the unit tests.                                                                                                                                                                                                |
+| Test coverage        | ✅ On  | ![Coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fdpuse%2Fdpuse-connector-dexie-js%2Fmain%2Fcode-health-reports%2Fvitest%2Fbadge.json) [Vitest's V8 coverage](https://vitest.dev/guide/coverage) measures the share of source lines the unit tests run. The target is 80%. |
 
 ### Code Quality
 

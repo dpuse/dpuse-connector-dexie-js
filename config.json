@@ -29,6 +29,7 @@
             "maxConnectionCount": null
         }
     },
+    "itemTypeId": "table",
     "lastUpdatedAt": null,
     "status": null,
     "statusId": "alpha",
@@ -38,5 +39,5 @@
     "vendorAccountURL": "https://manager.dexie.cloud/auth/signin",
     "vendorDocumentationURL": "https://dexie.org/docs",
     "vendorHomeURL": "https://dexie.org/",
-    "version": "1.0.108"
+    "version": "1.0.109"
 }
