@@ -19,7 +19,7 @@ const viteConfig = defineConfig({
             fileName: (format) => `${config.id}.${format}.js`,
             formats: ['es']
         },
-        rollupOptions: {
+        rolldownOptions: {
             plugins: [Sonda({ filename: 'index', format: 'json', brotli: false, gzip: true, open: false, outputDir: './bundle-analysis-reports/sonda' })]
         },
         sourcemap: 'hidden',

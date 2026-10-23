@@ -80,9 +80,11 @@ jobs:
                   mkdir -p ../../localhost
                   openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj "/CN=localhost" -keyout ../../localhost/localhost+1-key.pem -out ../../localhost/localhost+1.pem
 
-            # Only in projects with end-to-end tests. Chromium alone, which is all 'playwright.config.ts' runs on CI.
+            # Only in projects with end-to-end tests. Chromium alone, which is all 'playwright.config.ts' runs on CI. Stopped
+            # after 5 minutes, because a stalled Ubuntu package download otherwise holds the job until GitHub's 6-hour limit.
             - name: Install Playwright browsers
               if: hashFiles('playwright.config.ts') != ''
+              timeout-minutes: 5
               run: npx playwright install --with-deps chromium
 
             - name: Test
