@@ -1,7 +1,7 @@
 {
   "metadata": {
     "version": "0.14.0",
-    "generatedAt": "2026-10-19T12:23:41.957Z",
+    "generatedAt": "2026-10-28T09:08:41.077Z",
     "integration": "vite",
     "sources": false,
     "gzip": true,
@@ -21,8 +21,8 @@
       "name": "[unassigned]",
       "type": "other",
       "format": "other",
-      "uncompressed": 24244,
-      "gzip": 2443,
+      "uncompressed": 26898,
+      "gzip": 2495,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },
@@ -37,8 +37,8 @@
       "kind": "asset",
       "name": "dist/dpuse-connector-dexie-js.es.js",
       "type": "script",
-      "uncompressed": 150462,
-      "gzip": 41169,
+      "uncompressed": 157008,
+      "gzip": 41922,
       "brotli": 0
     },
     {
@@ -46,49 +46,49 @@
       "name": "node_modules/@dpuse/dpuse-shared/dist/dpuse-shared.es.js",
       "type": "script",
       "format": "esm",
-      "uncompressed": 36959
+      "uncompressed": 60581
     },
     {
       "kind": "chunk",
       "name": "node_modules/@dpuse/dpuse-shared/dist/dpuse-shared.es.js",
       "type": "script",
       "format": "esm",
-      "uncompressed": 8189,
-      "gzip": 2692,
+      "uncompressed": 8505,
+      "gzip": 2855,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },
     {
       "kind": "filesystem",
-      "name": "node_modules/dexie/dist/dexie.min.js",
+      "name": "node_modules/dexie/dist/dexie.js",
       "type": "script",
       "format": "cjs",
-      "uncompressed": 96163
+      "uncompressed": 275423
     },
     {
       "kind": "chunk",
-      "name": "node_modules/dexie/dist/dexie.min.js",
+      "name": "node_modules/dexie/dist/dexie.js",
       "type": "script",
       "format": "cjs",
-      "uncompressed": 112717,
-      "gzip": 34187,
+      "uncompressed": 115612,
+      "gzip": 34488,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },
     {
       "kind": "filesystem",
-      "name": "node_modules/dexie/import-wrapper-prod.mjs",
+      "name": "node_modules/dexie/import-wrapper.mjs",
       "type": "script",
       "format": "esm",
-      "uncompressed": 851
+      "uncompressed": 848
     },
     {
       "kind": "chunk",
-      "name": "node_modules/dexie/import-wrapper-prod.mjs",
+      "name": "node_modules/dexie/import-wrapper.mjs",
       "type": "script",
       "format": "esm",
       "uncompressed": 387,
-      "gzip": 293,
+      "gzip": 295,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },
@@ -104,15 +104,15 @@
       "name": "src/index.ts",
       "type": "script",
       "format": "esm",
-      "uncompressed": 7826
+      "uncompressed": 8860
     },
     {
       "kind": "chunk",
       "name": "src/index.ts",
       "type": "script",
       "format": "esm",
-      "uncompressed": 4925,
-      "gzip": 1555,
+      "uncompressed": 5606,
+      "gzip": 1788,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     }

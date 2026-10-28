@@ -69,34 +69,37 @@ jobs:
             - name: Lint
               run: npm run lint
 
-            # Only in projects with end-to-end tests. 'vite.config.ts' serves over HTTPS with a certificate from
-            # '../../localhost/', which exists only on a developer's machine, so the runner gets a throwaway self-signed one
-            # at the same path. 'playwright.config.ts' accepts it on CI.
-            - name: Create localhost certificate
-              if: hashFiles('playwright.config.ts') != ''
-              run: |
-                  mkdir -p ../../localhost
-                  openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj "/CN=localhost" -keyout ../../localhost/localhost+1-key.pem -out ../../localhost/localhost+1.pem
-
-            # Only in projects with end-to-end tests. Chromium alone, which is all 'playwright.config.ts' runs on CI. Stopped
-            # after 5 minutes, because a stalled Ubuntu package download otherwise holds the job until GitHub's 6-hour limit.
-            - name: Install Playwright browsers
-              if: hashFiles('playwright.config.ts') != ''
-              timeout-minutes: 5
-              run: npx playwright install --with-deps chromium
-
+            # Unit tests only. The end-to-end tests are switched off, because installing Playwright's Ubuntu packages stalls on
+            # some runners. The project's commands are put on the path first, as 'npm run' would have done.
+            # TODO: Run the end-to-end tests again once the job no longer downloads Ubuntu packages. Run the job in
+            # Playwright's Docker image ('mcr.microsoft.com/playwright'), which has Chromium and its packages built in: add
+            # a 'container' to the job with the image tag Playwright's Docker docs give for the '@playwright/test' version,
+            # pinned by digest for OpenSSF Scorecard. Then add back the two steps below, one before this step and one
+            # after it, and run 'npm test' in this step. No browser install step is needed, as the image already has the
+            # browsers.
+            #
+            # Before this step. 'vite.config.ts' serves over HTTPS with a certificate from '../../localhost/', which exists
+            # only on a developer's machine, so the runner gets a throwaway self-signed one at the same path.
+            # 'playwright.config.ts' accepts it on CI.
+            # - name: Create localhost certificate
+            #   if: hashFiles('playwright.config.ts') != ''
+            #   run: |
+            #       mkdir -p ../../localhost
+            #       openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj "/CN=localhost" -keyout ../../localhost/localhost+1-key.pem -out ../../localhost/localhost+1.pem
+            #
+            # After this step, only when a step fails. Playwright saves a trace of each failed test in 'test-results/',
+            # which the runner discards. Kept for a week, to open with 'npx playwright show-trace'.
+            # - name: Upload Playwright results
+            #   if: failure() && hashFiles('playwright.config.ts') != ''
+            #   uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+            #   with:
+            #       name: playwright-results
+            #       path: test-results/
+            #       retention-days: 7
             - name: Test
-              run: npm test
-
-            # Only in projects with end-to-end tests, and only when a step fails. Playwright saves a trace of each failed
-            # test in 'test-results/', which the runner discards. Kept for a week, to open with 'npx playwright show-trace'.
-            - name: Upload Playwright results
-              if: failure() && hashFiles('playwright.config.ts') != ''
-              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-              with:
-                  name: playwright-results
-                  path: test-results/
-                  retention-days: 7
+              run: |
+                  export PATH="$PWD/node_modules/.bin:$PATH"
+                  node -e "import('@dpuse/dpuse-development').then(m => m.testProject(['unit']))"
 
             - name: Audit
               run: npm run audit

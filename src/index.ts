@@ -3,7 +3,7 @@
 // https://dexie.org/docs/Dexie/Dexie.open()#dynamic-schema-manipulation
 
 // ── External Dependencies & Registrations
-import { Dexie } from 'dexie';
+import { Dexie, type IndexableType, type Table } from 'dexie';
 
 // ── DPUse Framework
 import { ConnectorError } from '@dpuse/dpuse-shared';
@@ -22,6 +22,7 @@ import type {
     ListNodesResult,
     PreviewConfig,
     PreviewObjectOptions,
+    RecordRange,
     RecordRetrievalTypeId,
     RemoveRecordsOptions,
     RetrieveRecordsOptions,
@@ -222,7 +223,7 @@ export class Connector implements ExtendedConnectorInterface {
         }
     }
 
-    // Retrieve records
+    // Retrieve records, every one of them or only those in a range of positions, which also reports the table's total.
     async retrieveRecords(
         options: RetrieveRecordsOptions,
         chunk: (typeId: RecordRetrievalTypeId, records: Record<string, unknown>[]) => void,
@@ -231,9 +232,17 @@ export class Connector implements ExtendedConnectorInterface {
         try {
             const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
             const container = await this.establishContainer(containerId);
-            const records = await container.table<Record<string, unknown>>(nodeId).toArray();
+            const table = container.table<Record<string, unknown>>(nodeId);
+            if (options.range == null) {
+                const records = await table.toArray();
+                chunk('jsonRecordArray', records);
+                complete({ byteCount: 0, commentLineCount: 0, emptyLineCount: 0, lineCount: 0, nonUniformRecordCount: 0, recordCount: records.length });
+                return;
+            }
+            const totalCount = await table.count();
+            const records = await retrieveRecordRange(table, options.range, totalCount);
             chunk('jsonRecordArray', records);
-            complete({ byteCount: 0, commentLineCount: 0, emptyLineCount: 0, lineCount: 0, nonUniformRecordCount: 0, recordCount: records.length });
+            complete({ byteCount: 0, commentLineCount: 0, emptyLineCount: 0, lineCount: 0, nonUniformRecordCount: 0, recordCount: records.length, totalCount });
         } catch (error) {
             throw new ConnectorError(`Failed to access Dexie table with path '${options.path}'.`, 'dpu-connector-dexie-js.index.retrieveRecords', { cause: error });
         } finally {
@@ -262,4 +271,23 @@ export class Connector implements ExtendedConnectorInterface {
         }
         return { containerId, nodeId };
     }
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+// A range is found by record number when the numbers run without a gap, as they do in a table one audit filled: the
+// record at position N is then numbered 'first + N', and is looked up directly however far in it is. Otherwise the
+// records before the range are stepped past, which takes longer the further in it starts.
+async function retrieveRecordRange(table: Table<Record<string, unknown>, IndexableType>, range: RecordRange, totalCount: number): Promise<Record<string, unknown>[]> {
+    if (range.limit <= 0 || range.offset >= totalCount) return [];
+    const [firstKey] = await table.toCollection().limit(1).primaryKeys();
+    const [lastKey] = await table.toCollection().reverse().limit(1).primaryKeys();
+    if (typeof firstKey === 'number' && typeof lastKey === 'number' && lastKey - firstKey + 1 === totalCount) {
+        const lowerKey = firstKey + range.offset;
+        return await table
+            .where(':id')
+            .between(lowerKey, lowerKey + range.limit, true, false)
+            .toArray();
+    }
+    return await table.offset(range.offset).limit(range.limit).toArray();
 }

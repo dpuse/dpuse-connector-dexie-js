@@ -11,6 +11,7 @@ import { Connector } from '@/index';
 
 const DATABASE_NAME = 'test';
 const PEOPLE_PATH = `/${DATABASE_NAME}/people`;
+const RECORDS_PATH = `/${DATABASE_NAME}/records`; // A data view's records, keyed by a hidden number that counts up, as an audit stores them.
 
 // Each test's connectors, closed afterwards so their databases can be deleted.
 const connectors: Connector[] = [];
@@ -23,6 +24,26 @@ function createConnector(): Connector {
 
 async function createPeopleTable(connector: Connector): Promise<void> {
     await connector.createObject({ path: PEOPLE_PATH, structure: 'id' });
+}
+
+// Stores records whose 'c1' is 'firstValue', 'firstValue + 1' and so on, in that order.
+async function fillRecordsTable(connector: Connector, count: number, firstValue = 0): Promise<void> {
+    await connector.upsertRecords({ path: RECORDS_PATH, records: Array.from({ length: count }, (_, index) => ({ c1: firstValue + index })) });
+}
+
+async function retrieveRange(connector: Connector, offset: number, limit: number): Promise<{ totalCount: number | undefined; values: unknown[] }> {
+    const values: unknown[] = [];
+    let totalCount: number | undefined;
+    await connector.retrieveRecords(
+        { path: RECORDS_PATH, range: { limit, offset } } as never,
+        (_typeId, records) => {
+            values.push(...records.map((record) => record['c1']));
+        },
+        (summary) => {
+            totalCount = summary.totalCount;
+        }
+    );
+    return { totalCount, values };
 }
 
 async function retrieveAll(connector: Connector): Promise<Record<string, unknown>[]> {
@@ -156,6 +177,50 @@ describe('Connector', () => {
 
             expect(chunk).toHaveBeenCalledWith('jsonRecordArray', [{ id: 1 }, { id: 2 }]);
             expect(complete).toHaveBeenCalledWith(expect.objectContaining({ recordCount: 2 }));
+        });
+
+        it("retrieves the records at a range of positions, wherever it lies, with the table's total", async () => {
+            const connector = createConnector();
+            await connector.createObject({ path: RECORDS_PATH, structure: '++' });
+            await fillRecordsTable(connector, 250);
+
+            const firstBlock = await retrieveRange(connector, 0, 100);
+            const lastBlock = await retrieveRange(connector, 200, 100);
+            const middle = await retrieveRange(connector, 120, 3);
+
+            expect(firstBlock.values).toEqual(Array.from({ length: 100 }, (_, index) => index));
+            expect(firstBlock.totalCount).toBe(250);
+            expect(lastBlock.values).toEqual(Array.from({ length: 50 }, (_, index) => 200 + index));
+            expect(middle.values).toEqual([120, 121, 122]);
+        });
+
+        it('finds the right records after the table was emptied and filled again, when its numbers no longer start at 1', async () => {
+            const connector = createConnector();
+            await connector.createObject({ path: RECORDS_PATH, structure: '++' });
+            await fillRecordsTable(connector, 10);
+            await connector.removeRecords({ keys: [], path: RECORDS_PATH });
+            await fillRecordsTable(connector, 10, 100);
+
+            expect(await retrieveRange(connector, 5, 3)).toEqual({ totalCount: 10, values: [105, 106, 107] });
+        });
+
+        it('steps through the records when their numbers have a gap', async () => {
+            const connector = createConnector();
+            await connector.createObject({ path: RECORDS_PATH, structure: '++' });
+            await fillRecordsTable(connector, 10);
+            await connector.containers[DATABASE_NAME]?.table<Record<string, unknown>>('records')
+                .filter((record) => record['c1'] === 2)
+                .delete();
+
+            expect(await retrieveRange(connector, 2, 2)).toEqual({ totalCount: 9, values: [3, 4] });
+        });
+
+        it('returns no records for a range past the end, still with the total', async () => {
+            const connector = createConnector();
+            await connector.createObject({ path: RECORDS_PATH, structure: '++' });
+            await fillRecordsTable(connector, 10);
+
+            expect(await retrieveRange(connector, 10, 5)).toEqual({ totalCount: 10, values: [] });
         });
 
         it('wraps a retrieval failure in a connector error', async () => {
