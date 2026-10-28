@@ -1,14 +1,14 @@
 {
-  "version": "1.0.110",
+  "version": "1.0.111",
   "name": "@dpuse/dpuse-connector-dexie-js",
   "dependencies": {
     "@dpuse/dpuse-development": {
-      "version": "1.0.135",
-      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-development/-/dpuse-development-1.0.135.tgz",
+      "version": "1.0.138",
+      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-development/-/dpuse-development-1.0.138.tgz",
       "overridden": false,
       "dependencies": {
         "@dpuse/dpuse-shared": {
-          "version": "1.0.154"
+          "version": "1.0.155"
         },
         "license-checker-rseidelsohn": {
           "version": "5.0.1",
@@ -1194,8 +1194,8 @@
       }
     },
     "@dpuse/dpuse-shared": {
-      "version": "1.0.154",
-      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-shared/-/dpuse-shared-1.0.154.tgz",
+      "version": "1.0.155",
+      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-shared/-/dpuse-shared-1.0.155.tgz",
       "overridden": false,
       "dependencies": {
         "file-type": {
@@ -1204,12 +1204,15 @@
           "overridden": false,
           "dependencies": {
             "@tokenizer/inflate": {
-              "version": "0.5.1",
-              "resolved": "https://registry.npmjs.org/@tokenizer/inflate/-/inflate-0.5.1.tgz",
+              "version": "0.5.2",
+              "resolved": "https://registry.npmjs.org/@tokenizer/inflate/-/inflate-0.5.2.tgz",
               "overridden": false,
               "dependencies": {
                 "debug": {
                   "version": "4.4.3"
+                },
+                "strtok3": {
+                  "version": "10.6.3"
                 },
                 "token-types": {
                   "version": "6.1.2"
@@ -1217,8 +1220,8 @@
               }
             },
             "strtok3": {
-              "version": "10.6.2",
-              "resolved": "https://registry.npmjs.org/strtok3/-/strtok3-10.6.2.tgz",
+              "version": "10.6.3",
+              "resolved": "https://registry.npmjs.org/strtok3/-/strtok3-10.6.3.tgz",
               "overridden": false,
               "dependencies": {
                 "@tokenizer/token": {
