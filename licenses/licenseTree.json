@@ -1,14 +1,14 @@
 {
-  "version": "1.0.111",
+  "version": "1.0.113",
   "name": "@dpuse/dpuse-connector-dexie-js",
   "dependencies": {
     "@dpuse/dpuse-development": {
-      "version": "1.0.138",
-      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-development/-/dpuse-development-1.0.138.tgz",
+      "version": "1.0.141",
+      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-development/-/dpuse-development-1.0.141.tgz",
       "overridden": false,
       "dependencies": {
         "@dpuse/dpuse-shared": {
-          "version": "1.0.155"
+          "version": "1.0.164"
         },
         "license-checker-rseidelsohn": {
           "version": "5.0.1",
@@ -1194,18 +1194,18 @@
       }
     },
     "@dpuse/dpuse-shared": {
-      "version": "1.0.155",
-      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-shared/-/dpuse-shared-1.0.155.tgz",
+      "version": "1.0.164",
+      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-shared/-/dpuse-shared-1.0.164.tgz",
       "overridden": false,
       "dependencies": {
         "file-type": {
-          "version": "22.2.0",
-          "resolved": "https://registry.npmjs.org/file-type/-/file-type-22.2.0.tgz",
+          "version": "22.3.0",
+          "resolved": "https://registry.npmjs.org/file-type/-/file-type-22.3.0.tgz",
           "overridden": false,
           "dependencies": {
             "@tokenizer/inflate": {
-              "version": "0.5.2",
-              "resolved": "https://registry.npmjs.org/@tokenizer/inflate/-/inflate-0.5.2.tgz",
+              "version": "0.6.0",
+              "resolved": "https://registry.npmjs.org/@tokenizer/inflate/-/inflate-0.6.0.tgz",
               "overridden": false,
               "dependencies": {
                 "debug": {
@@ -1237,8 +1237,8 @@
               "overridden": false,
               "dependencies": {
                 "@borewit/text-codec": {
-                  "version": "0.2.2",
-                  "resolved": "https://registry.npmjs.org/@borewit/text-codec/-/text-codec-0.2.2.tgz",
+                  "version": "0.2.3",
+                  "resolved": "https://registry.npmjs.org/@borewit/text-codec/-/text-codec-0.2.3.tgz",
                   "overridden": false
                 },
                 "@tokenizer/token": {
@@ -1780,7 +1780,7 @@
                   "version": "1.0.9"
                 },
                 "@types/node": {
-                  "version": "26.6.5"
+                  "version": "26.6.6"
                 }
               }
             },
@@ -2615,8 +2615,8 @@
       }
     },
     "@types/node": {
-      "version": "26.6.5",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-26.6.5.tgz",
+      "version": "26.6.6",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-26.6.6.tgz",
       "overridden": false,
       "dependencies": {
         "undici-types": {
@@ -3299,8 +3299,8 @@
       }
     },
     "fake-indexeddb": {
-      "version": "6.2.6",
-      "resolved": "https://registry.npmjs.org/fake-indexeddb/-/fake-indexeddb-6.2.6.tgz",
+      "version": "6.2.7",
+      "resolved": "https://registry.npmjs.org/fake-indexeddb/-/fake-indexeddb-6.2.7.tgz",
       "overridden": false
     },
     "prettier": {
@@ -3555,7 +3555,7 @@
       "overridden": false,
       "dependencies": {
         "@types/node": {
-          "version": "26.6.5"
+          "version": "26.6.6"
         },
         "@vitejs/devtools": {},
         "esbuild": {
@@ -3748,7 +3748,7 @@
           }
         },
         "@types/node": {
-          "version": "26.6.5"
+          "version": "26.6.6"
         },
         "@vitest/browser-playwright": {},
         "@vitest/browser-preview": {},
@@ -3859,8 +3859,8 @@
       }
     },
     "wrangler": {
-      "version": "4.154.0",
-      "resolved": "https://registry.npmjs.org/wrangler/-/wrangler-4.154.0.tgz",
+      "version": "4.156.0",
+      "resolved": "https://registry.npmjs.org/wrangler/-/wrangler-4.156.0.tgz",
       "overridden": false,
       "dependencies": {
         "@cloudflare/kv-asset-handler": {
@@ -3894,8 +3894,8 @@
           "version": "2.3.3"
         },
         "miniflare": {
-          "version": "5.20261023.1-beta",
-          "resolved": "https://registry.npmjs.org/miniflare/-/miniflare-5.20261023.1-beta.tgz",
+          "version": "5.20261023.3-beta",
+          "resolved": "https://registry.npmjs.org/miniflare/-/miniflare-5.20261023.3-beta.tgz",
           "overridden": false,
           "dependencies": {
             "@cspotcode/source-map-support": {

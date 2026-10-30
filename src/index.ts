@@ -188,7 +188,6 @@ export class Connector implements ExtendedConnectorInterface {
             encodingId: undefined,
             fileType: undefined,
             hasHeaders: undefined,
-            inferenceRecords: [],
             parsedRecords: [],
             recordDelimiterId: undefined,
             size: undefined,
