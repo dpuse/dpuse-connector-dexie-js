@@ -234,10 +234,10 @@ describe('Connector', () => {
             const connector = createConnector();
             await createPeopleTable(connector);
 
-            const preview = await connector.previewObject({ path: PEOPLE_PATH } as never);
+            const { contentAuditConfig, readConfig } = await connector.previewObject({ path: PEOPLE_PATH } as never);
 
-            expect(preview.dataFormatId).toBe('unknown');
-            expect(preview.columnConfigs).toEqual([]);
+            expect(readConfig.dataFormatId).toBe('unknown');
+            expect(contentAuditConfig.columns).toEqual([]);
         });
     });
 });

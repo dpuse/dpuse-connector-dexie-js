@@ -20,8 +20,8 @@ import type {
     GetRecordResult,
     ListNodesOptions,
     ListNodesResult,
-    PreviewConfig,
     PreviewObjectOptions,
+    PreviewObjectResult,
     RecordRange,
     RecordRetrievalTypeId,
     RemoveRecordsOptions,
@@ -175,24 +175,34 @@ export class Connector implements ExtendedConnectorInterface {
     }
 
     // Preview object
-    async previewObject(options: PreviewObjectOptions): Promise<PreviewConfig> {
+    async previewObject(options: PreviewObjectOptions): Promise<PreviewObjectResult> {
         const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
         const container = await this.establishContainer(containerId);
         const data = await container.table<Record<string, unknown>>(nodeId).limit(50).toArray(); // Fetch the first 50 rows.
         return {
-            asAt: Date.now(),
-            columnConfigs: [],
-            dataFormatId: 'unknown',
-            duration: 0,
-            encodingConfidenceLevel: undefined,
-            encodingId: undefined,
-            fileType: undefined,
-            hasHeaders: undefined,
-            parsedRecords: [],
-            recordDelimiterId: undefined,
-            size: undefined,
-            text: undefined,
-            valueDelimiterId: undefined
+            contentAuditConfig: {
+                asAt: Date.now(),
+                byteCount: 0,
+                columns: [],
+                commentLineCount: undefined,
+                duration: 0,
+                emptyLineCount: undefined,
+                invalidFieldLengthCount: undefined,
+                isComplete: false,
+                lineCount: undefined,
+                recordCount: 0,
+                sourceWaitDuration: undefined
+            },
+            previewConfig: { parsedRecords: [], size: undefined, text: undefined },
+            readConfig: {
+                dataFormatId: 'unknown',
+                encodingConfidenceLevel: undefined,
+                encodingId: undefined,
+                fileType: undefined,
+                hasHeaders: undefined,
+                recordDelimiterId: undefined,
+                valueDelimiterId: undefined
+            }
         };
     }
 
