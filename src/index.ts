@@ -193,8 +193,8 @@ export class Connector implements ExtendedConnectorInterface {
                 recordCount: 0,
                 sourceWaitDuration: undefined
             },
-            previewConfig: { parsedRecords: [], size: undefined, text: undefined },
-            readConfig: {
+            sampleConfig: { parsedRecords: [], size: undefined, text: undefined },
+            readingConfig: {
                 dataFormatId: 'unknown',
                 encodingConfidenceLevel: undefined,
                 encodingId: undefined,

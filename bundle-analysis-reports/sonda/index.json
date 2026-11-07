@@ -1,7 +1,7 @@
 {
   "metadata": {
     "version": "0.14.0",
-    "generatedAt": "2026-10-30T10:19:54.516Z",
+    "generatedAt": "2026-11-07T10:07:13.795Z",
     "integration": "vite",
     "sources": false,
     "gzip": true,
@@ -21,8 +21,8 @@
       "name": "[unassigned]",
       "type": "other",
       "format": "other",
-      "uncompressed": 26899,
-      "gzip": 2495,
+      "uncompressed": 26909,
+      "gzip": 2462,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },
@@ -31,14 +31,14 @@
       "name": "config.json",
       "type": "script",
       "format": "esm",
-      "uncompressed": 5017
+      "uncompressed": 5025
     },
     {
       "kind": "asset",
       "name": "dist/dpuse-connector-dexie-js.es.js",
       "type": "script",
-      "uncompressed": 157051,
-      "gzip": 41937,
+      "uncompressed": 156558,
+      "gzip": 41706,
       "brotli": 0
     },
     {
@@ -46,15 +46,15 @@
       "name": "node_modules/@dpuse/dpuse-shared/dist/dpuse-shared.es.js",
       "type": "script",
       "format": "esm",
-      "uncompressed": 62600
+      "uncompressed": 57409
     },
     {
       "kind": "chunk",
       "name": "node_modules/@dpuse/dpuse-shared/dist/dpuse-shared.es.js",
       "type": "script",
       "format": "esm",
-      "uncompressed": 8569,
-      "gzip": 2878,
+      "uncompressed": 7834,
+      "gzip": 2608,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },
@@ -70,8 +70,8 @@
       "name": "node_modules/dexie/dist/dexie.js",
       "type": "script",
       "format": "cjs",
-      "uncompressed": 115612,
-      "gzip": 34488,
+      "uncompressed": 115614,
+      "gzip": 34480,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },
@@ -88,7 +88,7 @@
       "type": "script",
       "format": "esm",
       "uncompressed": 387,
-      "gzip": 295,
+      "gzip": 294,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },
@@ -104,15 +104,15 @@
       "name": "src/index.ts",
       "type": "script",
       "format": "esm",
-      "uncompressed": 8835
+      "uncompressed": 9147
     },
     {
       "kind": "chunk",
       "name": "src/index.ts",
       "type": "script",
       "format": "esm",
-      "uncompressed": 5584,
-      "gzip": 1781,
+      "uncompressed": 5814,
+      "gzip": 1861,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     }

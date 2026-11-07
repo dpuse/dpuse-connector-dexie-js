@@ -234,9 +234,9 @@ describe('Connector', () => {
             const connector = createConnector();
             await createPeopleTable(connector);
 
-            const { contentAuditConfig, readConfig } = await connector.previewObject({ path: PEOPLE_PATH } as never);
+            const { contentAuditConfig, readingConfig } = await connector.previewObject({ path: PEOPLE_PATH } as never);
 
-            expect(readConfig.dataFormatId).toBe('unknown');
+            expect(readingConfig.dataFormatId).toBe('unknown');
             expect(contentAuditConfig.columns).toEqual([]);
         });
     });
