@@ -1,5 +1,5 @@
 {
-  "version": "1.0.116",
+  "version": "1.0.117",
   "name": "@dpuse/dpuse-connector-dexie-js",
   "dependencies": {
     "@dpuse/dpuse-development": {

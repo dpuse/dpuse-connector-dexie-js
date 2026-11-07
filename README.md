@@ -24,7 +24,7 @@ In addition, DPUse provides [Tools](https://www.dpuse.app) used by the applicati
 
 ## Introduction
 
-Provides access to local Dexie.js (IndexedDB) databases in the browser. It is intended for local-first, offline-capable data storage and supports read/write operations. Each database may optionally be synced with Dexie Cloud, in which case access is governed by that database's own authentication and realm permissions; unsynced databases require no authentication and are scoped to the local device only.
+Provides access to local IndexedDB databases in the browser via the Dexie.js wrapper library. It is intended for local-first, offline-capable data storage and supports read/write operations. Each database may optionally be synced with Dexie Cloud, in which case access is governed by that database's own authentication and realm permissions; unsynced databases require no authentication and are scoped to the local device only.
 
 <!-- OPENING_END -->
 
