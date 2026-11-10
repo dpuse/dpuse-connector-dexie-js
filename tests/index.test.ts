@@ -66,24 +66,16 @@ describe('Connector', () => {
         for (const name of databaseNames) await Dexie.delete(name);
     });
 
-    it('constructs with the static config and no active operation', () => {
+    it('constructs with no open containers', () => {
         const connector = createConnector();
-        expect(connector.config.id).toBe('dpuse-connector-dexie-js');
-        expect(connector.abortController).toBeUndefined();
         expect(connector.containers).toEqual({});
     });
 
-    it('aborts a running operation and clears it, and does nothing when none is running', () => {
+    it('abortOperation is a no-op when nothing is running', () => {
         const connector = createConnector();
         expect(() => {
             connector.abortOperation();
         }).not.toThrow();
-
-        const abortController = new AbortController();
-        connector.abortController = abortController;
-        connector.abortOperation();
-        expect(abortController.signal.aborted).toBe(true);
-        expect(connector.abortController).toBeUndefined();
     });
 
     describe('objects', () => {
@@ -227,7 +219,6 @@ describe('Connector', () => {
             const connector = createConnector();
 
             await expect(connector.retrieveRecords({ path: 'bad' } as never, vi.fn(), vi.fn())).rejects.toThrow("Failed to access Dexie table with path 'bad'.");
-            expect(connector.abortController).toBeUndefined();
         });
 
         it('previews a table with an unknown data format', async () => {

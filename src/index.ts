@@ -9,7 +9,6 @@ import { Dexie, type IndexableType, type Table } from 'dexie';
 import { ConnectorError } from '@dpuse/dpuse-shared';
 import type {
     ConnectionNodeConfig,
-    ConnectorConfig,
     ConnectorInterface,
     ConnectorUtilities,
     CreateObjectOptions,
@@ -31,10 +30,6 @@ import type {
     UpsertRecordsOptions
 } from '@dpuse/dpuse-shared';
 
-// ── Data
-import config from '~/config.json';
-import { version } from '~/package.json';
-
 // ── Types ────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 // Extend default connector interface with Dexie container map
@@ -52,16 +47,13 @@ const ERROR_INVALID_OBJECT_PATH = 'Encountered invalid object path';
 // ── Connectors ───────────────────────────────────────────────────────────────────────────────────────────────────────
 
 export class Connector implements ExtendedConnectorInterface {
-    abortController: AbortController | undefined;
-    readonly config: ConnectorConfig;
-    connectorUtilities: ConnectorUtilities;
-    readonly toolConfigs;
+    private abortController: AbortController | undefined;
+    private readonly connectorUtilities: ConnectorUtilities;
+    private readonly toolConfigs;
     containers: Record<string, Dexie>;
 
     constructor(connectorUtilities: ConnectorUtilities, toolConfigs: ToolConfig[]) {
         this.abortController = undefined;
-        this.config = config as ConnectorConfig;
-        this.config.version = version;
         this.connectorUtilities = connectorUtilities;
         this.toolConfigs = toolConfigs;
         this.containers = {};
@@ -193,13 +185,14 @@ export class Connector implements ExtendedConnectorInterface {
                 recordCount: 0,
                 sourceWaitDuration: undefined
             },
-            sampleConfig: { parsedRecords: [], size: undefined, text: undefined },
+            sampleConfig: { issues: [], parsedRecords: [], size: undefined, text: undefined },
             readingConfig: {
                 dataFormatId: 'unknown',
                 encodingConfidenceLevel: undefined,
                 encodingId: undefined,
                 fileType: undefined,
                 hasHeaders: undefined,
+                parserId: undefined,
                 recordDelimiterId: undefined,
                 valueDelimiterId: undefined
             }
