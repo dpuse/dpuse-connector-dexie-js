@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "1.0.121",
+    "version": "1.0.122",
     "private": false,
     "description": "Provides access to local Dexie.js (IndexedDB) databases in the browser.",
     "license": "MIT",
@@ -61,7 +61,7 @@
         "test": "node -e \"import('@dpuse/dpuse-development').then(m => m.testProject())\""
     },
     "dependencies": {
-        "@dpuse/dpuse-shared": "^1.0.211",
+        "@dpuse/dpuse-shared": "^1.0.212",
         "dexie": "^4.4.7"
     },
     "devDependencies": {

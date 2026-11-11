@@ -3,7 +3,7 @@
 // https://dexie.org/docs/Dexie/Dexie.open()#dynamic-schema-manipulation
 
 // ── External Dependencies & Registrations
-import { Dexie, type IndexableType, type Table } from 'dexie';
+import { type Collection, Dexie, type IndexableType, type Table } from 'dexie';
 
 // ── DPUse Framework
 import type {
@@ -23,10 +23,14 @@ import type {
     GetRecordResult,
     ListNodesOptions,
     ListNodesResult,
+    LoadObjectRecordsOptions,
+    LoadObjectRecordsResult,
     ObjectColumnConfig,
+    OpenStoreResult,
     PreviewObjectOptions,
     PreviewObjectResult,
-    RecordRange,
+    QueryRecordsOptions,
+    QueryRecordsResult,
     RemoveRecordsOptions,
     RetrieveRecordsChunk,
     RetrieveRecordsOptions,
@@ -36,18 +40,22 @@ import type {
     ToolConfig,
     UpsertRecordsOptions
 } from '@dpuse/dpuse-shared';
-import { ConnectorError, convertStoreRecordToParsedRecord, normalizeToError } from '@dpuse/dpuse-shared';
+import { ConnectorError, convertStoreRecordToParsedRecord, normalizeToError, resolveRequestSignal } from '@dpuse/dpuse-shared';
+
+// ── Local Framework
+import { checkCount, queryStoreRecords } from '@/dexieStore';
 
 // ── Types ────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-// Extend default connector interface with Dexie container map
+// The connector keeps each database it has opened, by name.
 interface ExtendedConnectorInterface extends ConnectorInterface {
     containers: Record<string, Dexie>;
 }
 
-// The column types saved for a table this connector created, by the table's path.
+// The column types saved for a table this connector created or loaded, by the table's path.
 interface SavedObject {
     columnConfigs: ObjectColumnConfig[];
+    loadId?: string | undefined; // The load whose records the table shows. Undefined for a table filled through 'upsertRecords'.
     path: string;
 }
 
@@ -55,6 +63,7 @@ interface SavedObject {
 interface TableLayout {
     columnConfigs: ObjectColumnConfig[];
     fieldNames: string[];
+    loadId: string | undefined;
 }
 
 // ── Constants ────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -68,50 +77,55 @@ const ERROR_INVALID_OBJECT_PATH = 'Encountered invalid object path';
 // a database of the connector's own. It is left out of the databases listed.
 const OBJECTS_DATABASE_NAME = '_dpuse_objects';
 
+// A store path that names no database, such as a data view's id, uses this database.
+const DEFAULT_STORE_DATABASE_NAME = 'dpuse-store';
+
+// Each loaded record holds the id of the load that wrote it. A new load is written beside the earlier one and only
+// replaces it once complete, because IndexedDB cannot keep one transaction open while the records arrive.
+const LOAD_FIELD = '_load';
+const LOAD_TABLE_SCHEMA = `++,${LOAD_FIELD}`;
+
 const INFERENCE_RECORD_COUNT = 100; // Records read to work out the columns of a table this connector did not create.
 const PREVIEW_RECORD_COUNT = 50;
 const DEFAULT_AUDIT_CHUNK_SIZE = 10_000;
 
 // ── Connectors ───────────────────────────────────────────────────────────────────────────────────────────────────────
 
+// Reads and writes IndexedDB databases through Dexie, and keeps data views for investigation as a store. Every tab can
+// open the same database, so the store is never held by one tab.
 export class Connector implements ExtendedConnectorInterface {
-    private abortController: AbortController | undefined;
     private readonly connectorUtilities: ConnectorUtilities;
+    private readonly schemaChanges: Map<string, Promise<unknown>>; // Each database's latest schema change, which the next one waits for.
+    private storeIsOpen: boolean;
     private readonly toolConfigs;
     containers: Record<string, Dexie>;
 
     constructor(connectorUtilities: ConnectorUtilities, toolConfigs: ToolConfig[]) {
-        this.abortController = undefined;
         this.connectorUtilities = connectorUtilities;
+        this.schemaChanges = new Map();
+        this.storeIsOpen = false;
         this.toolConfigs = toolConfigs;
         this.containers = {};
     }
 
-    // Abort operation
-    abortOperation(): void {
-        if (!this.abortController) return;
-        this.abortController.abort();
-        this.abortController = undefined;
-    }
+    // ── Actions ──────────────────────────────────────────────────────────────────────────────────────────────────────
 
     // A table's columns already have types, so the audit counts its values against them rather than working types out.
     // The auditor reads text, so each typed record is handed over as text. A table has no bytes, so 'byteLimit' does
     // not apply, and the audit reads every record unless 'stopSignal' fires.
     async auditObjectContent(options: AuditObjectContentOptions, onProgress: (recordCount: number, byteCount: number) => void): Promise<AuditObjectContentResult> {
-        const abortController = new AbortController();
-        this.abortController = abortController;
-        const { signal } = abortController;
+        const signal = resolveRequestSignal(options);
         try {
             const asAt = Date.now();
             const startedAt = performance.now();
             const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
             const container = await this.establishContainer(containerId);
             const table = container.table<Record<string, unknown>>(nodeId);
-            const layout = await this.establishTableLayout(options.path, table);
+            const layout = await this.establishTableLayout(constructObjectPath(containerId, nodeId), table);
             const columnAuditor = this.connectorUtilities.constructColumnAuditor(false, constructDeclaredColumnConfigs(layout));
             let recordCount = 0;
             let isComplete = true;
-            const recordChunks = readRecordChunks(table, options.chunkSize ?? DEFAULT_AUDIT_CHUNK_SIZE);
+            const recordChunks = readRecordChunks(table, options.chunkSize ?? DEFAULT_AUDIT_CHUNK_SIZE, layout.loadId);
             for await (const records of recordChunks) {
                 signal.throwIfAborted();
                 if (options.stopSignal?.aborted === true) {
@@ -141,91 +155,64 @@ export class Connector implements ExtendedConnectorInterface {
             };
         } catch (error) {
             throw normalizeToError(error);
-        } finally {
-            if (this.abortController === abortController) this.abortController = undefined;
         }
     }
 
-    // Create object
+    // Closes every database, so a schema change made in another tab is not held up waiting for this one.
+    closeStore(): Promise<void> {
+        this.storeIsOpen = false;
+        for (const container of Object.values(this.containers)) container.close();
+        this.containers = {};
+        return Promise.resolve();
+    }
+
     async createObject(options: CreateObjectOptions): Promise<void> {
         const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
-        const container = await this.establishContainer(containerId);
-
-        if (container.tables.some((table) => table.name === nodeId)) throw new Error(`Duplicate table '${nodeId}'.`);
-
-        container.close();
-        const newContainer = new Dexie(container.name);
-        newContainer.on('blocked', () => false); // Silence console warning of blocked event
-
-        if (container.tables.length === 0) {
-            await container.delete();
-            newContainer.version(1).stores({ [nodeId]: constructTableSchema(options) });
-        } else {
-            const currentSchema: Record<string, string> = {};
-            for (const { name, schema } of container.tables) {
-                currentSchema[name] = [schema.primKey.src, ...schema.indexes.map((index) => index.src)].join(',');
-            }
-            newContainer.version(container.verno).stores(currentSchema);
-            newContainer.version(container.verno + 1).stores({ [nodeId]: constructTableSchema(options) });
-        }
-        this.containers[containerId] = await newContainer.open();
+        await this.runSchemaChange(containerId, async () => {
+            const container = await this.establishContainer(containerId);
+            if (container.tables.some((table) => table.name === nodeId)) throw new Error(`Duplicate table '${nodeId}'.`);
+            await this.changeSchema(containerId, nodeId, constructTableSchema(options));
+        });
         const objectsDatabase = await this.establishObjectsDatabase();
-        await objectsDatabase.table<SavedObject>('objects').put({ columnConfigs: options.columnConfigs, path: options.path });
+        await objectsDatabase.table<SavedObject>('objects').put({ columnConfigs: options.columnConfigs, path: constructObjectPath(containerId, nodeId) });
     }
 
-    // Drop object
+    // Drops a table this connector created, or one a store load wrote. A store names a table on its own when it is in the
+    // default store database.
     async dropObject(options: DropObjectOptions): Promise<void> {
-        const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
-        const container = await this.establishContainer(containerId);
-
-        if (container.tables.every((table) => table.name !== nodeId)) throw new Error(`Table '${nodeId}' not found.`);
-
-        container.close();
-        const newContainer = new Dexie(container.name);
-        newContainer.on('blocked', () => false); // Silence console warning of blocked event
-
-        if (container.tables.length === 1) {
-            await container.delete();
-            newContainer.version(1).stores({});
-        } else {
-            const currentSchema: Record<string, string> = {};
-            for (const { name, schema } of container.tables) {
-                currentSchema[name] = [schema.primKey.src, ...schema.indexes.map((index) => index.src)].join(',');
-            }
-            newContainer.version(container.verno).stores(currentSchema);
-            newContainer.version(container.verno + 1).stores({ [nodeId]: null });
-        }
-        this.containers[containerId] = await newContainer.open();
+        const { containerId, nodeId } = this.resolveObjectIdentifiers(options.path);
+        await this.runSchemaChange(containerId, async () => {
+            const container = await this.establishContainer(containerId);
+            if (container.tables.every((table) => table.name !== nodeId)) throw new Error(`Table '${nodeId}' not found.`);
+            await this.changeSchema(containerId, nodeId, null);
+        });
         const objectsDatabase = await this.establishObjectsDatabase();
-        await objectsDatabase.table<SavedObject>('objects').delete(options.path);
+        await objectsDatabase.table<SavedObject>('objects').delete(constructObjectPath(containerId, nodeId));
     }
 
-    // Find object
     async findObject(options: FindObjectOptions): Promise<FindObjectResult> {
         if (options.storeId == null) throw new Error(`${ERROR_INVALID_CONTAINER_ID} '${String(options.storeId)}'.`);
         const container = await this.establishContainer(options.storeId);
         const isObjectFound = container.tables.some((table) => table.name === options.nodeId);
-        return { path: isObjectFound ? `/${options.storeId}/${options.nodeId}` : undefined };
+        return { path: isObjectFound ? constructObjectPath(options.storeId, options.nodeId) : undefined };
     }
 
-    // Get record
+    // A record an earlier load wrote, and not yet removed, is not part of the table.
     async getRecord(options: GetRecordOptions): Promise<GetRecordResult> {
         const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
         const container = await this.establishContainer(containerId);
         const table = container.table<Record<string, unknown>>(nodeId);
+        const layout = await this.establishTableLayout(constructObjectPath(containerId, nodeId), table);
         const record = await table.get(options.id);
-        if (!record) throw new Error('Not found.');
-        const layout = await this.establishTableLayout(options.path, table);
+        if (!record || (layout.loadId != null && record[LOAD_FIELD] !== layout.loadId)) throw new Error('Not found.');
         return { record: constructStoreRecord(record, layout) };
     }
 
-    // List nodes
     async listNodes(settings: ListNodesOptions): Promise<ListNodesResult> {
         const folderPathSegments = settings.folderPath.split('/');
         switch (folderPathSegments.length) {
             case 1: {
                 if (folderPathSegments[0] != '') throw new Error(`${ERROR_INVALID_FOLDER_PATH} '${settings.folderPath}'.`); // Invalid folder path if characters ahead of first separator.
-                // Return list of database nodes for Dexie instance.
                 const allDatabaseNames = await Dexie.getDatabaseNames();
                 const databaseNames = allDatabaseNames.filter((name) => name !== OBJECTS_DATABASE_NAME);
                 const connectionNodeConfigs = databaseNames.map(
@@ -237,7 +224,6 @@ export class Connector implements ExtendedConnectorInterface {
                 if (folderPathSegments[0] != '') throw new Error(`${ERROR_INVALID_FOLDER_PATH} '${settings.folderPath}'.`); // Invalid folder path if characters ahead of first separator.
                 const containerName = folderPathSegments[1];
                 if (containerName == null) throw new Error(`${ERROR_INVALID_FOLDER_PATH} '${settings.folderPath}'.`); // Invalid folder path if no container name.
-                // Return list of table nodes in Dexie database.
                 const container = await this.establishContainer(containerName);
                 const connectionNodeConfigs = container.tables.map(
                     (table) => ({ folderPath: settings.folderPath, id: table.name, label: table.name, name: table.name, typeId: 'object' }) as ConnectionNodeConfig
@@ -249,6 +235,58 @@ export class Connector implements ExtendedConnectorInterface {
         }
     }
 
+    // Replaces a table's records with those given, typed by the columns given. The new records are written under a load
+    // id of their own, and the table only switches to them once all are written. So a failed or stopped load leaves the
+    // earlier one in place, and it is removed only after the switch.
+    async loadObjectRecords(options: LoadObjectRecordsOptions, chunks: AsyncIterable<StoreRecord[]>): Promise<LoadObjectRecordsResult> {
+        const signal = resolveRequestSignal(options);
+        try {
+            this.establishOpenStore();
+            const { containerId, nodeId } = this.resolveObjectIdentifiers(options.path);
+            await this.ensureLoadTable(containerId, nodeId);
+            const container = await this.establishContainer(containerId);
+            const table = container.table<Record<string, unknown>>(nodeId);
+            const objectPath = constructObjectPath(containerId, nodeId);
+            const loadId = crypto.randomUUID();
+            const layout: TableLayout = {
+                columnConfigs: options.columnConfigs,
+                fieldNames: options.columnConfigs.map((_columnConfig, columnIndex) => constructFieldName(columnIndex)),
+                loadId
+            };
+            let recordCount = 0;
+            try {
+                for await (const records of chunks) {
+                    signal.throwIfAborted();
+                    await table.bulkAdd(records.map((record) => ({ ...constructRecordObject(record, layout), [LOAD_FIELD]: loadId })));
+                    recordCount += records.length;
+                }
+                signal.throwIfAborted();
+            } catch (error) {
+                await table.where(LOAD_FIELD).equals(loadId).delete();
+                throw error;
+            }
+            const objectsDatabase = await this.establishObjectsDatabase();
+            await objectsDatabase.table<SavedObject>('objects').put({ columnConfigs: options.columnConfigs, loadId, path: objectPath });
+            await table.filter((record) => record[LOAD_FIELD] !== loadId).delete();
+            return { recordCount };
+        } catch (error) {
+            throw normalizeToError(error);
+        }
+    }
+
+    // IndexedDB lets every tab open the same database, so no tab holds the store for itself and 'heldElsewhere' never
+    // applies. Some private windows refuse IndexedDB, which leaves the store unavailable.
+    async openStore(): Promise<OpenStoreResult> {
+        if (typeof indexedDB === 'undefined') return { storeStateId: 'unavailable' };
+        try {
+            await this.establishContainer(DEFAULT_STORE_DATABASE_NAME);
+        } catch {
+            return { storeStateId: 'unavailable' };
+        }
+        this.storeIsOpen = true;
+        return { storeStateId: 'ready' };
+    }
+
     // A table's columns come from its saved or worked-out types, so nothing is detected and the user has nothing to choose.
     // The sample is shown as text, as a file's is.
     async previewObject(options: PreviewObjectOptions): Promise<PreviewObjectResult> {
@@ -257,9 +295,9 @@ export class Connector implements ExtendedConnectorInterface {
         const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
         const container = await this.establishContainer(containerId);
         const table = container.table<Record<string, unknown>>(nodeId);
-        const layout = await this.establishTableLayout(options.path, table);
-        const records = await table.limit(PREVIEW_RECORD_COUNT).toArray();
-        const totalCount = await table.count();
+        const layout = await this.establishTableLayout(constructObjectPath(containerId, nodeId), table);
+        const records = await selectCurrentRecords(table, layout).limit(PREVIEW_RECORD_COUNT).toArray();
+        const totalCount = await selectCurrentRecords(table, layout).count();
         const parsedRecords = records.map((record) => convertStoreRecordToParsedRecord(constructStoreRecord(record, layout)));
         const { columnConfigs } = this.connectorUtilities.inferDataTypes(parsedRecords, false, constructDeclaredColumnConfigs(layout));
         return {
@@ -291,54 +329,107 @@ export class Connector implements ExtendedConnectorInterface {
         };
     }
 
-    // Upsert records
-    async upsertRecords(options: UpsertRecordsOptions): Promise<void> {
-        if (options.records.length === 0) return;
-        const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
-        const container = await this.establishContainer(containerId);
-        const table = container.table<Record<string, unknown>>(nodeId);
-        const layout = await this.establishTableLayout(options.path, table);
-        await table.bulkPut(options.records.map((record) => constructRecordObject(record, layout)));
+    // A page with no filters, groups or sorts is read straight from the table. Any other query reads the whole table and
+    // is answered in memory, because IndexedDB cannot filter, group or sort as SQL does.
+    async queryRecords(options: QueryRecordsOptions): Promise<QueryRecordsResult> {
+        try {
+            this.establishOpenStore();
+            const { containerId, nodeId } = this.resolveObjectIdentifiers(options.path);
+            const container = await this.establishContainer(containerId);
+            if (container.tables.every((table) => table.name !== nodeId)) throw new Error(`'${options.path}' has not been loaded.`);
+            const table = container.table<Record<string, unknown>>(nodeId);
+            const layout = await this.establishTableLayout(constructObjectPath(containerId, nodeId), table);
+            if (options.filters.length === 0 && options.groupColumnIndexes.length === 0 && options.sorts.length === 0) {
+                const pageRecords = await selectCurrentRecords(table, layout).offset(checkCount(options.offset)).limit(checkCount(options.limit)).toArray();
+                const totalCount = await selectCurrentRecords(table, layout).count();
+                return { records: pageRecords.map((record) => constructStoreRecord(record, layout)), totalCount };
+            }
+            const records = await selectCurrentRecords(table, layout).toArray();
+            return queryStoreRecords(
+                records.map((record) => constructStoreRecord(record, layout)),
+                layout.columnConfigs.length,
+                options
+            );
+        } catch (error) {
+            throw normalizeToError(error);
+        }
     }
 
-    // Remove records
+    // No keys removes every record.
     async removeRecords(options: RemoveRecordsOptions): Promise<void> {
         const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
         const container = await this.establishContainer(containerId);
         const keys = options.keys;
         if (keys.length === 0) {
-            await container.table(nodeId).clear(); // Remove all records.
+            await container.table(nodeId).clear();
         } else if (keys.length === 1 && keys[0] != null) {
-            await container.table(nodeId).delete(keys[0]); // Remove single record.
+            await container.table(nodeId).delete(keys[0]);
         } else {
-            await container.table(nodeId).bulkDelete(keys); // Remove multiple records.
+            await container.table(nodeId).bulkDelete(keys);
         }
     }
 
-    // Retrieve records, every one of them or only those in a range of positions, which also reports the table's total.
+    // Retrieves every record of the table, typed by its columns.
     async *retrieveRecords(options: RetrieveRecordsOptions): AsyncGenerator<RetrieveRecordsChunk, RetrieveRecordsSummary, undefined> {
         try {
             const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
             const container = await this.establishContainer(containerId);
             const table = container.table<Record<string, unknown>>(nodeId);
-            const layout = await this.establishTableLayout(options.path, table);
-            if (options.range == null) {
-                const records = await table.toArray();
-                yield { records: records.map((record) => constructStoreRecord(record, layout)), typeId: 'storeRecordArray' };
-                return { recordCount: records.length };
-            }
-            const totalCount = await table.count();
-            const records = await retrieveRecordRange(table, options.range, totalCount);
+            const layout = await this.establishTableLayout(constructObjectPath(containerId, nodeId), table);
+            const records = await selectCurrentRecords(table, layout).toArray();
             yield { records: records.map((record) => constructStoreRecord(record, layout)), typeId: 'storeRecordArray' };
-            return { recordCount: records.length, totalCount };
+            return { recordCount: records.length };
         } catch (error) {
-            throw new ConnectorError(`Failed to access Dexie table with path '${options.path}'.`, 'dpu-connector-dexie-js.index.retrieveRecords', { cause: error });
-        } finally {
-            this.abortController = undefined;
+            throw new ConnectorError(`Failed to access Dexie table with path '${options.path}'.`, 'dpuse-connector-dexie-js.Connector.retrieveRecords', { cause: error });
         }
     }
 
+    // A record added to a loaded table joins the current load, so it shows with the rest.
+    async upsertRecords(options: UpsertRecordsOptions): Promise<void> {
+        if (options.records.length === 0) return;
+        const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
+        const container = await this.establishContainer(containerId);
+        const table = container.table<Record<string, unknown>>(nodeId);
+        const layout = await this.establishTableLayout(constructObjectPath(containerId, nodeId), table);
+        const loadFields = layout.loadId == null ? {} : { [LOAD_FIELD]: layout.loadId };
+        await table.bulkPut(options.records.map((record) => ({ ...constructRecordObject(record, layout), ...loadFields })));
+    }
+
     // ── Helpers ──────────────────────────────────────────────────────────────────────────────────────────────────────
+
+    // Adds a table, or removes it when 'schema' is null. Dexie changes a schema by closing the database and opening it
+    // again at the next version. A database left with no tables is deleted and started again at version 1.
+    private async changeSchema(containerId: string, nodeId: string, schema: string | null): Promise<void> {
+        const container = await this.establishContainer(containerId);
+        container.close();
+        const newContainer = new Dexie(container.name);
+        newContainer.on('blocked', () => false); // Silence console warning of blocked event
+        const isLastTable = container.tables.length === 0 || (schema == null && container.tables.length === 1);
+        if (isLastTable) {
+            await container.delete();
+            newContainer.version(1).stores(schema == null ? {} : { [nodeId]: schema });
+        } else {
+            const currentSchema: Record<string, string> = {};
+            for (const { name, schema: tableSchema } of container.tables) {
+                currentSchema[name] = [tableSchema.primKey.src, ...tableSchema.indexes.map((index) => index.src)].join(',');
+            }
+            newContainer.version(container.verno).stores(currentSchema);
+            newContainer.version(container.verno + 1).stores({ [nodeId]: schema });
+        }
+        this.containers[containerId] = await newContainer.open();
+    }
+
+    // A table that takes loads numbers its records and indexes each record's load. A table keyed any other way, such as
+    // one 'createObject' made with a key column, cannot change its key, so it is dropped and made again.
+    private async ensureLoadTable(containerId: string, nodeId: string): Promise<void> {
+        await this.runSchemaChange(containerId, async () => {
+            const container = await this.establishContainer(containerId);
+            const table = container.tables.find((candidate) => candidate.name === nodeId);
+            if (table?.schema.primKey.auto === true && table.schema.indexes.some((index) => index.name === LOAD_FIELD)) return;
+            if (table != null) await this.changeSchema(containerId, nodeId, null);
+            await this.changeSchema(containerId, nodeId, LOAD_TABLE_SCHEMA);
+        });
+    }
 
     private async establishContainer(name: string): Promise<Dexie> {
         let container = this.containers[name];
@@ -362,16 +453,6 @@ export class Connector implements ExtendedConnectorInterface {
         return objectsDatabase;
     }
 
-    // A table this connector created has its column types saved, and its fields are named by position. Any other
-    // table's columns are worked out from its first records.
-    private async establishTableLayout(path: string, table: Table<Record<string, unknown>, IndexableType>): Promise<TableLayout> {
-        const objectsDatabase = await this.establishObjectsDatabase();
-        const savedObject = await objectsDatabase.table<SavedObject>('objects').get(path);
-        return savedObject
-            ? { columnConfigs: savedObject.columnConfigs, fieldNames: savedObject.columnConfigs.map((_columnConfig, columnIndex) => constructFieldName(columnIndex)) }
-            : inferTableLayout(await table.limit(INFERENCE_RECORD_COUNT).toArray());
-    }
-
     private establishObjectIdentifiers(path: string): { containerId: string; nodeId: string } {
         const pathSegments = path.split('/');
         const [, containerId, nodeId] = pathSegments;
@@ -379,6 +460,50 @@ export class Connector implements ExtendedConnectorInterface {
             throw new Error(`${ERROR_INVALID_OBJECT_PATH} '${path}'.`);
         }
         return { containerId, nodeId };
+    }
+
+    private establishOpenStore(): void {
+        if (!this.storeIsOpen) throw new Error('The store is not open.');
+    }
+
+    // A table this connector created or loaded has its column types saved, and its fields are named by position. Any
+    // other table's columns are worked out from its first records.
+    private async establishTableLayout(objectPath: string, table: Table<Record<string, unknown>, IndexableType>): Promise<TableLayout> {
+        const objectsDatabase = await this.establishObjectsDatabase();
+        const savedObject = await objectsDatabase.table<SavedObject>('objects').get(objectPath);
+        return savedObject
+            ? {
+                  columnConfigs: savedObject.columnConfigs,
+                  fieldNames: savedObject.columnConfigs.map((_columnConfig, columnIndex) => constructFieldName(columnIndex)),
+                  loadId: savedObject.loadId
+              }
+            : inferTableLayout(await table.limit(INFERENCE_RECORD_COUNT).toArray());
+    }
+
+    // A store names a table in the default store database on its own, such as a data view's id. Any other path names its
+    // database too, as '/database/table'.
+    private resolveObjectIdentifiers(path: string): { containerId: string; nodeId: string } {
+        return path.startsWith('/') ? this.establishObjectIdentifiers(path) : { containerId: DEFAULT_STORE_DATABASE_NAME, nodeId: path };
+    }
+
+    // Changing a schema closes the database and opens it again at the next version. Two changes made together would both
+    // start from the same version, so each waits for the one before it on the same database.
+    private async runSchemaChange(containerId: string, change: () => Promise<void>): Promise<void> {
+        const previousChange = this.schemaChanges.get(containerId);
+        const currentChange = (async (): Promise<void> => {
+            try {
+                await previousChange;
+            } catch {
+                // A failed change does not stop the next one. Its caller has its error.
+            }
+            await change();
+        })();
+        this.schemaChanges.set(containerId, currentChange);
+        try {
+            await currentChange;
+        } finally {
+            if (this.schemaChanges.get(containerId) === currentChange) this.schemaChanges.delete(containerId);
+        }
     }
 }
 
@@ -406,6 +531,11 @@ function constructDeclaredColumnConfigs(layout: TableLayout): DeclaredColumnConf
     }));
 }
 
+// The key a table's saved column types are kept under, the same however the table was named.
+function constructObjectPath(containerId: string, nodeId: string): string {
+    return `/${containerId}/${nodeId}`;
+}
+
 // A record as Dexie stores it, with a field for each column. Each value is kept only if it fits its column's type.
 function constructRecordObject(record: StoreRecord, layout: TableLayout): Record<string, StoreValue> {
     if (record.length > layout.fieldNames.length) throw new Error(`A record has ${String(record.length)} values, but the table has ${String(layout.fieldNames.length)} columns.`);
@@ -429,8 +559,9 @@ function constructTableSchema(options: CreateObjectOptions): string {
 }
 
 // Every record of a table, a chunk at a time in key order. Each chunk starts after the last key of the one before, so a
-// chunk far into the table is found as quickly as the first.
-async function* readRecordChunks(table: Table<Record<string, unknown>, IndexableType>, chunkSize: number): AsyncGenerator<Record<string, unknown>[]> {
+// chunk far into the table is found as quickly as the first. Records an earlier load wrote, and not yet removed, are
+// left out.
+async function* readRecordChunks(table: Table<Record<string, unknown>, IndexableType>, chunkSize: number, loadId: string | undefined): AsyncGenerator<Record<string, unknown>[]> {
     let lastKey: IndexableType | undefined;
     for (;;) {
         const startKey = lastKey;
@@ -439,26 +570,15 @@ async function* readRecordChunks(table: Table<Record<string, unknown>, Indexable
         if (records.length === 0) return;
         const keys = await collection().primaryKeys();
         lastKey = keys.at(-1);
-        yield records;
+        const currentRecords = loadId == null ? records : records.filter((record) => record[LOAD_FIELD] === loadId);
+        if (currentRecords.length > 0) yield currentRecords;
         if (records.length < chunkSize) return;
     }
 }
 
-// A range is found by record number when the numbers run without a gap, as they do in a table one audit filled: the
-// record at position N is then numbered 'first + N', and is looked up directly however far in it is. Otherwise the
-// records before the range are stepped past, which takes longer the further in it starts.
-async function retrieveRecordRange(table: Table<Record<string, unknown>, IndexableType>, range: RecordRange, totalCount: number): Promise<Record<string, unknown>[]> {
-    if (range.limit <= 0 || range.offset >= totalCount) return [];
-    const [firstKey] = await table.toCollection().limit(1).primaryKeys();
-    const [lastKey] = await table.toCollection().reverse().limit(1).primaryKeys();
-    if (typeof firstKey === 'number' && typeof lastKey === 'number' && lastKey - firstKey + 1 === totalCount) {
-        const lowerKey = firstKey + range.offset;
-        return await table
-            .where(':id')
-            .between(lowerKey, lowerKey + range.limit, true, false)
-            .toArray();
-    }
-    return await table.offset(range.offset).limit(range.limit).toArray();
+// The records a table shows: those of its current load, or every record of a table that has never been loaded.
+function selectCurrentRecords(table: Table<Record<string, unknown>, IndexableType>, layout: TableLayout): Collection<Record<string, unknown>> {
+    return layout.loadId == null ? table.toCollection() : table.where(LOAD_FIELD).equals(layout.loadId);
 }
 
 // The type each kind of stored value has. An object or list, which a store column cannot hold, is read as JSON text.
@@ -498,7 +618,8 @@ function inferTableLayout(records: Record<string, unknown>[]): TableLayout {
                 records.map((record) => record[fieldName])
             )
         ),
-        fieldNames
+        fieldNames,
+        loadId: undefined
     };
 }
 
