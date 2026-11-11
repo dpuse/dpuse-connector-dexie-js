@@ -1,6 +1,6 @@
 {
     "packages": [
-        "@dpuse/dpuse-shared@1.0.205",
+        "@dpuse/dpuse-shared@1.0.211",
         "dexie@4.4.7",
         "valibot@1.5.0"
     ],

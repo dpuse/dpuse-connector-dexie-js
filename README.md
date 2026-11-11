@@ -39,7 +39,7 @@ This connector is a Bidirectional connector that supports both read and write ac
 | Action               | Supported |
 | :------------------- | :-------: |
 | Abort Operation      |     ✓     |
-| Audit Object Content |           |
+| Audit Object Content |     ✓     |
 | Close Store          |           |
 | Create Object        |     ✓     |
 | Describe Connection  |           |
@@ -88,7 +88,7 @@ License data is updated each time `npm run document` is run, using [license-chec
 
 | Dependency                                                   | Version | License(s) | Document                                                              |
 | :----------------------------------------------------------- | :-----: | :--------- | :-------------------------------------------------------------------- |
-| [@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared) | 1.0.205 | MIT        | [LICENSE](licenses/downloads/@dpuse/dpuse-shared@1.0.205-LICENSE.txt) |
+| [@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared) | 1.0.211 | MIT        | [LICENSE](licenses/downloads/@dpuse/dpuse-shared@1.0.211-LICENSE.txt) |
 | [dexie](https://github.com/dexie/Dexie.js)                   |  4.4.7  | Apache-2.0 | [LICENSE](licenses/downloads/dexie@4.4.7-LICENSE.txt)                 |
 | [valibot](https://github.com/open-circle/valibot)            |  1.5.0  | MIT        | [LICENSE](licenses/downloads/valibot@1.5.0-LICENSE.txt)               |
 
@@ -96,7 +96,7 @@ License data is updated each time `npm run document` is run, using [license-chec
 
 The dependency tree below shows how each package in the table above is reached — direct and transitive — along with its installed version, release date, and update status. A package that does not ship itself, such as one whose parts are bundled separately, is left out and what ships beneath it is shown in its place. Packages flagged ❗ have a newer version available; ⚠️ indicates a package that hasn't been updated in the last 6 months or longer. Neither flag necessarily indicates a problem: we let new releases stabilise before upgrading, and some packages are mature and stable (have limited or no dependencies), so they require no active development.
 
-- **[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)** 1.0.205 — this month: 2026-11-10 → latest: 1.0.206 — this month: 2026-11-10 ❗
+- **[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)** 1.0.211 — this month: 2026-11-11
     - **[valibot](https://github.com/open-circle/valibot)** 1.5.0 — 2 mths ago: 2026-09-09
 - **[dexie](https://github.com/dexie/Dexie.js)** 4.4.7 — this month: 2026-10-19
 
@@ -112,13 +112,13 @@ _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not gen
 
 | Chunk/Module/File                                                     | Composition                                                                                     |
 | :-------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------- |
-| **dist/dpuse-connector-dexie-js.es.js**                               | 148.5&nbsp;kB&nbsp;·&nbsp;gzip&nbsp;39.2&nbsp;kB&nbsp;·&nbsp;100.0%&nbsp;of&nbsp;the&nbsp;build |
-| &nbsp;&nbsp;&nbsp;&nbsp;dexie → dist/dexie.js + 1 more                | `███████████████░░░░░`&nbsp;76.3%&nbsp;·&nbsp;113.3&nbsp;kB                                     |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ dist/dexie.js       | `▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░`&nbsp;76.0%&nbsp;·&nbsp;112.9&nbsp;kB                                     |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ import-wrapper.mjs  | `░░░░░░░░░░░░░░░░░░░░`&nbsp;0.3%&nbsp;·&nbsp;387&nbsp;B                                         |
-| &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared.es.js | `█░░░░░░░░░░░░░░░░░░░`&nbsp;5.2%&nbsp;·&nbsp;7.7&nbsp;kB                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts                                | `█░░░░░░░░░░░░░░░░░░░`&nbsp;3.8%&nbsp;·&nbsp;5.7&nbsp;kB                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;(bundler output, whitespace & JSON)           | `███░░░░░░░░░░░░░░░░░`&nbsp;14.7%&nbsp;·&nbsp;21.9&nbsp;kB                                      |
+| **dist/dpuse-connector-dexie-js.es.js**                               | 154.4&nbsp;kB&nbsp;·&nbsp;gzip&nbsp;40.7&nbsp;kB&nbsp;·&nbsp;100.0%&nbsp;of&nbsp;the&nbsp;build |
+| &nbsp;&nbsp;&nbsp;&nbsp;dexie → dist/dexie.js + 1 more                | `███████████████░░░░░`&nbsp;73.4%&nbsp;·&nbsp;113.3&nbsp;kB                                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ dist/dexie.js       | `▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░`&nbsp;73.1%&nbsp;·&nbsp;112.9&nbsp;kB                                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ import-wrapper.mjs  | `░░░░░░░░░░░░░░░░░░░░`&nbsp;0.2%&nbsp;·&nbsp;387&nbsp;B                                         |
+| &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts                                | `█░░░░░░░░░░░░░░░░░░░`&nbsp;6.9%&nbsp;·&nbsp;10.7&nbsp;kB                                       |
+| &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared.es.js | `█░░░░░░░░░░░░░░░░░░░`&nbsp;5.3%&nbsp;·&nbsp;8.2&nbsp;kB                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;(bundler output, whitespace & JSON)           | `███░░░░░░░░░░░░░░░░░`&nbsp;14.4%&nbsp;·&nbsp;22.2&nbsp;kB                                      |
 
 Bars show each row's share of its output file. ↳ rows are part of the row above.
 
