@@ -165,5 +165,5 @@ function query(options: Partial<QueryRecordsOptions>): ReturnType<typeof querySt
 }
 
 function constructQuery(options: Partial<QueryRecordsOptions>): QueryRecordsOptions {
-    return { aggregates: [], filters: [], groupColumnIndexes: [], limit: 100, offset: 0, path: 'sales', sorts: [], ...options };
+    return { aggregates: [], columnConfigs: [], filters: [], groupColumnIndexes: [], limit: 100, offset: 0, path: 'sales', sorts: [], ...options };
 }

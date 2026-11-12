@@ -82,7 +82,7 @@ const FAILING_ACTIONS: Action[] = [
     { name: 'retrieveRecords', start: (connector) => readRetrieval(connector, buildRetrieveOptions({ path: 'bad' })) },
     { name: 'auditObjectContent', start: (connector) => connector.auditObjectContent(buildAuditOptions({ path: 'bad' }), vi.fn()) },
     { name: 'createObject', start: (connector) => connector.createObject(buildCreateOptions({ path: 'bad' })) },
-    { name: 'dropObject', start: (connector) => connector.dropObject({ path: `/${DATABASE_NAME}/missing` }) },
+    { name: 'dropObject', start: (connector) => connector.dropObject({ path: '/bad' }) },
     { name: 'getRecord', start: (connector) => connector.getRecord({ id: 1, path: 'bad' }) },
     { name: 'upsertRecords', start: (connector) => connector.upsertRecords({ path: 'bad', records: [[1]] }) },
     { name: 'removeRecords', start: (connector) => connector.removeRecords({ keys: [], path: 'bad' }) },
@@ -193,7 +193,7 @@ describe('Connector', () => {
     });
 
     describe('previewObject', () => {
-        it("previews a table's first records as text, with its saved column types and nothing to choose", async () => {
+        it("previews a table's first records as text, with column types worked out from its values and nothing to choose", async () => {
             const inferredColumnConfigs = [{ id: 'inferred' }];
             const inferDataTypes = vi.fn().mockReturnValue({ columnConfigs: inferredColumnConfigs, hasHeaders: false });
             const connector = createConnector({ inferDataTypes });
@@ -209,8 +209,8 @@ describe('Connector', () => {
                 ]
             ];
             expect(inferDataTypes).toHaveBeenCalledWith(parsedRecords, false, [
-                { dataSubtypeId: undefined, dataTypeId: 'numeric', label: 'Id', name: 'c0' },
-                { dataSubtypeId: undefined, dataTypeId: 'string', label: 'Name', name: 'c1' }
+                { dataSubtypeId: 'integer', dataTypeId: 'numeric', label: 'c0', name: 'c0' },
+                { dataSubtypeId: 'plain', dataTypeId: 'string', label: 'c1', name: 'c1' }
             ]);
             expect(sampleConfig.parsedRecords).toEqual(parsedRecords);
             expect(contentAuditConfig).toMatchObject({ columns: inferredColumnConfigs, isComplete: true, recordCount: 1 });
@@ -269,7 +269,7 @@ describe('Connector', () => {
     });
 
     describe('auditObjectContent', () => {
-        it('audits every record a chunk at a time, as text, against its column types', async () => {
+        it('audits every record a chunk at a time, as text, against column types worked out from its values', async () => {
             const columnAuditor = { auditRecords: vi.fn(), completeAudit: vi.fn().mockReturnValue({ columnConfigs: [{ id: 'audited' }], hasHeaders: false }) };
             const constructColumnAuditor = vi.fn().mockReturnValue(columnAuditor);
             const connector = createConnector({ constructColumnAuditor });
@@ -279,7 +279,7 @@ describe('Connector', () => {
 
             const { contentAuditConfig, hasHeaders } = await connector.auditObjectContent(buildAuditOptions({ chunkSize: 10 }), onProgress);
 
-            expect(constructColumnAuditor).toHaveBeenCalledWith(false, [{ dataSubtypeId: 'integer', dataTypeId: 'numeric', label: 'Value', name: 'c0' }]);
+            expect(constructColumnAuditor).toHaveBeenCalledWith(false, [{ dataSubtypeId: 'integer', dataTypeId: 'numeric', label: 'c0', name: 'c0' }]);
             expect(columnAuditor.auditRecords).toHaveBeenCalledTimes(3);
             expect(columnAuditor.auditRecords.mock.calls[2]?.[0]).toEqual(Array.from({ length: 5 }, (_, index) => [{ value: String(20 + index), valueWasQuoted: false }]));
             expect(onProgress.mock.calls).toEqual([
@@ -354,8 +354,8 @@ describe('Connector', () => {
             expect(tables.totalCount).toBe(0);
         });
 
-        it('rejects a table that does not exist', async () => {
-            await expect(createConnector().dropObject({ path: `/${DATABASE_NAME}/missing` })).rejects.toThrow("Table 'missing' not found.");
+        it('does nothing for a table that does not exist, as the SQL stores do', async () => {
+            await expect(createConnector().dropObject({ path: `/${DATABASE_NAME}/missing` })).resolves.toBeUndefined();
         });
     });
 
@@ -398,13 +398,13 @@ describe('Connector', () => {
             ]);
         });
 
-        it("keeps a value only if it fits its column's type, and rejects a record with more values than columns", async () => {
+        it('stores values as given, and rejects a record with more values than the table has columns', async () => {
             const connector = createConnector();
             await connector.createObject(buildCreateOptions());
 
             await connector.upsertRecords({ path: PEOPLE_PATH, records: [['one', 2]] });
 
-            expect(await retrieveAll(connector)).toEqual([[null, '2']]); // A text column takes any value as text.
+            expect(await retrieveAll(connector)).toEqual([['one', 2]]);
             await expect(connector.upsertRecords({ path: PEOPLE_PATH, records: [[1, 'Ada', true]] })).rejects.toThrow('A record has 3 values, but the table has 2 columns.');
         });
     });
@@ -417,7 +417,7 @@ describe('Connector', () => {
 
             await connector.removeRecords({ keys: [1], path: PEOPLE_PATH }); // Numbers, which the keys are stored as, not their text.
             await connector.removeRecords({ keys: [2, 3], path: PEOPLE_PATH });
-            expect(await retrieveAll(connector)).toEqual([[4, null]]);
+            expect(await retrieveAll(connector)).toEqual([[4]]);
 
             await connector.removeRecords({ keys: [], path: PEOPLE_PATH });
             expect(await retrieveAll(connector)).toEqual([]);
@@ -461,21 +461,23 @@ describe('Connector', () => {
             expect(await retrieveAll(connector, '/archive/dataView1')).toEqual([[7]]);
         });
 
-        it('replaces an earlier load, and keeps it when a later load fails or is stopped', async () => {
+        it('replaces a table of the same name, so it holds only the new records', async () => {
             const connector = await openStoreConnector();
             await connector.loadObjectRecords(buildLoadOptions(), yieldChunks([[[1], [2]]]));
-            await connector.loadObjectRecords(buildLoadOptions(), yieldChunks([[[5]]]));
-            const abortController = new AbortController();
-            abortController.abort(new Error('Aborted.'));
-            const failingChunks = yieldChunks([[[8]], [[9]]], new Error('Source failed.'));
 
-            await expect(connector.loadObjectRecords(buildLoadOptions(), failingChunks)).rejects.toThrow('Source failed.');
-            await expect(connector.loadObjectRecords(buildLoadOptions({ signal: abortController.signal }), yieldChunks([[[8]]]))).rejects.toThrow('Aborted.');
+            await connector.loadObjectRecords(buildLoadOptions(), yieldChunks([[[5]]]));
 
             const queried = await connector.queryRecords(buildQueryOptions());
-            const storedRecordCount = await connector.containers['dpuse-store']?.table('dataView1').count();
-            expect(queried.records).toEqual([[5]]);
-            expect(storedRecordCount).toBe(1); // The earlier and failed loads' records are gone.
+            expect(queried).toEqual({ records: [[5]], totalCount: 1 });
+        });
+
+        it('passes on a failure in the source, leaving the new table for the app to drop', async () => {
+            const connector = await openStoreConnector();
+            const failingChunks = yieldChunks([[[8]]], new Error('Source failed.'));
+
+            await expect(connector.loadObjectRecords(buildLoadOptions(), failingChunks)).rejects.toThrow('Source failed.');
+            await connector.dropObject({ path: 'dataView1' });
+            await expect(connector.queryRecords(buildQueryOptions())).rejects.toThrow("'dataView1' has not been loaded.");
         });
 
         it('refuses to load until the store is open', async () => {
@@ -594,8 +596,9 @@ function buildLoadOptions(overrides: Partial<LoadObjectRecordsOptions> = {}): Lo
     return { columnConfigs: RECORDS_COLUMN_CONFIGS, path: 'dataView1', ...overrides };
 }
 
+// The query brings the columns the table was loaded with, as the app does.
 function buildQueryOptions(overrides: Partial<QueryRecordsOptions> = {}): QueryRecordsOptions {
-    return { aggregates: [], filters: [], groupColumnIndexes: [], limit: 100, offset: 0, path: 'dataView1', sorts: [], ...overrides };
+    return { aggregates: [], columnConfigs: RECORDS_COLUMN_CONFIGS, filters: [], groupColumnIndexes: [], limit: 100, offset: 0, path: 'dataView1', sorts: [], ...overrides };
 }
 
 function buildRetrieveOptions(overrides: Partial<RetrieveRecordsOptions> = {}): RetrieveRecordsOptions {
