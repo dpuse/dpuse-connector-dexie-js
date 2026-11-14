@@ -77,7 +77,13 @@ const SIGNALLED_ACTIONS: Action[] = [
 // Every action, each asked for something it cannot do, in the order a user meets them.
 const FAILING_ACTIONS: Action[] = [
     { name: 'listNodes', start: (connector) => connector.listNodes({ folderPath: 'x' }) },
-    { name: 'findObject', start: (connector) => connector.findObject({ nodeId: 'people', storeId: undefined }) },
+    {
+        name: 'findObject',
+        start: (connector) => {
+            vi.spyOn(Dexie, 'getDatabaseNames').mockRejectedValueOnce(new Error('IndexedDB is unavailable.')); // Any id is valid, so only the browser can fail.
+            return connector.findObject({ id: 'people' });
+        }
+    },
     { name: 'previewObject', start: (connector) => connector.previewObject({ path: 'bad' } as never) },
     { name: 'retrieveRecords', start: (connector) => readRetrieval(connector, buildRetrieveOptions({ path: 'bad' })) },
     { name: 'auditObjectContent', start: (connector) => connector.auditObjectContent(buildAuditOptions({ path: 'bad' }), vi.fn()) },
@@ -138,7 +144,7 @@ describe('Connector', () => {
     });
 
     describe('listNodes', () => {
-        it('lists each database at the root, leaving out the one that keeps column types', async () => {
+        it('lists each database at the root', async () => {
             const connector = createConnector();
             await createPeopleTable(connector);
 
@@ -179,16 +185,12 @@ describe('Connector', () => {
     });
 
     describe('findObject', () => {
-        it('gives the path of a table that exists, and none for one that does not', async () => {
+        it('gives the path of a table found by its name in any database, and none for one that does not exist', async () => {
             const connector = createConnector();
             await createPeopleTable(connector);
 
-            expect(await connector.findObject({ nodeId: 'people', storeId: DATABASE_NAME })).toEqual({ path: PEOPLE_PATH });
-            expect(await connector.findObject({ nodeId: 'missing', storeId: DATABASE_NAME })).toEqual({ path: undefined });
-        });
-
-        it('rejects a missing database name', async () => {
-            await expect(createConnector().findObject({ nodeId: 'people', storeId: undefined })).rejects.toThrow("Encountered invalid container identifier 'undefined'.");
+            expect(await connector.findObject({ id: 'people' })).toEqual({ path: PEOPLE_PATH });
+            expect(await connector.findObject({ id: 'missing' })).toEqual({ path: undefined });
         });
     });
 
@@ -350,7 +352,7 @@ describe('Connector', () => {
             await connector.dropObject({ path: PEOPLE_PATH });
 
             const tables = await connector.listNodes({ folderPath: `/${DATABASE_NAME}` });
-            expect(await connector.findObject({ nodeId: 'people', storeId: DATABASE_NAME })).toEqual({ path: undefined });
+            expect(await connector.findObject({ id: 'people' })).toEqual({ path: undefined });
             expect(tables.totalCount).toBe(0);
         });
 

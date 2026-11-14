@@ -61,7 +61,6 @@ interface TableLayout {
 // ── Constants ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 const CALLBACK_RETRIEVE_ABORTED = 'Connector failed to abort retrieve all records operation.';
-const ERROR_INVALID_CONTAINER_ID = 'Encountered invalid container identifier';
 const ERROR_INVALID_FOLDER_PATH = 'Encountered invalid folder path';
 const ERROR_INVALID_OBJECT_PATH = 'Encountered invalid object path';
 
@@ -169,11 +168,16 @@ export class Connector implements ExtendedConnectorInterface {
         });
     }
 
+    // A table's id is its name, which is unique only within its database, so the databases are searched in name order and
+    // the first table found is given.
     async findObject(options: FindObjectOptions): Promise<FindObjectResult> {
-        if (options.storeId == null) throw new Error(`${ERROR_INVALID_CONTAINER_ID} '${String(options.storeId)}'.`);
-        const container = await this.establishContainer(options.storeId);
-        const isObjectFound = container.tables.some((table) => table.name === options.nodeId);
-        return { path: isObjectFound ? `/${options.storeId}/${options.nodeId}` : undefined };
+        const databaseNames = await Dexie.getDatabaseNames();
+        const sortedDatabaseNames = databaseNames.toSorted((left, right) => left.localeCompare(right));
+        for (const databaseName of sortedDatabaseNames) {
+            const container = await this.establishContainer(databaseName);
+            if (container.tables.some((table) => table.name === options.id)) return { path: `/${databaseName}/${options.id}` };
+        }
+        return { path: undefined };
     }
 
     async getRecord(options: GetRecordOptions): Promise<GetRecordResult> {
