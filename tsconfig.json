@@ -20,7 +20,8 @@
         "sourceMap": true,
         "strict": true,
         "target": "ESNext",
-        "tsBuildInfoFile": "./node_modules/.cache/tsconfig.tsbuildinfo"
+        "tsBuildInfoFile": "./node_modules/.cache/tsconfig.tsbuildinfo",
+        "types": ["trusted-types"]
     },
     "include": ["eslint.config.js", "eslint.config.*.js", "src/**/*.ts", "tests/**/*.ts", "vite.config.*", "vitest.config.*"]
 }

@@ -65,9 +65,10 @@
         "dexie": "^4.4.7"
     },
     "devDependencies": {
-        "@dpuse/dpuse-development": "^1.0.149",
+        "@dpuse/dpuse-development": "^1.0.153",
         "@dpuse/eslint-config-dpuse": "^1.0.150",
         "@types/node": "^26.6.6",
+        "@types/trusted-types": "^2.0.7",
         "@vitest/coverage-v8": "^5.1.0",
         "eslint": "^10.14.0",
         "fake-indexeddb": "^6.2.8",
