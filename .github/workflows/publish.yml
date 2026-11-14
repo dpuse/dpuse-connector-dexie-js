@@ -5,6 +5,7 @@ on:
         types: [published]
 
 permissions:
+    actions: read
     contents: read
     id-token: write
 
@@ -12,7 +13,27 @@ jobs:
     publish:
         name: Publish
         runs-on: ubuntu-latest
+        timeout-minutes: 30 # GitHub's default is 6 hours, which a stuck CI run would otherwise hold the job for.
         steps:
+            # A release is created straight after its push, so this runs alongside CI. Publishing waits for that CI run on
+            # the same commit and stops if it fails, so CI's checks run once and gate every release, including one created
+            # by hand on GitHub. The run is looked for again for a few minutes, as CI may not have been queued yet.
+            - name: Wait for CI
+              run: |
+                  for attempt in $(seq 1 18); do
+                      run_id="$(gh run list --workflow ci.yml --commit "$GITHUB_SHA" --event push --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
+                      if [ -n "$run_id" ]; then break; fi
+                      sleep 10
+                  done
+                  if [ -z "$run_id" ]; then
+                      echo "::error::No CI run found for commit $GITHUB_SHA"
+                      exit 1
+                  fi
+                  gh run watch "$run_id" --exit-status --compact --interval 10
+              env:
+                  GH_REPO: ${{ github.repository }}
+                  GH_TOKEN: ${{ github.token }}
+
             - name: Checkout
               uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
@@ -65,25 +86,6 @@ jobs:
 
             - name: Build
               run: npm run build
-
-            # Repeats the CI checks: a release is created straight after its push, so this runs alongside CI rather than
-            # after it, and must not publish a commit that fails them.
-            - name: Lint
-              run: npm run lint
-
-            # Unit tests only. CI runs the end-to-end tests on the same commit, so they are left out here, because installing
-            # Playwright's Ubuntu packages stalls on some runners and blocked releases. The project's commands are put on the
-            # path first, as for 'Publish' below.
-            # TODO: Run the end-to-end tests here again once the job no longer downloads Ubuntu packages. Run the job in
-            # Playwright's Docker image ('mcr.microsoft.com/playwright'), which has Chromium and its packages built in: add
-            # a 'container' to the job with the image tag Playwright's Docker docs give for the '@playwright/test' version,
-            # pinned by digest for OpenSSF Scorecard. Then add back the two steps kept in the TODO above the 'Test' step in
-            # 'ci.yml', and run 'npm test' in this step. No browser install step is needed, as the image already has the
-            # browsers.
-            - name: Test
-              run: |
-                  export PATH="$PWD/node_modules/.bin:$PATH"
-                  node -e "import('@dpuse/dpuse-development').then(m => m.testProject(['unit']))"
 
             # One step for every project: the action publishes to npm, uploads to DPUse, or both, as the module type requires.
             # Called directly rather than through a package.json script, as a script named 'publish' would be run again by
