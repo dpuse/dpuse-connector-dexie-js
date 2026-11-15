@@ -43,6 +43,7 @@ const CONNECTOR_ACTION_NAMES = Object.keys({
     dropObject: true,
     findObject: true,
     getInfo: true,
+    getObject: true,
     getReadableStream: true,
     getRecord: true,
     indexObjectStructure: true,
