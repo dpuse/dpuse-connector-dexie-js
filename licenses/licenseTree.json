@@ -1,14 +1,14 @@
 {
-  "version": "1.0.122",
+  "version": "1.0.123",
   "name": "@dpuse/dpuse-connector-dexie-js",
   "dependencies": {
     "@dpuse/dpuse-development": {
-      "version": "1.0.149",
-      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-development/-/dpuse-development-1.0.149.tgz",
+      "version": "1.0.153",
+      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-development/-/dpuse-development-1.0.153.tgz",
       "overridden": false,
       "dependencies": {
         "@dpuse/dpuse-shared": {
-          "version": "1.0.213"
+          "version": "1.0.221"
         },
         "license-checker-rseidelsohn": {
           "version": "5.0.1",
@@ -1194,8 +1194,8 @@
       }
     },
     "@dpuse/dpuse-shared": {
-      "version": "1.0.213",
-      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-shared/-/dpuse-shared-1.0.213.tgz",
+      "version": "1.0.221",
+      "resolved": "https://registry.npmjs.org/@dpuse/dpuse-shared/-/dpuse-shared-1.0.221.tgz",
       "overridden": false,
       "dependencies": {
         "file-type": {
@@ -2612,6 +2612,11 @@
           "overridden": false
         }
       }
+    },
+    "@types/trusted-types": {
+      "version": "2.0.7",
+      "resolved": "https://registry.npmjs.org/@types/trusted-types/-/trusted-types-2.0.7.tgz",
+      "overridden": false
     },
     "@vitest/coverage-v8": {
       "version": "5.1.0",
