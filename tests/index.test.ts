@@ -182,12 +182,12 @@ describe('Connector', () => {
     });
 
     describe('findObject', () => {
-        it('gives back the path of a table that exists, and none for one that does not', async () => {
+        it('gives back the path of a table that exists, and throws for one that does not', async () => {
             const connector = createConnector();
             await createPeopleTable(connector);
 
             expect(await connector.findObject({ id: PEOPLE_PATH })).toEqual({ path: PEOPLE_PATH });
-            expect(await connector.findObject({ id: `/${DATABASE_NAME}/missing` })).toEqual({ path: undefined });
+            await expect(connector.findObject({ id: `/${DATABASE_NAME}/missing` })).rejects.toThrow(`Object '/${DATABASE_NAME}/missing' not found.`);
         });
 
         it('finds a table named on its own in the default store database', async () => {
@@ -197,8 +197,8 @@ describe('Connector', () => {
             expect(await connector.findObject({ id: 'dataView1' })).toEqual({ path: 'dataView1' });
         });
 
-        it('gives no path for a table in a database that does not exist, without creating the database', async () => {
-            expect(await createConnector().findObject({ id: '/missing/people' })).toEqual({ path: undefined });
+        it('throws for a table in a database that does not exist, without creating the database', async () => {
+            await expect(createConnector().findObject({ id: '/missing/people' })).rejects.toThrow("Object '/missing/people' not found.");
             expect(await Dexie.exists('missing')).toBe(false);
         });
     });
@@ -361,7 +361,7 @@ describe('Connector', () => {
             await connector.dropObject({ path: PEOPLE_PATH });
 
             const tables = await connector.listNodes({ folderPath: `/${DATABASE_NAME}` });
-            expect(await connector.findObject({ id: PEOPLE_PATH })).toEqual({ path: undefined });
+            await expect(connector.findObject({ id: PEOPLE_PATH })).rejects.toThrow(`Object '${PEOPLE_PATH}' not found.`);
             expect(tables.totalCount).toBe(0);
         });
 

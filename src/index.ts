@@ -173,9 +173,11 @@ export class Connector implements ExtendedConnectorInterface {
     async findObject(options: FindObjectOptions): Promise<FindObjectResult> {
         try {
             const { containerId, nodeId } = this.resolveObjectIdentifiers(options.id);
-            if (!(await Dexie.exists(containerId))) return { path: undefined };
-            const container = await this.establishContainer(containerId);
-            return { path: container.tables.some((table) => table.name === nodeId) ? options.id : undefined };
+            if (await Dexie.exists(containerId)) {
+                const container = await this.establishContainer(containerId);
+                if (container.tables.some((table) => table.name === nodeId)) return { path: options.id };
+            }
+            throw new ConnectorError(`Object '${options.id}' not found.`, 'dpuse-connector-dexie-js.Connector.findObject');
         } catch (error) {
             throw normalizeToError(error);
         }
