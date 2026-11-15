@@ -168,16 +168,17 @@ export class Connector implements ExtendedConnectorInterface {
         });
     }
 
-    // A table's id is its name, which is unique only within its database, so the databases are searched in name order and
-    // the first table found is given.
+    // An object's id is its path, as in the SQL stores, so finding it only checks that it is there. A missing database is
+    // not opened, because opening it would create it.
     async findObject(options: FindObjectOptions): Promise<FindObjectResult> {
-        const databaseNames = await Dexie.getDatabaseNames();
-        const sortedDatabaseNames = databaseNames.toSorted((left, right) => left.localeCompare(right));
-        for (const databaseName of sortedDatabaseNames) {
-            const container = await this.establishContainer(databaseName);
-            if (container.tables.some((table) => table.name === options.id)) return { path: `/${databaseName}/${options.id}` };
+        try {
+            const { containerId, nodeId } = this.resolveObjectIdentifiers(options.id);
+            if (!(await Dexie.exists(containerId))) return { path: undefined };
+            const container = await this.establishContainer(containerId);
+            return { path: container.tables.some((table) => table.name === nodeId) ? options.id : undefined };
+        } catch (error) {
+            throw normalizeToError(error);
         }
-        return { path: undefined };
     }
 
     async getRecord(options: GetRecordOptions): Promise<GetRecordResult> {
