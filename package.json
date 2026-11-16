@@ -1,6 +1,6 @@
 {
     "name": "@dpuse/dpuse-connector-dexie-js",
-    "version": "1.0.126",
+    "version": "1.0.127",
     "private": false,
     "description": "Provides access to local Dexie.js (IndexedDB) databases in the browser.",
     "license": "MIT",
@@ -47,7 +47,7 @@
         "fsevents@2.3.3": true,
         "unrs-resolver@1.11.1": true,
         "esbuild@0.28.2": true,
-        "workerd@1.20261113.1": true
+        "workerd@1.20261116.1": true
     },
     "scripts": {
         "audit": "node -e \"import('@dpuse/dpuse-development').then(m => m.auditDependencies())\"",
@@ -78,6 +78,6 @@
         "vite": "^8.3.8",
         "vite-plugin-dts": "^5.1.2",
         "vitest": "^5.1.0",
-        "wrangler": "^4.162.0"
+        "wrangler": "^4.163.0"
     }
 }
