@@ -61,7 +61,7 @@
         "test": "node -e \"import('@dpuse/dpuse-development').then(m => m.testProject())\""
     },
     "dependencies": {
-        "@dpuse/dpuse-shared": "^1.0.225",
+        "@dpuse/dpuse-shared": "^1.0.228",
         "dexie": "^4.4.7"
     },
     "devDependencies": {

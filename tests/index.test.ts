@@ -214,10 +214,7 @@ describe('Connector', () => {
             const { contentAuditConfig, readingConfig, sampleConfig } = await connector.previewObject({ path: PEOPLE_PATH } as never);
 
             const parsedRecords = [
-                [
-                    { value: '1', valueWasQuoted: false },
-                    { value: 'Ada', valueWasQuoted: false }
-                ]
+                ['1', 'Ada']
             ];
             expect(inferDataTypes).toHaveBeenCalledWith(parsedRecords, false, [
                 { dataSubtypeId: 'integer', dataTypeId: 'numeric', label: 'c0', name: 'c0' },
@@ -292,7 +289,7 @@ describe('Connector', () => {
 
             expect(constructColumnAuditor).toHaveBeenCalledWith(false, [{ dataSubtypeId: 'integer', dataTypeId: 'numeric', label: 'c0', name: 'c0' }]);
             expect(columnAuditor.auditRecords).toHaveBeenCalledTimes(3);
-            expect(columnAuditor.auditRecords.mock.calls[2]?.[0]).toEqual(Array.from({ length: 5 }, (_, index) => [{ value: String(20 + index), valueWasQuoted: false }]));
+            expect(columnAuditor.auditRecords.mock.calls[2]?.[0]).toEqual(Array.from({ length: 5 }, (_, index) => [String(20 + index)]));
             expect(onProgress.mock.calls).toEqual([
                 [10, 0],
                 [10, 0],
