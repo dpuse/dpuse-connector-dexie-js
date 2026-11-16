@@ -1,7 +1,7 @@
 {
   "metadata": {
     "version": "0.14.0",
-    "generatedAt": "2026-11-16T12:24:28.383Z",
+    "generatedAt": "2026-11-16T22:35:23.695Z",
     "integration": "vite",
     "sources": false,
     "gzip": true,
@@ -30,8 +30,8 @@
       "kind": "asset",
       "name": "dist/dpuse-connector-dexie-js.es.js",
       "type": "script",
-      "uncompressed": 164313,
-      "gzip": 43023,
+      "uncompressed": 164310,
+      "gzip": 43024,
       "brotli": 0
     },
     {
@@ -39,15 +39,15 @@
       "name": "node_modules/@dpuse/dpuse-shared/dist/dpuse-shared.es.js",
       "type": "script",
       "format": "esm",
-      "uncompressed": 71938
+      "uncompressed": 72452
     },
     {
       "kind": "chunk",
       "name": "node_modules/@dpuse/dpuse-shared/dist/dpuse-shared.es.js",
       "type": "script",
       "format": "esm",
-      "uncompressed": 9687,
-      "gzip": 2951,
+      "uncompressed": 9684,
+      "gzip": 2950,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },
@@ -64,7 +64,7 @@
       "type": "script",
       "format": "cjs",
       "uncompressed": 115620,
-      "gzip": 34052,
+      "gzip": 34054,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     },
@@ -115,7 +115,7 @@
       "type": "script",
       "format": "esm",
       "uncompressed": 11726,
-      "gzip": 3520,
+      "gzip": 3521,
       "brotli": 0,
       "parent": "dist/dpuse-connector-dexie-js.es.js"
     }
