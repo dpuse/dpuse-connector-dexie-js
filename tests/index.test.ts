@@ -291,9 +291,9 @@ describe('Connector', () => {
             expect(columnAuditor.auditRecords).toHaveBeenCalledTimes(3);
             expect(columnAuditor.auditRecords.mock.calls[2]?.[0]).toEqual(Array.from({ length: 5 }, (_, index) => [String(20 + index)]));
             expect(onProgress.mock.calls).toEqual([
-                [10, 0],
-                [10, 0],
-                [5, 0]
+                [10, 0, 25],
+                [10, 0, 25],
+                [5, 0, 25]
             ]);
             expect(contentAuditConfig).toMatchObject({ columns: [{ id: 'audited' }], isComplete: true, recordCount: 25 });
             expect(hasHeaders).toBe(false);

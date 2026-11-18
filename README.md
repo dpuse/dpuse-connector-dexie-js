@@ -117,8 +117,8 @@ _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not gen
 | &nbsp;&nbsp;&nbsp;&nbsp;dexie → dist/dexie.js + 1 more                | `██████████████░░░░░░`&nbsp;70.6%&nbsp;·&nbsp;113.3&nbsp;kB                                     |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ dist/dexie.js       | `▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░`&nbsp;70.4%&nbsp;·&nbsp;112.9&nbsp;kB                                     |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ import-wrapper.mjs  | `░░░░░░░░░░░░░░░░░░░░`&nbsp;0.2%&nbsp;·&nbsp;387&nbsp;B                                         |
-| &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts + 1 more                       | `██░░░░░░░░░░░░░░░░░░`&nbsp;9.4%&nbsp;·&nbsp;15.2&nbsp;kB                                       |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ index.ts            | `▒░░░░░░░░░░░░░░░░░░░`&nbsp;7.1%&nbsp;·&nbsp;11.5&nbsp;kB                                       |
+| &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts + 1 more                       | `██░░░░░░░░░░░░░░░░░░`&nbsp;9.5%&nbsp;·&nbsp;15.2&nbsp;kB                                       |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ index.ts            | `▒░░░░░░░░░░░░░░░░░░░`&nbsp;7.2%&nbsp;·&nbsp;11.5&nbsp;kB                                       |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↳ dexieStore.ts       | `░░░░░░░░░░░░░░░░░░░░`&nbsp;2.3%&nbsp;·&nbsp;3.7&nbsp;kB                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared.es.js | `█░░░░░░░░░░░░░░░░░░░`&nbsp;5.9%&nbsp;·&nbsp;9.5&nbsp;kB                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;(bundler output, whitespace & JSON)           | `███░░░░░░░░░░░░░░░░░`&nbsp;14.1%&nbsp;·&nbsp;22.6&nbsp;kB                                      |

@@ -94,8 +94,12 @@ export class Connector implements ExtendedConnectorInterface {
 
     // A table's columns already have types, so the audit counts its values against them rather than working types out.
     // The auditor reads text, so each typed record is handed over as text. A table has no bytes, so 'byteLimit' does
-    // not apply, and the audit reads every record unless 'stopSignal' fires.
-    async auditObjectContent(options: AuditObjectContentOptions, onProgress: (recordCount: number, byteCount: number) => void): Promise<AuditObjectContentResult> {
+    // not apply, and the audit reads every record unless 'stopSignal' fires. With no bytes to measure progress by, the
+    // table's records are counted first and the total goes with every chunk.
+    async auditObjectContent(
+        options: AuditObjectContentOptions,
+        onProgress: (recordCount: number, byteCount: number, totalRecordCount?: number) => void
+    ): Promise<AuditObjectContentResult> {
         const signal = resolveRequestSignal(options);
         try {
             const asAt = Date.now();
@@ -105,6 +109,7 @@ export class Connector implements ExtendedConnectorInterface {
             const table = container.table<Record<string, unknown>>(nodeId);
             const layout = await establishTableLayout(table);
             const columnAuditor = this.connectorUtilities.constructColumnAuditor(false, constructDeclaredColumnConfigs(layout));
+            const totalRecordCount = await table.count();
             let recordCount = 0;
             let isComplete = true;
             const recordChunks = readRecordChunks(table, options.chunkSize ?? DEFAULT_AUDIT_CHUNK_SIZE);
@@ -116,7 +121,7 @@ export class Connector implements ExtendedConnectorInterface {
                 }
                 columnAuditor.auditRecords(records.map((record) => convertStoreRecordToParsedRecord(constructStoreRecord(record, layout))));
                 recordCount += records.length;
-                onProgress(records.length, 0);
+                onProgress(records.length, 0, totalRecordCount);
             }
             const { columnConfigs } = columnAuditor.completeAudit();
             return {
