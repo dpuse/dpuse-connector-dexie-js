@@ -250,6 +250,7 @@ describe('Connector', () => {
                         [1, 'Ada'],
                         [2, 'Grace']
                     ],
+                    totalRecordCount: 2, // The chunk holds every record, so a load can show it as complete.
                     typeId: 'storeRecordArray'
                 }
             ]);

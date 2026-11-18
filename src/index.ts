@@ -357,7 +357,7 @@ export class Connector implements ExtendedConnectorInterface {
             const table = container.table<Record<string, unknown>>(nodeId);
             const layout = await establishTableLayout(table);
             const records = await table.toArray();
-            yield { records: records.map((record) => constructStoreRecord(record, layout)), typeId: 'storeRecordArray' };
+            yield { records: records.map((record) => constructStoreRecord(record, layout)), totalRecordCount: records.length, typeId: 'storeRecordArray' };
             return { recordCount: records.length };
         } catch (error) {
             throw new ConnectorError(`Failed to access Dexie table with path '${options.path}'.`, 'dpuse-connector-dexie-js.Connector.retrieveRecords', { cause: error });
