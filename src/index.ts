@@ -44,6 +44,8 @@ import { ConnectorError, convertStoreRecordToParsedRecord, normalizeToError, res
 
 // ── Local Framework
 import { checkCount, queryStoreRecords } from '@/dexieStore';
+import { constructRecordPacker, countPackedRecords, isPackedTable, PACKED_TABLE_SCHEMA, readAllPackedRecords } from '@/packedRecords';
+import { type PackedTable, readPackedRecordChunks, readPackedRecords } from '@/packedRecords';
 
 // ── Types ────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -58,6 +60,15 @@ interface TableLayout {
     fieldNames: string[];
 }
 
+// Reads a table's records typed by its columns, however the table holds them: an entry for each record, as any
+// IndexedDB table does, or packed, as a store load writes them.
+interface TableReader {
+    countRecords: () => Promise<number>;
+    layout: TableLayout;
+    readRecordChunks: (chunkSize: number) => AsyncGenerator<StoreRecord[]>; // Every record, in the order they are stored.
+    readRecords: (offset: number, limit: number) => Promise<StoreRecord[]>;
+}
+
 // ── Constants ────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 const CALLBACK_RETRIEVE_ABORTED = 'Connector failed to abort retrieve all records operation.';
@@ -70,6 +81,7 @@ const DEFAULT_STORE_DATABASE_NAME = 'dpuse-store';
 const INFERENCE_RECORD_COUNT = 100; // Records read to work out a table's columns from its values.
 const PREVIEW_RECORD_COUNT = 50;
 const DEFAULT_AUDIT_CHUNK_SIZE = 10_000;
+const DEFAULT_RETRIEVE_CHUNK_SIZE = 10_000;
 
 // ── Connectors ───────────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -106,20 +118,19 @@ export class Connector implements ExtendedConnectorInterface {
             const startedAt = performance.now();
             const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
             const container = await this.establishContainer(containerId);
-            const table = container.table<Record<string, unknown>>(nodeId);
-            const layout = await establishTableLayout(table);
-            const columnAuditor = this.connectorUtilities.constructColumnAuditor(false, constructDeclaredColumnConfigs(layout));
-            const totalRecordCount = await table.count();
+            const tableReader = await establishTableReader(container.table<Record<string, unknown>>(nodeId));
+            const columnAuditor = this.connectorUtilities.constructColumnAuditor(false, constructDeclaredColumnConfigs(tableReader.layout));
+            const totalRecordCount = await tableReader.countRecords();
             let recordCount = 0;
             let isComplete = true;
-            const recordChunks = readRecordChunks(table, options.chunkSize ?? DEFAULT_AUDIT_CHUNK_SIZE);
+            const recordChunks = tableReader.readRecordChunks(options.chunkSize ?? DEFAULT_AUDIT_CHUNK_SIZE);
             for await (const records of recordChunks) {
                 signal.throwIfAborted();
                 if (options.stopSignal?.aborted === true) {
                     isComplete = false;
                     break;
                 }
-                columnAuditor.auditRecords(records.map((record) => convertStoreRecordToParsedRecord(constructStoreRecord(record, layout))));
+                columnAuditor.auditRecords(records.map((record) => convertStoreRecordToParsedRecord(record)));
                 recordCount += records.length;
                 onProgress(records.length, 0, totalRecordCount);
             }
@@ -188,10 +199,19 @@ export class Connector implements ExtendedConnectorInterface {
         }
     }
 
+    // A packed table's records have no keys of their own, so a record there is found by its number, counted from 1 as
+    // IndexedDB numbers the records of any other table as they are added.
     async getRecord(options: GetRecordOptions): Promise<GetRecordResult> {
         const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
         const container = await this.establishContainer(containerId);
         const table = container.table<Record<string, unknown>>(nodeId);
+        if (isPackedTable(table)) {
+            const recordNumber = Number(options.id);
+            const tableReader = await establishTableReader(table);
+            const [packedRecord] = Number.isSafeInteger(recordNumber) && recordNumber > 0 ? await tableReader.readRecords(recordNumber - 1, 1) : [];
+            if (!packedRecord) throw new Error('Not found.');
+            return { record: packedRecord };
+        }
         const layout = await establishTableLayout(table);
         const record = await table.get(options.id);
         if (!record) throw new Error('Not found.');
@@ -226,7 +246,8 @@ export class Connector implements ExtendedConnectorInterface {
 
     // Fills a table with the records given, typed by the columns given. The app names a new table for every load, so an
     // earlier load stays in its own table until the app drops it, and a failed load leaves only its own table to drop. A
-    // table already holding the name is replaced.
+    // table already holding the name is replaced. The records are stored packed, many to an entry, because IndexedDB is
+    // slow at a table with an entry for each record.
     async loadObjectRecords(options: LoadObjectRecordsOptions, chunks: AsyncIterable<StoreRecord[]>): Promise<LoadObjectRecordsResult> {
         const signal = resolveRequestSignal(options);
         try {
@@ -235,18 +256,19 @@ export class Connector implements ExtendedConnectorInterface {
             await this.runSchemaChange(containerId, async () => {
                 const container = await this.establishContainer(containerId);
                 if (container.tables.some((table) => table.name === nodeId)) await this.changeSchema(containerId, nodeId, null);
-                await this.changeSchema(containerId, nodeId, '++');
+                await this.changeSchema(containerId, nodeId, PACKED_TABLE_SCHEMA);
             });
             const container = await this.establishContainer(containerId);
-            const table = container.table<Record<string, unknown>>(nodeId);
+            const recordPacker = constructRecordPacker(container.table(nodeId));
             const layout = constructTableLayout(options.columnConfigs);
             let recordCount = 0;
             for await (const records of chunks) {
                 signal.throwIfAborted();
-                await table.bulkAdd(records.map((record) => constructRecordObject(record, layout)));
+                await recordPacker.addRecords(records.map((record) => constructPackedRecord(record, layout)));
                 recordCount += records.length;
             }
             signal.throwIfAborted();
+            await recordPacker.finish();
             return { recordCount };
         } catch (error) {
             throw normalizeToError(error);
@@ -273,12 +295,11 @@ export class Connector implements ExtendedConnectorInterface {
         const startedAt = performance.now();
         const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
         const container = await this.establishContainer(containerId);
-        const table = container.table<Record<string, unknown>>(nodeId);
-        const layout = await establishTableLayout(table);
-        const records = await table.limit(PREVIEW_RECORD_COUNT).toArray();
-        const totalCount = await table.count();
-        const parsedRecords = records.map((record) => convertStoreRecordToParsedRecord(constructStoreRecord(record, layout)));
-        const { columnConfigs } = this.connectorUtilities.inferDataTypes(parsedRecords, false, constructDeclaredColumnConfigs(layout));
+        const tableReader = await establishTableReader(container.table<Record<string, unknown>>(nodeId));
+        const records = await tableReader.readRecords(0, PREVIEW_RECORD_COUNT);
+        const totalCount = await tableReader.countRecords();
+        const parsedRecords = records.map((record) => convertStoreRecordToParsedRecord(record));
+        const { columnConfigs } = this.connectorUtilities.inferDataTypes(parsedRecords, false, constructDeclaredColumnConfigs(tableReader.layout));
         return {
             contentAuditConfig: {
                 asAt,
@@ -319,7 +340,21 @@ export class Connector implements ExtendedConnectorInterface {
             if (container.tables.every((table) => table.name !== nodeId)) throw new Error(`'${options.path}' has not been loaded.`);
             const table = container.table<Record<string, unknown>>(nodeId);
             const layout = constructTableLayout(options.columnConfigs);
-            if (options.filters.length === 0 && options.groupColumnIndexes.length === 0 && options.sorts.length === 0) {
+            const isPage = options.filters.length === 0 && options.groupColumnIndexes.length === 0 && options.sorts.length === 0;
+            // A table loaded before loads were packed still has an entry for each record, and is read as it is.
+            if (isPackedTable(table)) {
+                if (isPage) {
+                    const pageRecords = await readPackedRecords(table, checkCount(options.offset), checkCount(options.limit));
+                    return { records: pageRecords.map((record) => constructPackedRecord(record, layout)), totalCount: await countPackedRecords(table) };
+                }
+                const packedRecords = await readAllPackedRecords(table);
+                return queryStoreRecords(
+                    packedRecords.map((record) => constructPackedRecord(record, layout)),
+                    layout.columnConfigs.length,
+                    options
+                );
+            }
+            if (isPage) {
                 const pageRecords = await table.offset(checkCount(options.offset)).limit(checkCount(options.limit)).toArray();
                 const totalCount = await table.count();
                 return { records: pageRecords.map((record) => constructStoreRecord(record, layout)), totalCount };
@@ -340,6 +375,7 @@ export class Connector implements ExtendedConnectorInterface {
         const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
         const container = await this.establishContainer(containerId);
         const keys = options.keys;
+        if (keys.length > 0 && isPackedTable(container.table(nodeId))) throw new Error(`'${options.path}' is a loaded table, so its records cannot be removed one at a time.`);
         if (keys.length === 0) {
             await container.table(nodeId).clear();
         } else if (keys.length === 1 && keys[0] != null) {
@@ -349,16 +385,22 @@ export class Connector implements ExtendedConnectorInterface {
         }
     }
 
-    // Retrieves every record of the table, typed by its columns.
+    // Retrieves every record of the table, typed by its columns, a chunk at a time. Nothing more is read until the next
+    // chunk is asked for, so a large table is never held whole. The table's records are counted first and the total
+    // goes with every chunk, so a load can show how far it has got.
     async *retrieveRecords(options: RetrieveRecordsOptions): AsyncGenerator<RetrieveRecordsChunk, RetrieveRecordsSummary, undefined> {
         try {
             const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
             const container = await this.establishContainer(containerId);
-            const table = container.table<Record<string, unknown>>(nodeId);
-            const layout = await establishTableLayout(table);
-            const records = await table.toArray();
-            yield { records: records.map((record) => constructStoreRecord(record, layout)), totalRecordCount: records.length, typeId: 'storeRecordArray' };
-            return { recordCount: records.length };
+            const tableReader = await establishTableReader(container.table<Record<string, unknown>>(nodeId));
+            const totalRecordCount = await tableReader.countRecords();
+            let recordCount = 0;
+            const recordChunks = tableReader.readRecordChunks(options.chunkSize ?? DEFAULT_RETRIEVE_CHUNK_SIZE);
+            for await (const records of recordChunks) {
+                yield { records, totalRecordCount, typeId: 'storeRecordArray' };
+                recordCount += records.length;
+            }
+            return { recordCount };
         } catch (error) {
             throw new ConnectorError(`Failed to access Dexie table with path '${options.path}'.`, 'dpuse-connector-dexie-js.Connector.retrieveRecords', { cause: error });
         }
@@ -371,6 +413,7 @@ export class Connector implements ExtendedConnectorInterface {
         const { containerId, nodeId } = this.establishObjectIdentifiers(options.path);
         const container = await this.establishContainer(containerId);
         const table = container.table<Record<string, unknown>>(nodeId);
+        if (isPackedTable(table)) throw new Error(`'${options.path}' is a loaded table, so records cannot be added to it or changed.`);
         const { fieldNames } = await establishTableLayout(table);
         await table.bulkPut(
             options.records.map((record) => {
@@ -491,10 +534,39 @@ async function establishTableLayout(table: Table<Record<string, unknown>, Indexa
     return inferTableLayout(await table.limit(INFERENCE_RECORD_COUNT).toArray());
 }
 
-// A record as Dexie stores it, with a field for each column. Each value is kept only if it fits its column's type.
-function constructRecordObject(record: StoreRecord, layout: TableLayout): Record<string, StoreValue> {
-    if (record.length > layout.fieldNames.length) throw new Error(`A record has ${String(record.length)} values, but the table has ${String(layout.fieldNames.length)} columns.`);
-    return Object.fromEntries(layout.fieldNames.map((fieldName, columnIndex) => [fieldName, toStoreValue(record[columnIndex], layout.columnConfigs[columnIndex])]));
+// A table's records, read the way the table holds them. A packed table's columns are worked out from its first
+// records, as any other table's are, because it keeps no column types either.
+async function establishTableReader(table: Table<Record<string, unknown>, IndexableType>): Promise<TableReader> {
+    if (isPackedTable(table)) {
+        const layout = inferPackedTableLayout(await readPackedRecords(table, 0, INFERENCE_RECORD_COUNT));
+        return {
+            countRecords: () => countPackedRecords(table),
+            layout,
+            readRecordChunks: (chunkSize) => readTypedPackedRecordChunks(table, chunkSize, layout),
+            readRecords: async (offset, limit) => {
+                const records = await readPackedRecords(table, offset, limit);
+                return records.map((record) => constructPackedRecord(record, layout));
+            }
+        };
+    }
+    const layout = await establishTableLayout(table);
+    return {
+        countRecords: () => table.count(),
+        layout,
+        readRecordChunks: (chunkSize) => readTypedRecordChunks(table, chunkSize, layout),
+        readRecords: async (offset, limit) => {
+            const records = await table.offset(offset).limit(limit).toArray();
+            return records.map((record) => constructStoreRecord(record, layout));
+        }
+    };
+}
+
+// A record as a packed table holds it, and as it is read from one: its values in column order, each kept only if it
+// fits its column's type.
+function constructPackedRecord(record: StoreRecord, layout: TableLayout): StoreRecord {
+    if (record.length > layout.columnConfigs.length)
+        throw new Error(`A record has ${String(record.length)} values, but the table has ${String(layout.columnConfigs.length)} columns.`);
+    return layout.columnConfigs.map((columnConfig, columnIndex) => toStoreValue(record[columnIndex], columnConfig));
 }
 
 // A stored record's values in column order, each as its column's type.
@@ -529,6 +601,14 @@ async function* readRecordChunks(table: Table<Record<string, unknown>, Indexable
     }
 }
 
+async function* readTypedPackedRecordChunks(table: PackedTable, chunkSize: number, layout: TableLayout): AsyncGenerator<StoreRecord[]> {
+    for await (const records of readPackedRecordChunks(table, chunkSize)) yield records.map((record) => constructPackedRecord(record, layout));
+}
+
+async function* readTypedRecordChunks(table: Table<Record<string, unknown>, IndexableType>, chunkSize: number, layout: TableLayout): AsyncGenerator<StoreRecord[]> {
+    for await (const records of readRecordChunks(table, chunkSize)) yield records.map((record) => constructStoreRecord(record, layout));
+}
+
 // The type each kind of stored value has. An object or list, which a store column cannot hold, is read as JSON text.
 function identifyValueType(value: unknown): { dataSubtypeId: DataSubtypeId | undefined; dataTypeId: DataTypeId } {
     if (typeof value === 'boolean') return { dataSubtypeId: undefined, dataTypeId: 'boolean' };
@@ -555,6 +635,22 @@ function inferColumnConfig(fieldName: string, values: unknown[]): ObjectColumnCo
     return { dataSubtypeId: valueTypes[0]?.dataSubtypeId, dataTypeId: onlyDataTypeId, label };
 }
 
+// A packed table's records are lists of values, so its fields are named by position and each field's type is worked
+// out from its values in the table's first records.
+function inferPackedTableLayout(records: StoreRecord[]): TableLayout {
+    const columnCount = Math.max(0, ...records.map((record) => record.length));
+    const fieldNames = Array.from({ length: columnCount }, (_value, columnIndex) => constructFieldName(columnIndex));
+    return {
+        columnConfigs: fieldNames.map((fieldName, columnIndex) =>
+            inferColumnConfig(
+                fieldName,
+                records.map((record) => record[columnIndex])
+            )
+        ),
+        fieldNames
+    };
+}
+
 // No column types are kept, so a table's fields are taken in the order they first appear in its first records, and each
 // field's type is worked out from its values there.
 function inferTableLayout(records: Record<string, unknown>[]): TableLayout {
@@ -571,7 +667,6 @@ function inferTableLayout(records: Record<string, unknown>[]): TableLayout {
 }
 
 // A value that does not fit its column's type is null, as in the other stores. A text column takes any value as text.
-// eslint-disable-next-line sonarjs/function-return-type -- A store value is one of several types, by its column.
 function toStoreValue(value: unknown, columnConfig: ObjectColumnConfig | undefined): StoreValue {
     if (value == null) return null;
     switch (columnConfig?.dataTypeId) {

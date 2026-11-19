@@ -13,8 +13,8 @@ const config = defineConfig({
     },
     test: {
         coverage: {
-            // 'json' writes the coverage-final.json that `fallow health --coverage` reads; 'json-summary' writes the totals
-            // the README's Testing table reports.
+            // 'json' writes the coverage-final.json that `fallow health --coverage` reads; 'json-summary' writes the
+            // totals the README's Testing table reports.
             exclude: ['dist/**', 'scripts/**', 'tests/**'],
             include: ['src/**/*.ts'],
             provider: 'v8',

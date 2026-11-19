@@ -8,6 +8,8 @@
 
 Provides access to local Dexie.js (IndexedDB) databases in the browser.
 
+**Release candidate.** See [Release Status](#release-status).
+
 [Report a Vulnerability](https://github.com/dpuse/dpuse-connector-dexie-js/security/advisories/new) · [Open an Issue](https://github.com/dpuse/dpuse-connector-dexie-js/issues)
 
 ## About DPUse
@@ -75,9 +77,15 @@ cd dpuse-connector-dexie-js
 npm install
 ```
 
-_Requires [Node.js](https://nodejs.org/) 24 or later, [npm](https://www.npmjs.com/) 12 or later, and [TypeScript](https://www.typescriptlang.org/) 6.0.3 or later._
+_Requires [Node.js](https://nodejs.org/) 24 or later, [npm](https://www.npmjs.com/) 12 or later, and [TypeScript](https://www.typescriptlang.org/) 6.0.3 or a later 6.0 release. Later versions, including TypeScript 7, are not supported yet._
 
 This repository is managed using the common set of actions provided by [@dpuse/dpuse-development](https://github.com/dpuse/dpuse-development). See the `scripts` block in [package.json](https://github.com/dpuse/dpuse-connector-dexie-js/blob/main/package.json) for details.
+
+### Release Status
+
+DPUse is a new product, and this connector is a release candidate: complete and in use across DPUse, but not yet at its first stable release.
+
+Every release is listed on the [Releases](https://github.com/dpuse/dpuse-connector-dexie-js/releases) page.
 
 <!-- USAGE_END -->
 
@@ -99,7 +107,7 @@ The dependency tree below shows how each package in the table above is reached �
 
 - **[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)** 1.0.245 — this month: 2026-11-18
     - **[valibot](https://github.com/open-circle/valibot)** 1.5.0 — 2 mths ago: 2026-09-09
-- **[dexie](https://github.com/dexie/Dexie.js)** 4.4.7 — this month: 2026-10-19
+- **[dexie](https://github.com/dexie/Dexie.js)** 4.4.7 — 1 mth ago: 2026-10-19
 
 <!-- DEPENDENCY_LICENSES_END -->
 
@@ -113,11 +121,11 @@ _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not gen
 
 | Chunk/Module/File                                                     | Composition                                                                                     |
 | :-------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------- |
-| **dist/dpuse-connector-dexie-js.es.js**                               | 160.5&nbsp;kB&nbsp;·&nbsp;gzip&nbsp;42.0&nbsp;kB&nbsp;·&nbsp;100.0%&nbsp;of&nbsp;the&nbsp;build |
-| &nbsp;&nbsp;&nbsp;&nbsp;dexie → dist/dexie.js + 1 more                | `██████████████░░░░░░`&nbsp;70.6%&nbsp;·&nbsp;113.3&nbsp;kB                                     |
-| &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts + 1 more                       | `██░░░░░░░░░░░░░░░░░░`&nbsp;9.5%&nbsp;·&nbsp;15.2&nbsp;kB                                       |
-| &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared.es.js | `█░░░░░░░░░░░░░░░░░░░`&nbsp;5.9%&nbsp;·&nbsp;9.5&nbsp;kB                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;(bundler output, whitespace & JSON)           | `███░░░░░░░░░░░░░░░░░`&nbsp;14.1%&nbsp;·&nbsp;22.6&nbsp;kB                                      |
+| **dist/dpuse-connector-dexie-js.es.js**                               | 163.5&nbsp;kB&nbsp;·&nbsp;gzip&nbsp;42.9&nbsp;kB&nbsp;·&nbsp;100.0%&nbsp;of&nbsp;the&nbsp;build |
+| &nbsp;&nbsp;&nbsp;&nbsp;dexie → dist/dexie.js + 1 more                | `██████████████░░░░░░`&nbsp;69.3%&nbsp;·&nbsp;113.3&nbsp;kB                                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts + 2 more                       | `██░░░░░░░░░░░░░░░░░░`&nbsp;11.0%&nbsp;·&nbsp;18.0&nbsp;kB                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared.es.js | `█░░░░░░░░░░░░░░░░░░░`&nbsp;5.8%&nbsp;·&nbsp;9.5&nbsp;kB                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;(bundler output, whitespace & JSON)           | `███░░░░░░░░░░░░░░░░░`&nbsp;13.9%&nbsp;·&nbsp;22.7&nbsp;kB                                      |
 
 Bars show each row's share of its output file.
 
@@ -143,10 +151,10 @@ This section is updated each time `npm run document` is run. Settings come from 
 
 ### Code Quality
 
-| Check         | Status | What it does                                                                                                                                                                                                                |
-| :------------ | :----- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Code analysis | ❌ Off | [SonarCloud](https://sonarcloud.io) checks every push for bugs, code smells and vulnerabilities.                                                                                                                            |
-| Linting       | ✅ On  | [ESLint](https://eslint.org) checks the code for errors and style problems. Part of the [CI workflow](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml) on every push and pull request to `main`. |
+| Check         | Status | What it does                                                                                                                                                                                                                                                                                                              |
+| :------------ | :----- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Code analysis | ❌ Off | [SonarCloud](https://sonarcloud.io) checks every push for bugs, code smells and vulnerabilities.                                                                                                                                                                                                                          |
+| Linting       | ✅ On  | [ESLint](https://eslint.org) checks the code for errors and style problems, and the [TypeScript](https://www.typescriptlang.org/) compiler type-checks the whole project. Part of the [CI workflow](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml) on every push and pull request to `main`. |
 
 ### Security Analysis
 

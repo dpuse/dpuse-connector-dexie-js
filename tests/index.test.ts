@@ -225,13 +225,26 @@ describe('Connector', () => {
             expect(readingConfig).toMatchObject({ encodingId: undefined, hasHeaders: false, isDeclared: true, valueDelimiterId: undefined });
         });
 
+        it("previews a loaded table's first records", async () => {
+            const inferDataTypes = vi.fn().mockReturnValue({ columnConfigs: [{ id: 'c0' }], hasHeaders: false });
+            const connector = createConnector({ inferDataTypes });
+            await connector.openStore();
+            await connector.loadObjectRecords(buildLoadOptions(), yieldChunks([numberRecords(0, 60)]));
+
+            const { contentAuditConfig, sampleConfig } = await connector.previewObject({ path: '/dpuse-store/dataView1' } as never);
+
+            expect(sampleConfig.parsedRecords).toEqual(Array.from({ length: 50 }, (_, index) => [String(index)]));
+            expect(contentAuditConfig).toMatchObject({ isComplete: false, recordCount: 50 });
+            expect(inferDataTypes.mock.calls[0]?.[2]).toEqual([{ dataSubtypeId: 'integer', dataTypeId: 'numeric', label: 'c0', name: 'c0' }]);
+        });
+
         it('rejects an invalid path', async () => {
             await expect(createConnector().previewObject({ path: 'bad' } as never)).rejects.toThrow("Encountered invalid object path 'bad'.");
         });
     });
 
     describe('retrieveRecords', () => {
-        it('retrieves every record as one chunk of typed records, then reports the count', async () => {
+        it('retrieves every record typed, with the count of every record, then reports the count', async () => {
             const connector = createConnector();
             await createPeopleTable(connector);
             await connector.upsertRecords({
@@ -250,11 +263,41 @@ describe('Connector', () => {
                         [1, 'Ada'],
                         [2, 'Grace']
                     ],
-                    totalRecordCount: 2, // The chunk holds every record, so a load can show it as complete.
+                    totalRecordCount: 2,
                     typeId: 'storeRecordArray'
                 }
             ]);
             expect(summary).toEqual({ recordCount: 2 });
+        });
+
+        it('retrieves a chunk at a time, each with the count of every record', async () => {
+            const connector = createConnector();
+            await createRecordsTable(connector);
+            await fillRecordsTable(connector, 5);
+
+            const { chunks, summary } = await readRetrieval(connector, buildRetrieveOptions({ chunkSize: 2, path: RECORDS_PATH }));
+
+            expect(chunks).toEqual([
+                { records: [[0], [1]], totalRecordCount: 5, typeId: 'storeRecordArray' },
+                { records: [[2], [3]], totalRecordCount: 5, typeId: 'storeRecordArray' },
+                { records: [[4]], totalRecordCount: 5, typeId: 'storeRecordArray' }
+            ]);
+            expect(summary).toEqual({ recordCount: 5 });
+        });
+
+        it('retrieves a loaded table a chunk at a time, in the order it was loaded', async () => {
+            const connector = await openStoreConnector();
+            await connector.loadObjectRecords(buildLoadOptions(), yieldChunks([numberRecords(0, 1500), numberRecords(1500, 1000)]));
+
+            const { chunks, summary } = await readRetrieval(connector, buildRetrieveOptions({ chunkSize: 1000, path: '/dpuse-store/dataView1' }));
+
+            expect(chunks.map((chunk) => [chunk.records.length, chunk.typeId === 'storeRecordArray' ? chunk.totalRecordCount : undefined])).toEqual([
+                [1000, 2500],
+                [1000, 2500],
+                [500, 2500]
+            ]);
+            expect(chunks.flatMap((chunk) => chunk.records)).toEqual(numberRecords(0, 2500));
+            expect(summary).toEqual({ recordCount: 2500 });
         });
 
         it('works out the columns of a table it did not create from the records in it', async () => {
@@ -298,6 +341,26 @@ describe('Connector', () => {
             ]);
             expect(contentAuditConfig).toMatchObject({ columns: [{ id: 'audited' }], isComplete: true, recordCount: 25 });
             expect(hasHeaders).toBe(false);
+        });
+
+        it('audits a loaded table a chunk at a time, with the count of every record', async () => {
+            const columnAuditor = { auditRecords: vi.fn(), completeAudit: vi.fn().mockReturnValue({ columnConfigs: [], hasHeaders: false }) };
+            const constructColumnAuditor = vi.fn().mockReturnValue(columnAuditor);
+            const connector = createConnector({ constructColumnAuditor });
+            await connector.openStore();
+            await connector.loadObjectRecords(buildLoadOptions(), yieldChunks([numberRecords(0, 2500)]));
+            const onProgress = vi.fn();
+
+            const { contentAuditConfig } = await connector.auditObjectContent(buildAuditOptions({ chunkSize: 1000, path: '/dpuse-store/dataView1' }), onProgress);
+
+            expect(constructColumnAuditor).toHaveBeenCalledWith(false, [{ dataSubtypeId: 'integer', dataTypeId: 'numeric', label: 'c0', name: 'c0' }]);
+            expect(columnAuditor.auditRecords.mock.calls[2]?.[0]).toEqual(Array.from({ length: 500 }, (_, index) => [String(2000 + index)]));
+            expect(onProgress.mock.calls).toEqual([
+                [1000, 0, 2500],
+                [1000, 0, 2500],
+                [500, 0, 2500]
+            ]);
+            expect(contentAuditConfig).toMatchObject({ isComplete: true, recordCount: 2500 });
         });
 
         it('keeps what it has audited when told to stop', async () => {
@@ -377,6 +440,16 @@ describe('Connector', () => {
             expect(await connector.getRecord({ id: 1, path: PEOPLE_PATH })).toEqual({ record: [1, 'Ada'] });
         });
 
+        it('gets a record of a loaded table by its number, counted from 1', async () => {
+            const connector = await openStoreConnector();
+            await connector.loadObjectRecords(buildLoadOptions(), yieldChunks([numberRecords(10, 1200)]));
+
+            expect(await connector.getRecord({ id: 1, path: '/dpuse-store/dataView1' })).toEqual({ record: [10] });
+            expect(await connector.getRecord({ id: 1200, path: '/dpuse-store/dataView1' })).toEqual({ record: [1209] });
+            await expect(connector.getRecord({ id: 0, path: '/dpuse-store/dataView1' })).rejects.toThrow('Not found.');
+            await expect(connector.getRecord({ id: 1201, path: '/dpuse-store/dataView1' })).rejects.toThrow('Not found.');
+        });
+
         it('fails for a record that does not exist, and for an invalid path', async () => {
             const connector = createConnector();
             await createPeopleTable(connector);
@@ -407,6 +480,15 @@ describe('Connector', () => {
             ]);
         });
 
+        it('refuses to add to or change a loaded table, whose records are packed', async () => {
+            const connector = await openStoreConnector();
+            await connector.loadObjectRecords(buildLoadOptions(), yieldChunks([[[1]]]));
+
+            await expect(connector.upsertRecords({ path: '/dpuse-store/dataView1', records: [[2]] })).rejects.toThrow(
+                "'/dpuse-store/dataView1' is a loaded table, so records cannot be added to it or changed."
+            );
+        });
+
         it('stores values as given, and rejects a record with more values than the table has columns', async () => {
             const connector = createConnector();
             await connector.createObject(buildCreateOptions());
@@ -430,6 +512,18 @@ describe('Connector', () => {
 
             await connector.removeRecords({ keys: [], path: PEOPLE_PATH });
             expect(await retrieveAll(connector)).toEqual([]);
+        });
+
+        it('removes every record of a loaded table, but refuses to remove some of them', async () => {
+            const connector = await openStoreConnector();
+            await connector.loadObjectRecords(buildLoadOptions(), yieldChunks([[[1], [2]]]));
+
+            await expect(connector.removeRecords({ keys: [1], path: '/dpuse-store/dataView1' })).rejects.toThrow(
+                "'/dpuse-store/dataView1' is a loaded table, so its records cannot be removed one at a time."
+            );
+            await connector.removeRecords({ keys: [], path: '/dpuse-store/dataView1' });
+
+            expect(await connector.queryRecords(buildQueryOptions())).toEqual({ records: [], totalCount: 0 });
         });
 
         it('rejects an invalid path', async () => {
@@ -460,6 +554,29 @@ describe('Connector', () => {
             expect(result).toEqual({ recordCount: 3 });
             expect(queried.records).toEqual([[1], [2], [3]]);
             expect(tables.connectionNodeConfigs.map((node) => node.id)).toEqual(['dataView1']); // A loaded data view is a table like any other.
+        });
+
+        it('stores the records packed, many to an entry, however the source hands them over', async () => {
+            const connector = await openStoreConnector();
+
+            const result = await connector.loadObjectRecords(buildLoadOptions(), yieldChunks([numberRecords(0, 700), numberRecords(700, 1500), numberRecords(2200, 300)]));
+
+            const entries = await connector.containers['dpuse-store']?.table('dataView1').toArray();
+            expect(result).toEqual({ recordCount: 2500 });
+            expect(entries?.map((entry: { firstRecordIndex: number; records: unknown[] }) => [entry.firstRecordIndex, entry.records.length])).toEqual([
+                [0, 1000],
+                [1000, 1000],
+                [2000, 500]
+            ]);
+        });
+
+        it('keeps a value only if it fits its column, and rejects a record with more values than there are columns', async () => {
+            const connector = await openStoreConnector();
+
+            await connector.loadObjectRecords(buildLoadOptions(), yieldChunks([[[1], ['two'], [null], []]]));
+
+            expect(await connector.queryRecords(buildQueryOptions())).toEqual({ records: [[1], [null], [null], [null]], totalCount: 4 });
+            await expect(connector.loadObjectRecords(buildLoadOptions(), yieldChunks([[[1, 2]]]))).rejects.toThrow('A record has 2 values, but the table has 1 columns.');
         });
 
         it('loads into a database named in the path', async () => {
@@ -502,6 +619,29 @@ describe('Connector', () => {
             const result = await connector.queryRecords(buildQueryOptions({ limit: 2, offset: 1 }));
 
             expect(result).toEqual({ records: [[2], [3]], totalCount: 4 });
+        });
+
+        it('reads a page that runs from one entry of a loaded table into the next', async () => {
+            const connector = await openStoreConnector();
+            await connector.loadObjectRecords(buildLoadOptions(), yieldChunks([numberRecords(0, 2500)]));
+
+            expect(await connector.queryRecords(buildQueryOptions({ limit: 4, offset: 998 }))).toEqual({ records: [[998], [999], [1000], [1001]], totalCount: 2500 });
+            expect(await connector.queryRecords(buildQueryOptions({ limit: 10, offset: 2498 }))).toEqual({ records: [[2498], [2499]], totalCount: 2500 });
+            expect(await connector.queryRecords(buildQueryOptions({ limit: 10, offset: 2500 }))).toEqual({ records: [], totalCount: 2500 });
+        });
+
+        it('still reads a table loaded before loads were packed, which has an entry for each record', async () => {
+            const earlierDatabase = new Dexie('dpuse-store');
+            earlierDatabase.version(1).stores({ dataView1: '++' });
+            await earlierDatabase.table('dataView1').bulkAdd([{ c0: 1 }, { c0: 2 }, { c0: 2 }, { c0: 3 }]);
+            earlierDatabase.close();
+            const connector = await openStoreConnector();
+
+            expect(await connector.queryRecords(buildQueryOptions({ limit: 2, offset: 1 }))).toEqual({ records: [[2], [2]], totalCount: 4 });
+            expect(await connector.queryRecords(buildQueryOptions({ filters: [{ columnIndex: 0, operatorId: 'greaterThan', value: 1 }] }))).toEqual({
+                records: [[2], [2], [3]],
+                totalCount: 3
+            });
         });
 
         it('filters, groups and sorts in memory for any other query', async () => {
@@ -576,6 +716,11 @@ async function createRecordsTable(connector: Connector): Promise<void> {
 // Stores records whose one value is 0, 1 and so on, in that order.
 async function fillRecordsTable(connector: Connector, count: number): Promise<void> {
     await connector.upsertRecords({ path: RECORDS_PATH, records: Array.from({ length: count }, (_, index) => [index]) });
+}
+
+// Records whose one value counts up from 'firstValue', so a wrong or missing record shows.
+function numberRecords(firstValue: number, recordCount: number): StoreRecord[] {
+    return Array.from({ length: recordCount }, (_, index) => [firstValue + index]);
 }
 
 // A people table with no key or indexes, unless the test asks for them.

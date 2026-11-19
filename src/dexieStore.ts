@@ -44,7 +44,6 @@ function groupRecords(records: StoreRecord[], columnCount: number, options: Quer
 }
 
 // Empty values are left out of every aggregate but 'count', which counts records, as in SQL.
-// eslint-disable-next-line sonarjs/function-return-type -- An aggregate is a count, a sum or one of the column's values.
 function aggregateValues(group: StoreRecord[], aggregate: QueryAggregate): StoreValue {
     if (aggregate.functionId === 'count') return group.length;
     const { columnIndex } = aggregate;
@@ -73,7 +72,6 @@ function selectExtremeValue(values: NonNullable<StoreValue>[], direction: 1 | -1
 
 // Whole numbers are added exactly, so a sum beyond ±2^53 stays a bigint, as in the SQL stores. Any decimal makes the
 // sum a plain number.
-// eslint-disable-next-line sonarjs/function-return-type -- A sum is a bigint only when it is too large to be an exact number.
 function sumValues(values: NonNullable<StoreValue>[]): bigint | number {
     const isWhole = values.every((value) => typeof value === 'bigint' || (typeof value === 'number' && Number.isSafeInteger(value)));
     if (!isWhole) {
