@@ -3,26 +3,26 @@
 <!-- OPENING_START -->
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-[![DPUse version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.dpuse.app%2Fconfigs%2Fdpuse-connector-dexie-js&query=%24.data.version&prefix=v&label=DPUse&color=blue)](https://github.com/dpuse/dpuse-connector-dexie-js/releases/latest)
 [![CI](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml/badge.svg)](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/codeql.yml/badge.svg)](https://github.com/dpuse/dpuse-connector-dexie-js/security/code-scanning)
+![Coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fdpuse%2Fdpuse-connector-dexie-js%2Fmain%2Fcode-health-reports%2Fvitest%2Fbadge.json)
+[![DPUse version](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.dpuse.app%2Fconfigs%2Fdpuse-connector-dexie-js&query=%24.data.version&prefix=v&label=DPUse&color=blue)](https://github.com/dpuse/dpuse-connector-dexie-js/releases/latest)
 
 Provides access to local Dexie.js (IndexedDB) databases in the browser.
-
-**Release candidate.** See [Release Status](#release-status).
 
 [Report a Vulnerability](https://github.com/dpuse/dpuse-connector-dexie-js/security/advisories/new) · [Open an Issue](https://github.com/dpuse/dpuse-connector-dexie-js/issues)
 
 ## About DPUse
 
-[DPUse](https://www.dpuse.app) (Data Positioning & Use) is an in-browser application that positions your data for use through three core activities: sourcing, contextualising, and publishing.
+DPUse (Data Positioning & Use) is a browser-based app that helps you prepare your data for use in two main steps: Sourcing and Contextualising. Once your data is contextualised, Presentations and Cookbooks give you two ways to put it to use.
 
-**Sourcing** uses a library of [Connectors](https://www.dpuse.app/connectors) to establish [Connections](https://www.dpuse.app) to applications, databases, file stores, and curated datasets; these connections are subsequently used to configure structured [Data Views](https://www.dpuse.app) from the underlying sources.
+**Sourcing** uses Connectors to link to applications, databases, file stores, and curated datasets. These Connections help you set up tabular Data Views from your sources.
 
-**Contextualising** extracts chronological events from those [Data Views](https://www.dpuse.app) and maps them into comprehensive [Context Models](https://www.dpuse.app). This gives the DPUse Engine the structural framework needed to generate deterministic transactions, facts, or observations.
+**Contextualising** maps events from your Data Views to detailed Context Models. These models give the DPUse Engine the structure it needs to create clear transactions, facts, or observations.
 
-**Publishing** uses a library of [Presenters](https://www.dpuse.app) to render standard [Presentations](https://www.dpuse.app) immediately using the contextualised data; additionally, [Cookbooks](https://www.dpuse.app) of [Recipes](https://www.dpuse.app) let you build Data Apps using your preferred tools.
+**Presentations** use ready-made Presenters to show your contextualised data in a meaningful way as soon as it's ready.
 
-In addition, DPUse provides [Tools](https://www.dpuse.app) used by the application, and you can use them to construct connectors and presenters.
+**Cookbooks** of Recipes guide you in building Data Apps, and additional Presenters, with your contextualised data using your preferred tools.
 
 ## Introduction
 
@@ -97,7 +97,7 @@ License data is updated each time `npm run document` is run, using [CycloneDX](h
 
 | Dependency                                                   | Version | License(s) | Document                                                              |
 | :----------------------------------------------------------- | :-----: | :--------- | :-------------------------------------------------------------------- |
-| [@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared) | 1.0.245 | MIT        | [LICENSE](licenses/downloads/@dpuse/dpuse-shared@1.0.245-LICENSE.txt) |
+| [@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared) | 1.0.253 | MIT        | [LICENSE](licenses/downloads/@dpuse/dpuse-shared@1.0.253-LICENSE.txt) |
 | [dexie](https://github.com/dexie/Dexie.js)                   |  4.4.7  | Apache-2.0 | [LICENSE](licenses/downloads/dexie@4.4.7-LICENSE.txt)                 |
 | [valibot](https://github.com/open-circle/valibot)            |  1.5.0  | MIT        | [LICENSE](licenses/downloads/valibot@1.5.0-LICENSE.txt)               |
 
@@ -105,7 +105,7 @@ License data is updated each time `npm run document` is run, using [CycloneDX](h
 
 The dependency tree below shows how each package in the table above is reached — direct and transitive — along with its installed version, release date, and update status. A package that does not ship itself, such as one whose parts are bundled separately, is left out and what ships beneath it is shown in its place. Packages flagged ❗ have a newer version available; ⚠️ indicates a package that hasn't been updated in the last 6 months or longer. Neither flag necessarily indicates a problem: we let new releases stabilise before upgrading, and some packages are mature and stable (have limited or no dependencies), so they require no active development.
 
-- **[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)** 1.0.245 — this month: 2026-11-18
+- **[@dpuse/dpuse-shared](https://github.com/dpuse/dpuse-shared)** 1.0.253 — this month: 2026-11-27
     - **[valibot](https://github.com/open-circle/valibot)** 1.5.0 — 2 mths ago: 2026-09-09
 - **[dexie](https://github.com/dexie/Dexie.js)** 4.4.7 — 1 mth ago: 2026-10-19
 
@@ -121,8 +121,8 @@ _Note: Sonda's Vite reports currently exclude CSS files, since Vite does not gen
 
 | Chunk/Module/File                                                     | Composition                                                                                     |
 | :-------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------- |
-| **dist/dpuse-connector-dexie-js.es.js**                               | 163.5&nbsp;kB&nbsp;·&nbsp;gzip&nbsp;42.9&nbsp;kB&nbsp;·&nbsp;100.0%&nbsp;of&nbsp;the&nbsp;build |
-| &nbsp;&nbsp;&nbsp;&nbsp;dexie → dist/dexie.js + 1 more                | `██████████████░░░░░░`&nbsp;69.3%&nbsp;·&nbsp;113.3&nbsp;kB                                     |
+| **dist/dpuse-connector-dexie-js.es.js**                               | 163.4&nbsp;kB&nbsp;·&nbsp;gzip&nbsp;42.8&nbsp;kB&nbsp;·&nbsp;100.0%&nbsp;of&nbsp;the&nbsp;build |
+| &nbsp;&nbsp;&nbsp;&nbsp;dexie → dist/dexie.js + 1 more                | `██████████████░░░░░░`&nbsp;69.3%&nbsp;·&nbsp;113.2&nbsp;kB                                     |
 | &nbsp;&nbsp;&nbsp;&nbsp;src → index.ts + 2 more                       | `██░░░░░░░░░░░░░░░░░░`&nbsp;11.0%&nbsp;·&nbsp;18.0&nbsp;kB                                      |
 | &nbsp;&nbsp;&nbsp;&nbsp;@dpuse/dpuse-shared → dist/dpuse-shared.es.js | `█░░░░░░░░░░░░░░░░░░░`&nbsp;5.8%&nbsp;·&nbsp;9.5&nbsp;kB                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;(bundler output, whitespace & JSON)           | `███░░░░░░░░░░░░░░░░░`&nbsp;13.9%&nbsp;·&nbsp;22.7&nbsp;kB                                      |
@@ -143,36 +143,35 @@ This section is updated each time `npm run document` is run. Settings come from 
 
 ### Testing
 
-| Check                | Status | What it does                                                                                                                                                                                                                                                                                                       |
-| :------------------- | :----- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Unit tests           | ✅ On  | [Vitest](https://vitest.dev) runs the unit tests. Part of the [CI workflow](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml) on every push and pull request to `main`.                                                                                                                  |
-| Property-based tests | ❌ Off | [fast-check](https://fast-check.dev) runs many random inputs per test to find edge cases, alongside the unit tests.                                                                                                                                                                                                |
-| Test coverage        | ✅ On  | ![Coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fdpuse%2Fdpuse-connector-dexie-js%2Fmain%2Fcode-health-reports%2Fvitest%2Fbadge.json) [Vitest's V8 coverage](https://vitest.dev/guide/coverage) measures the share of source lines the unit tests run. The target is 80%. |
+| Check                | Status | What it does                                                                                                                                                                                      |
+| :------------------- | :----- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Unit tests           | ✅ On  | [Vitest](https://vitest.dev) runs the unit tests. Part of the [CI workflow](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml) on every push and pull request to `main`. |
+| Property-based tests | ❌ Off | [fast-check](https://fast-check.dev) runs many random inputs per test to find edge cases, alongside the unit tests.                                                                               |
+| Test coverage        | ✅ On  | [Vitest's V8 coverage](https://vitest.dev/guide/coverage) measures the share of source lines the unit tests run.                                                                                  |
 
 ### Code Quality
 
 | Check         | Status | What it does                                                                                                                                                                                                                                                                                                              |
 | :------------ | :----- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Code analysis | ❌ Off | [SonarCloud](https://sonarcloud.io) checks every push for bugs, code smells and vulnerabilities.                                                                                                                                                                                                                          |
 | Linting       | ✅ On  | [ESLint](https://eslint.org) checks the code for errors and style problems, and the [TypeScript](https://www.typescriptlang.org/) compiler type-checks the whole project. Part of the [CI workflow](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml) on every push and pull request to `main`. |
+| Code analysis | ❌ Off | [SonarCloud](https://sonarcloud.io) checks every push for bugs, code smells and vulnerabilities.                                                                                                                                                                                                                          |
 
 ### Security Analysis
 
-| Check           | Status | What it does                                                                                                                                                                                                                                                                                                                                                                               |
-| :-------------- | :----- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Push protection | ✅ On  | [GitHub push protection](https://docs.github.com/en/code-security/secret-scanning/push-protection-for-repositories-and-organizations) blocks pushes that contain credentials.                                                                                                                                                                                                              |
-| Static analysis | ✅ On  | [![CodeQL](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/codeql.yml/badge.svg)](https://github.com/dpuse/dpuse-connector-dexie-js/security/code-scanning) [CodeQL](https://codeql.github.com) scans GitHub Actions and JavaScript/TypeScript for security vulnerabilities, using the extended security queries, on every push and pull request to `main` and weekly. |
-| Secret scanning | ✅ On  | [GitHub secret scanning](https://docs.github.com/en/code-security/secret-scanning) detects credentials, such as API keys and tokens, committed to the repository.                                                                                                                                                                                                                          |
+| Check           | Status | What it does                                                                                                                                                                                                      |
+| :-------------- | :----- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Push protection | ✅ On  | [GitHub push protection](https://docs.github.com/en/code-security/secret-scanning/push-protection-for-repositories-and-organizations) blocks pushes that contain credentials.                                     |
+| Static analysis | ✅ On  | [GitHub CodeQL](https://codeql.github.com) scans GitHub Actions and JavaScript/TypeScript for security vulnerabilities, using the extended security queries, on every push and pull request to `main` and weekly. |
+| Secret scanning | ✅ On  | [GitHub secret scanning](https://docs.github.com/en/code-security/secret-scanning) detects credentials, such as API keys and tokens, committed to the repository.                                                 |
 
 ### Dependencies
 
 | Check               | Status | What it does                                                                                                                                                                                                                                                                                                                    |
 | :------------------ | :----- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Vulnerability audit | ✅ On  | [npm audit](https://docs.npmjs.com/cli/commands/npm-audit) fails when a shipped dependency has any known vulnerability, or a development dependency has a high or critical one. Part of the [CI workflow](https://github.com/dpuse/dpuse-connector-dexie-js/actions/workflows/ci.yml) on every push and pull request to `main`. |
-| Supply chain risk   | ✅ On  | [Socket](https://socket.dev) flags malicious packages, typosquatting and suspicious behaviour that may not yet have a CVE.                                                                                                                                                                                                      |
-| Security alerts     | ✅ On  | [Dependabot](https://docs.github.com/en/code-security/dependabot) alerts when a dependency has a known vulnerability, using the GitHub Advisory Database.                                                                                                                                                                       |
-| Security updates    | ❌ Off | [Dependabot](https://docs.github.com/en/code-security/dependabot) opens pull requests that update vulnerable dependencies. These are handled manually.                                                                                                                                                                          |
-| Version updates     | ❌ Off | [Dependabot](https://docs.github.com/en/code-security/dependabot) opens pull requests for new dependency versions. These are handled manually.                                                                                                                                                                                  |
+| Supply chain risk   | ✅ On  | [Socket.dev](https://socket.dev) flags malicious packages, typosquatting and suspicious behaviour that may not yet have a CVE.                                                                                                                                                                                                  |
+| Security alerts     | ✅ On  | [GitHub Dependabot](https://docs.github.com/en/code-security/dependabot) alerts when a dependency has a known vulnerability, using the GitHub Advisory Database.                                                                                                                                                                |
+| Dependency updates  | ❌ Off | [GitHub Dependabot](https://docs.github.com/en/code-security/dependabot) can open pull requests for new and vulnerable dependency versions. Dependencies are updated by hand with `npm run check` instead.                                                                                                                      |
 
 ### OpenSSF 🚧
 
@@ -190,7 +189,7 @@ Please do not open public GitHub issues for security vulnerabilities. Use [GitHu
 
 ## Contributing
 
-This repository is maintained solely by its owner and does not, at present, accept external contributions into the canonical repo. Its source is published openly under the MIT License — every DPUse project is fully open source except DPUse Engine, which remains closed and proprietary.
+This repository is maintained solely by its owner and does not, at present, accept external contributions.
 
 For security vulnerabilities, see [Reporting Vulnerabilities](#reporting-vulnerabilities). For bugs, inconsistencies, or other feedback, [open a GitHub issue](https://github.com/dpuse/dpuse-connector-dexie-js/issues) — feedback is read, but responses and fixes are at the maintainer's discretion.
 

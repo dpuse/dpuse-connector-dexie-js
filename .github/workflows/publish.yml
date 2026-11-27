@@ -17,11 +17,12 @@ jobs:
         steps:
             # A release is created straight after its push, so this runs alongside CI. Publishing waits for that CI run on
             # the same commit and stops if it fails, so CI's checks run once and gate every release, including one created
-            # by hand on GitHub. The run is looked for again for a few minutes, as CI may not have been queued yet.
+            # by hand on GitHub. The run is looked for again for a few minutes, as CI may not have been queued yet or
+            # GitHub's API may briefly fail.
             - name: Wait for CI
               run: |
                   for attempt in $(seq 1 18); do
-                      run_id="$(gh run list --workflow ci.yml --commit "$GITHUB_SHA" --event push --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
+                      run_id="$(gh run list --workflow ci.yml --commit "$GITHUB_SHA" --event push --limit 1 --json databaseId --jq '.[0].databaseId // empty' || true)"
                       if [ -n "$run_id" ]; then break; fi
                       sleep 10
                   done

@@ -4,6 +4,10 @@ import { fileURLToPath, URL } from 'node:url';
 
 // ── Vitest Configuration ─────────────────────────────────────────────────────────────────────────────────────────────
 
+// Every machine runs the tests in the same time zone, so a result cannot depend on where it ran. It is not UTC, so that
+// code wrongly using local time fails here rather than passing unnoticed.
+process.env['TZ'] = 'Europe/Madrid';
+
 const config = defineConfig({
     resolve: {
         alias: {

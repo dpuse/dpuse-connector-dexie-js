@@ -216,10 +216,15 @@ describe('Connector', () => {
             const parsedRecords = [
                 ['1', 'Ada']
             ];
-            expect(inferDataTypes).toHaveBeenCalledWith(parsedRecords, false, [
-                { dataSubtypeId: 'integer', dataTypeId: 'numeric', label: 'c0', name: 'c0' },
-                { dataSubtypeId: 'plain', dataTypeId: 'string', label: 'c1', name: 'c1' }
-            ]);
+            expect(inferDataTypes).toHaveBeenCalledWith(
+                parsedRecords,
+                false,
+                [
+                    { dataSubtypeId: 'integer', dataTypeId: 'numeric', label: 'c0', name: 'c0' },
+                    { dataSubtypeId: 'plain', dataTypeId: 'string', label: 'c1', name: 'c1' }
+                ],
+                true // The sample is the whole table.
+            );
             expect(sampleConfig.parsedRecords).toEqual(parsedRecords);
             expect(contentAuditConfig).toMatchObject({ columns: inferredColumnConfigs, isComplete: true, recordCount: 1 });
             expect(readingConfig).toMatchObject({ encodingId: undefined, hasHeaders: false, isDeclared: true, valueDelimiterId: undefined });
@@ -236,6 +241,7 @@ describe('Connector', () => {
             expect(sampleConfig.parsedRecords).toEqual(Array.from({ length: 50 }, (_, index) => [String(index)]));
             expect(contentAuditConfig).toMatchObject({ isComplete: false, recordCount: 50 });
             expect(inferDataTypes.mock.calls[0]?.[2]).toEqual([{ dataSubtypeId: 'integer', dataTypeId: 'numeric', label: 'c0', name: 'c0' }]);
+            expect(inferDataTypes.mock.calls[0]?.[3]).toBe(false); // The table holds more records than the sample.
         });
 
         it('rejects an invalid path', async () => {

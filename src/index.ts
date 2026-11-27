@@ -299,7 +299,8 @@ export class Connector implements ExtendedConnectorInterface {
         const records = await tableReader.readRecords(0, PREVIEW_RECORD_COUNT);
         const totalCount = await tableReader.countRecords();
         const parsedRecords = records.map((record) => convertStoreRecordToParsedRecord(record));
-        const { columnConfigs } = this.connectorUtilities.inferDataTypes(parsedRecords, false, constructDeclaredColumnConfigs(tableReader.layout));
+        const isComplete = records.length === totalCount;
+        const { columnConfigs } = this.connectorUtilities.inferDataTypes(parsedRecords, false, constructDeclaredColumnConfigs(tableReader.layout), isComplete);
         return {
             contentAuditConfig: {
                 asAt,
@@ -309,7 +310,7 @@ export class Connector implements ExtendedConnectorInterface {
                 duration: performance.now() - startedAt,
                 emptyLineCount: undefined,
                 invalidFieldLengthCount: undefined,
-                isComplete: records.length === totalCount,
+                isComplete,
                 lineCount: undefined,
                 recordCount: records.length,
                 sourceWaitDuration: undefined
